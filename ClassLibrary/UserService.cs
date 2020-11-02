@@ -11,17 +11,27 @@ namespace ServerLibrary
 {
     class UserService
     {
+        /// <summary>
+        /// Klasa zajmująca się obsługą użytkownika
+        /// </summary>
         private bool isLogged;
         private string username;
         private string password;
+
         public UserService()
         {
             isLogged = false;
         }
+
         public bool IsLogged
         {
             get => isLogged;
         }
+        /// <summary>
+        /// Sprawdza czy użytkownik chce się zalogować czy zarejestrować
+        /// </summary>
+        /// <param name="op">operacja podana przez klienta</param>
+        /// <returns>zwraca wartość całkowitą mówiącą co dalej ma zrobić program</returns>
         public int parseOperation(string op)
         {
             op = op.ToLower();
@@ -38,7 +48,12 @@ namespace ServerLibrary
                 return -1;
             }
         }
-
+        /// <summary>
+        /// sprawdza czy użytkownik istnieje i loguje użytkownika
+        /// </summary>
+        /// <param name="username">nazwa użytkownika</param>
+        /// <param name="password">hasło</param>
+        /// <returns>zwraca tekst informujący o rezultacie logowania</returns>
         public string login(string username, string password)
         {
             using (var fileStream = File.OpenRead("user_db.txt"))
@@ -65,6 +80,12 @@ namespace ServerLibrary
             }
             return "Użytkownik nie istnieje";
         }
+        /// <summary>
+        /// sprawdza czy nazwa użytkownika nie jest zajęta i rejestruje go
+        /// </summary>
+        /// <param name="username">nazwa użytkownika</param>
+        /// <param name="password">hasło</param>
+        /// <returns>zwraca tekst informujący o rezultacie operacji</returns>
         public string register(string username, string password)
         {
             using (var fileStream = File.OpenRead("user_db.txt"))
@@ -88,6 +109,10 @@ namespace ServerLibrary
             }
             return "Pomyślnie utworzono użytkownika.\r\n";
         }
+        /// <summary>
+        /// usuwa użytkownika z bazy danych
+        /// </summary>
+        /// <returns>zwraca informację o powodzeniu usuwania</returns>
         public string deleteUser()
         {
             List<string> arrLine = new List<string>();

@@ -11,6 +11,9 @@ namespace ServerLibrary
 
     public class ServerAsync
     {
+        /// <summary>
+        /// Serwer asynchroniczny
+        /// </summary>
         IPAddress iPAddress;
         int port;
         int buffer_size = 1024;
@@ -25,6 +28,9 @@ namespace ServerLibrary
             if (port > 1024 && port < 49151) this.port = port;
             else this.port = 1024;
         }
+        /// <summary>
+        /// Akceptuje klienta
+        /// </summary>
         private void AcceptClient()
         {
             while (true)
@@ -36,23 +42,38 @@ namespace ServerLibrary
             }
 
         }
-
+        /// <summary>
+        /// rozpoczyna pracę serwera
+        /// </summary>
         public void Start()
         {
             running = true;
             StartListening();
             AcceptClient();
         }
+        /// <summary>
+        /// Rozpoczyna nasłuchiwanie
+        /// </summary>
         private void StartListening()
         {
             tcpListener = new TcpListener(iPAddress, port);
             tcpListener.Start();
         }
+        /// <summary>
+        /// Zakańcza pozwolenie
+        /// </summary>
+        /// <param name="ar"></param>
         private void TransmissionCallback(IAsyncResult ar)
         {
             TcpClient client = (TcpClient)ar.AsyncState;
             client.Close();
         }
+        /// <summary>
+        /// Konwertuje bufor bajtów na łańcuch znaków
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="buffer"></param>
+        /// <returns>Zwraca łańcuch znaków</returns>
         string ReadString(NetworkStream stream, byte[]buffer)
         {
             int message_size = stream.Read(buffer, 0, buffer_size);
@@ -61,7 +82,7 @@ namespace ServerLibrary
             return new ASCIIEncoding().GetString(buffer, 0, message_size);
         }
         /// <summary>
-        /// 
+        /// Obsługuje dialog z klientem
         /// </summary>
         /// <param name="stream"></param>
         public void BeginDataTransmission(NetworkStream stream)
@@ -142,6 +163,12 @@ namespace ServerLibrary
                 }
             }
         }
+        /// <summary>
+        /// wysyła łańcuch znaków do klienta w postaci tablicy bajtów
+        /// </summary>
+        /// <param name="str">łańcuch znaków do wysłania</param>
+        /// <param name="buffer">bufor wiadomości</param>
+        /// <param name="stream"></param>
         private void sendString(string str,byte[] buffer, NetworkStream stream)
         {
             buffer = Encoding.ASCII.GetBytes(str);
