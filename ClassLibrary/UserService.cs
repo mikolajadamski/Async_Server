@@ -90,7 +90,6 @@ namespace ServerLibrary
         }
         public string deleteUser()
         {
-            int it = 0;
             List<string> arrLine = new List<string>();
             using (var fileStream = File.OpenRead("user_db.txt"))
             {
