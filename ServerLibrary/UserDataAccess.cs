@@ -39,17 +39,23 @@ namespace ServerLibrary
                 return result;
             }
         }
-        static public int selectUser(User user)
+        static public string selectUser(User user)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                var result = databaseConnection.QueryFirst<User>(
-                                   @"
+                var result = databaseConnection.QuerySingleOrDefault(
+                       @"
                         SELECT * FROM users
-                        WHERE (username = @username
-                        AND password = @password)
+                        WHERE username = @name
+                        AND password = @password
                     ", user);
-                return 0;
+                string name = null;
+                if (result != null)
+                {
+                    name = result.username;
+                }
+                
+                return name;
                 
             }
         }
