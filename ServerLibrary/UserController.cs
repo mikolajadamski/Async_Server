@@ -23,10 +23,10 @@ namespace ServerLibrary
         public string login()
         {
 
-            if(UserDataAccess.selectUser(user))
+            if(UserDataAccess.selectUser(user) == User.Name)
             {
                 isLogged = true;
-                return "Zalogowano pomyślnie.";
+                return "Zalogowano.\r\n";
             }
             else
             {
@@ -37,11 +37,11 @@ namespace ServerLibrary
         {
             if(UserDataAccess.insertUser(user) == 0)
             {
-                return "Nazwa użytkownika już zajęta!";
+                return "Nazwa użytkownika już zajęta!\r\n";
             }
             else
             {
-                return "Zarejestrowano.";
+                return "Rejestracja zakończyła się powodzeniem.\r\n";
             }
         }
         public User User
@@ -50,6 +50,18 @@ namespace ServerLibrary
             set
             {
                if(value != null) user = value;
+            }
+        }
+        public string deleteUser()
+        {
+            int result = UserDataAccess.deleteUser(user);
+            if (result == 1)
+            {
+                return "Pomyślnie usunięto użytkownika (5 sekund do zamknięcia).\r\n";
+            }
+            else
+            {
+                return "Operacja zakończona niepowodzeniem.\r\n";
             }
         }
     }

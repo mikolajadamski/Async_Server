@@ -60,7 +60,7 @@ namespace ServerLibrary
                         }
                         else
                         {
-                            userController.register();
+                            StreamControl.sendText(userController.register(), buffer, stream);
                         }
                     }
                     else if (message == "exit")
@@ -82,19 +82,15 @@ namespace ServerLibrary
             {
                 try
                 {
-                    /*
                     StreamControl.sendText("Wpisz exit aby wyjść lub delete aby usunąć konto\r\n", buffer, stream);
                     string str = StreamControl.readText(stream, buffer);
                     if (str.ToLower() == "exit") break;
                     else if (str.ToLower() == "delete")
                     {
-                        StreamControl.sendText(usrService.deleteUser(), buffer, stream);
-                        StreamControl.sendText("Wpisz cokolwiek aby wyjść.\r\n", buffer, stream);
-                        StreamControl.readText(stream, buffer);
+                        StreamControl.sendText(userController.deleteUser(), buffer, stream);
+                        System.Threading.Thread.Sleep(5000);
                         break;
                     }
-                    else StreamControl.sendText(str, buffer, stream);
-                    */
                 }
                 catch (IOException e)
                 {
