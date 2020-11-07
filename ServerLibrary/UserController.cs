@@ -22,7 +22,7 @@ namespace ServerLibrary
         }
         public string login()
         {
-            if(UserDataAccess.selectUser(user) == 0)
+            if(UserDataAccess.selectUser(user) == null)
             {
                 return "Nieprawidłowe dane!\r\n";
             }
