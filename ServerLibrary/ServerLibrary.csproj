@@ -87,7 +87,7 @@
     <Compile Include="StreamControl.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserController.cs" />
-    <Compile Include="UserDAO.cs" />
+    <Compile Include="UserDataAccess.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -13,8 +13,10 @@ namespace ServerLibrary
         private static UTF8Encoding encoder = new UTF8Encoding();
         public static void sendText(string str, byte[] buffer, NetworkStream stream)
         {
-            buffer = Encoding.UTF8.GetBytes(str);
-            stream.Write(buffer, 0, str.Length);
+            byte[] encodedText = Encoding.UTF8.GetBytes(str);
+            int length = encodedText.Length;
+            Array.Copy(encodedText, buffer, length);
+            stream.Write(buffer, 0, length);
         }
         public static string readText(NetworkStream stream, byte[] buffer)
         {
