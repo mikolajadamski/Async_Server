@@ -57,6 +57,19 @@ namespace ServerLibrary
                 return name;
             }
         }
+        static public int changeUserPassword(User user)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                int result = databaseConnection.Execute(
+                    @"
+                     UPDATE users
+                     SET password = @password
+                     WHERE username = @name
+                 ", user);
+                return result;
+            };
+        }
         static private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;

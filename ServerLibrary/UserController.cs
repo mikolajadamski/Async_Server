@@ -23,10 +23,10 @@ namespace ServerLibrary
         public string login()
         {
 
-            if(UserDataAccess.selectUser(user))
+            if (UserDataAccess.selectUser(user) != null)
             {
                 isLogged = true;
-                return "Zalogowano pomyślnie.";
+                return "Zalogowano pomyślnie.\r\n";
             }
             else
             {
@@ -42,6 +42,26 @@ namespace ServerLibrary
             else
             {
                 return "Zarejestrowano.";
+            }
+        }
+        public bool IScorrectPassword(string oldPassword)
+        {
+            if (oldPassword == user.Password)
+                return true;
+            else
+                return false;
+        }
+        public string changePassword(string newpassword)
+        {
+
+            user.setPassword(newpassword);
+            if (UserDataAccess.changeUserPassword(user) == 0)
+            {
+                return "error";
+            }
+            else
+            {
+                return "Pomyślnie zmieniono hasło\r\n";
             }
         }
         public User User

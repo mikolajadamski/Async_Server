@@ -82,6 +82,19 @@ namespace ServerLibrary
             {
                 try
                 {
+                    StreamControl.sendText("Wpisz changepass aby zmienic haslo\r\n", buffer, stream);
+                    message = StreamControl.readText(stream, buffer);
+                    if (message == "changepass")
+                    {
+                        StreamControl.sendText("Podaj stare haslo: ", buffer, stream);
+                        string oldPassword = StreamControl.readText(stream, buffer);
+                        if (userController.IScorrectPassword(oldPassword))
+                        {
+                            StreamControl.sendText("Podaj nowe haslo: ", buffer, stream);
+                            string newPassword = StreamControl.readText(stream, buffer);
+                            StreamControl.sendText(userController.changePassword(newPassword), buffer, stream);
+                        }
+                    }
                     /*
                     StreamControl.sendText("Wpisz exit aby wyjść lub delete aby usunąć konto\r\n", buffer, stream);
                     string str = StreamControl.readText(stream, buffer);
