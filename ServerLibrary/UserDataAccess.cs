@@ -57,6 +57,29 @@ namespace ServerLibrary
                 return name;
             }
         }
+
+        static public void createCanal(string canalName,User user){
+           
+               using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
+
+                string pom4 = String.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
+                 var result = databaseConnection.QuerySingleOrDefault(@pom4);
+
+
+                if (result == null)
+                     {
+                    string pom = String.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
+                    string pom2 = String.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                    string pom3 = String.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
+                int result1 = databaseConnection.Execute(@pom3);
+                int result2 = databaseConnection.Execute(@pom);
+                int result3 =  databaseConnection.Execute(@pom2, user);
+               }
+               }
+
+           }
+
+    
         static private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;

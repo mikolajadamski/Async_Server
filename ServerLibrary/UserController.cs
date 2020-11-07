@@ -23,7 +23,7 @@ namespace ServerLibrary
         public string login()
         {
 
-            if(UserDataAccess.selectUser(user))
+            if(UserDataAccess.selectUser(user) == user.Name)
             {
                 isLogged = true;
                 return "Zalogowano pomyślnie.";
