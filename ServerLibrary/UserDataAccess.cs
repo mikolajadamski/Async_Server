@@ -54,9 +54,7 @@ namespace ServerLibrary
                 {
                     name = result.username;
                 }
-                
                 return name;
-                
             }
         }
         static private string LoadConnectionString(string id = "Default")

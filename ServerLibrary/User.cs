@@ -12,9 +12,9 @@ namespace ServerLibrary
         private string password;
         private bool isLogged;
         
-        public User(string name, string password)
+        public User(string username, string password)
         {
-            this.name = name;
+            this.name = username;
             this.password = password;
         }
         public string Name

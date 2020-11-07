@@ -14,8 +14,6 @@ namespace Application
     {
         static void Main(string[] args)
         {
-            string path = Directory.GetCurrentDirectory();
-            Console.WriteLine(path);
             ServerAsync server = new ServerAsync(IPAddress.Parse("127.0.0.1"), 3000);
             server.Start();
         }
