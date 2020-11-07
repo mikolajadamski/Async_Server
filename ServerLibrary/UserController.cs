@@ -22,13 +22,14 @@ namespace ServerLibrary
         }
         public string login()
         {
-            if(UserDataAccess.selectUser(user) == 0)
+            if(UserDataAccess.selectUser(user) == user.Name)
             {
-                return "Nieprawidłowe dane!\r\n";
+                isLogged = true;
+                return "Zalogowano pomyślnie.";
             }
             else
             {
-                return "Zalogowano pomyślnie.";
+                return "Nieprawidłowe dane!\r\n";
             }
         }
         public string register()

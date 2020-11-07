@@ -56,7 +56,7 @@ namespace ServerLibrary
                         if (userController.User == null) continue;
                         if(message == "login")
                         {
-                            userController.login();
+                            StreamControl.sendText(userController.login(), buffer, stream);
                         }
                         else
                         {
