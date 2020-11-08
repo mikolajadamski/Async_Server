@@ -79,7 +79,30 @@ namespace ServerLibrary
 
            }
 
-    
+     static public void deleteCanal(string canalName,User user){
+        
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
+             var result = databaseConnection.QuerySingleOrDefault( String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+            if(result != null){
+                string command = String.Format("SELECT * FROM {0} WHERE username = @name", canalName);
+                var result2 = databaseConnection.QuerySingleOrDefault(@command, user);
+               
+            if(result2 != null){
+                if(result2.administrator){
+                    databaseConnection.Execute(String.Format("DROP TABLE {0}", canalName));
+                    databaseConnection.Execute(String.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
+                    }                                                       
+                }
+            }
+
+            }
+
+
+
+    }
+
+
         static private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;

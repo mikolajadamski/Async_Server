@@ -57,7 +57,8 @@ namespace ServerLibrary
                         if(message == "login")
                         {
                             StreamControl.sendText(userController.login(), buffer, stream);
-                          UserDataAccess.createCanal("test", userController.User);// to tylko testowe wywołanie, do skasowania potem
+                        //  UserDataAccess.createCanal("test", userController.User);// to tylko testowe wywołanie, do skasowania potem
+                       //UserDataAccess.deleteCanal("test", userController.User);
                         }
                         else
                         {
