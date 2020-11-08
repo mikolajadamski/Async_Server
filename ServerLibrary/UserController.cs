@@ -10,10 +10,11 @@ namespace ServerLibrary
     {
         User user;
         bool isLogged;
-
+        string currentCanal;
         public UserController()
         {
             isLogged = false;
+            currentCanal = "MENU";
         }
         public bool IsLogged
         {
@@ -23,10 +24,10 @@ namespace ServerLibrary
         public string login()
         {
 
-            if(UserDataAccess.selectUser(user) == user.Name)
+            if (UserDataAccess.selectUser(user) == User.Name)
             {
                 isLogged = true;
-                return "Zalogowano pomyślnie.";
+                return "Zalogowano.\r\n";
             }
             else
             {
@@ -35,13 +36,13 @@ namespace ServerLibrary
         }
         public string register()
         {
-            if(UserDataAccess.insertUser(user) == 0)
+            if (UserDataAccess.insertUser(user) == 0)
             {
-                return "Nazwa użytkownika już zajęta!";
+                return "Nazwa użytkownika już zajęta!\r\n";
             }
             else
             {
-                return "Zarejestrowano.";
+                return "Rejestracja zakończyła się powodzeniem.\r\n";
             }
         }
         public User User
@@ -49,9 +50,28 @@ namespace ServerLibrary
             get => user;
             set
             {
-               if(value != null) user = value;
+                if (value != null) user = value;
             }
         }
+        public string CurrentCanal
+        {
+            get => currentCanal;
+            set => currentCanal = value;
+        }
+        public string deleteUser()
+        {
+            int result = UserDataAccess.deleteUser(user);
+            if (result == 1)
+            {
+                return "Pomyślnie usunięto użytkownika (5 sekund do zamknięcia).\r\n";
+            }
+            else
+            {
+                return "Operacja zakończona niepowodzeniem.\r\n";
+            }
+        }
+
+        
     }
     
 }
