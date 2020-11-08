@@ -15,14 +15,21 @@ namespace ServerLibrary
 
        static public int insertUser(User user)
         {
-            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            try
             {
-                int result = databaseConnection.Execute(
-                    @"
+                using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+                {
+                    int result = databaseConnection.Execute(
+                        @"
                     INSERT INTO users (username, password)
                     VALUES (@name, @password)"
-                    , user);
-                return result;
+                        , user);
+                    return result;
+                }
+            }
+            catch (System.Data.SQLite.SQLiteException)
+            {
+                return 0;
             }
             
         }

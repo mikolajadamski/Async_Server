@@ -40,7 +40,8 @@ namespace ServerLibrary
 
         protected override void BeginDataTransmission(NetworkStream stream)
         {
-            stream.ReadTimeout = 60000;
+            stream.ReadTimeout = 3600000;
+
             byte[] buffer = new byte[bufferSize];
             string message;
             UserController userController = new UserController();
@@ -107,8 +108,8 @@ namespace ServerLibrary
                             StreamControl.sendText(string.Join("\r\n", UserDataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
                             break;
 
-                        case "join":
-                            UserDataAccess.joinCanal(command[1], userController.User);
+                        case "add":
+                            UserDataAccess.addtoCanal(command[1], command[2]);
                             break;
 
                         case "exit":
