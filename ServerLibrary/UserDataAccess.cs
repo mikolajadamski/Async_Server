@@ -103,6 +103,28 @@ namespace ServerLibrary
     }
 
 
+        public static void addtoCanal(string canalName, string username){
+            
+             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())){
+            var result = databaseConnection.QuerySingleOrDefault( String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+        if(result != null){
+                var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                if(check == null){
+                        databaseConnection.Execute(String.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
+                   }
+
+           }
+
+        }
+
+      }
+
+        static public void joinCanal(string canalName, User user){
+            addtoCanal(canalName, user.Name);
+         }
+
+
         static private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
