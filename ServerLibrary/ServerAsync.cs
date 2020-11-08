@@ -84,14 +84,29 @@ namespace ServerLibrary
             {
                 try
                 {
-                    StreamControl.sendText("Wpisz exit aby wyjść lub delete aby usunąć konto\r\n", buffer, stream);
-                    string str = StreamControl.readText(stream, buffer);
-                    if (str.ToLower() == "exit") break;
-                    else if (str.ToLower() == "delete")
+                    StreamControl.sendText("MENU\r\n", buffer, stream);
+                    string[] command = StreamControl.readText(stream, buffer).Split();
+                    switch(command[0])
                     {
-                        StreamControl.sendText(userController.deleteUser(), buffer, stream);
-                        System.Threading.Thread.Sleep(5000);
-                        break;
+                        case "create":
+                            if(command.Length <2)
+                            {
+                                StreamControl.sendText("Za mało argumentów! Podaj nazwę kanału.\r\n", buffer, stream);
+                            }
+                            UserDataAccess.createCanal(command[1], userController.User);
+                            StreamControl.sendText("Utworzono kanał " + command[1], buffer, stream);
+                            break;
+
+                        case "unregister":
+                            StreamControl.sendText(userController.deleteUser(), buffer, stream);
+                            System.Threading.Thread.Sleep(5000);
+                            userController.IsLogged = false;
+                            break;
+
+                        case "exit":
+                            userController.IsLogged = false;
+                            break;
+
                     }
                 }
                 catch (IOException e)
