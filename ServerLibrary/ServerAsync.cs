@@ -57,9 +57,6 @@ namespace ServerLibrary
                         if(message == "login")
                         {
                             StreamControl.sendText(userController.login(), buffer, stream);
-                        // UserDataAccess.createCanal("test2", userController.User);// to tylko testowe wywołanie, do skasowania potem
-                       //UserDataAccess.deleteCanal("test", userController.User);
-                        //UserDataAccess.joinCanal("test2", userController.User);
                         }
                         else
                         {
@@ -85,17 +82,14 @@ namespace ServerLibrary
             {
                 try
                 {
-                    StreamControl.sendText("MENU\r\n", buffer, stream);
+                    StreamControl.sendText(userController.CurrentCanal+"\r\n", buffer, stream);
                     string[] command = StreamControl.readText(stream, buffer).Split();
-                    switch(command[0])
+                    switch(command[0].ToLower())
                     {
                         case "create":
-                            if(command.Length <2)
-                            {
-                                StreamControl.sendText("Za mało argumentów! Podaj nazwę kanału.\r\n", buffer, stream);
-                            }
+                            
                             UserDataAccess.createCanal(command[1], userController.User);
-                            StreamControl.sendText("Utworzono kanał " + command[1], buffer, stream);
+                            StreamControl.sendText("Utworzono kanał " + command[1] + "\r\n", buffer, stream);
                             break;
 
                         case "unregister":
@@ -104,11 +98,32 @@ namespace ServerLibrary
                             userController.IsLogged = false;
                             break;
 
+                        case "delete":
+                            UserDataAccess.deleteCanal(command[1], userController.User);
+                            StreamControl.sendText("Usunięto kanał " + command[1] + "\r\n", buffer, stream);
+                            break;
+
+                        case "list":
+                            StreamControl.sendText(string.Join("\r\n", UserDataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
+                            break;
+
+                        case "join":
+                            UserDataAccess.joinCanal(command[1], userController.User);
+                            break;
+
                         case "exit":
                             userController.IsLogged = false;
                             break;
 
+                        default:
+                            StreamControl.sendText("Nieznana komenda.\r\n", buffer, stream);
+                            break;
+
                     }
+                }
+                catch (System.IndexOutOfRangeException)
+                {
+                    StreamControl.sendText("Za mało argumentów!\r\n", buffer, stream);
                 }
                 catch (IOException e)
                 {

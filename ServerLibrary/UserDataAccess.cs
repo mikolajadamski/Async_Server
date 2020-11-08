@@ -58,7 +58,7 @@ namespace ServerLibrary
             }
         }
 
-        static public void createCanal(string canalName,User user){
+        static public int createCanal(string canalName,User user){
            
                using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
 
@@ -66,20 +66,22 @@ namespace ServerLibrary
                  var result = databaseConnection.QuerySingleOrDefault(@pom4);
 
 
-                if (result == null)
-                     {
+               if (result == null)
+               {
                     string pom = String.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
                     string pom2 = String.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
                     string pom3 = String.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
-                int result1 = databaseConnection.Execute(@pom3);
-                int result2 = databaseConnection.Execute(@pom);
-                int result3 =  databaseConnection.Execute(@pom2, user);
+                    int result1 = databaseConnection.Execute(@pom3);
+                    int result2 = databaseConnection.Execute(@pom);
+                    int result3 =  databaseConnection.Execute(@pom2, user);
+                    return result2;
                }
+                return 0;
                }
 
            }
 
-     static public void deleteCanal(string canalName,User user){
+    static public void deleteCanal(string canalName,User user){
         
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
              var result = databaseConnection.QuerySingleOrDefault( String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
@@ -124,11 +126,23 @@ namespace ServerLibrary
             addtoCanal(canalName, user.Name);
          }
 
-
+        static public string[] selectOpenCanals()
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                return databaseConnection.Query<string>(
+                    @"
+                    SELECT * 
+                    FROM canals
+                    ").ToArray();
+            }
+        }
         static private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
         }
 
     }
+
+    
 }
