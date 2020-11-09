@@ -84,9 +84,21 @@ namespace ServerLibrary
                 try
                 {
                     StreamControl.sendText(userController.CurrentCanal+"\r\n", buffer, stream);
+                    StreamControl.sendText("Wpisz \"help\" aby uzyskac pomoc\r\n", buffer, stream);
                     string[] command = StreamControl.readText(stream, buffer).Split();
                     switch(command[0].ToLower())
                     {
+                        case "changepassword":
+                            StreamControl.sendText("Podaj stare haslo: ", buffer, stream);
+                            string oldPassword = StreamControl.readText(stream, buffer);
+                            if (userController.IScorrectPassword(oldPassword))
+                            {
+                                StreamControl.sendText("Podaj nowe haslo: ", buffer, stream);
+                                string newPassword = StreamControl.readText(stream, buffer);
+                                StreamControl.sendText(userController.changePassword(newPassword), buffer, stream);
+                            }
+                            break;
+
                         case "create":
                             
                             UserDataAccess.createCanal(command[1], userController.User);
@@ -112,8 +124,42 @@ namespace ServerLibrary
                             UserDataAccess.addtoCanal(command[1], command[2]);
                             break;
 
+                        case "join":
+                            UserDataAccess.joinCanal(command[1], userController.User);
+                            break;
+
+                        case "remove":
+                            UserDataAccess.removefromCanal(command[1], command[2]);
+                            break;
+
+                        case "removeall":
+                            UserDataAccess.removeAllfromCanal(command[1]);
+                            break;
+
+                        case "leave":
+                            UserDataAccess.leaveCanal(command[1], userController.User);
+                            break;
+
+                        case "listofusers":
+                            StreamControl.sendText(string.Join("\r\n", UserDataAccess.listuserCanal(command[1])) + "\r\n", buffer, stream);
+                            break;
+                        
                         case "exit":
                             userController.IsLogged = false;
+                            break;
+
+                        case "help":
+                            StreamControl.sendText("POMOC\r\n", buffer, stream);
+                            StreamControl.sendText("Wpisz\r\n", buffer, Stream);
+                            StreamControl.sendText("\"changepassword\" aby zmienic haslo\r\n", buffer, stream);
+                            StreamControl.sendText("\"create [nazwa kanalu]\" aby stworzyc kanal komunikacyjny\r\n", buffer, stream);
+                            StreamControl.sendText("\"delete [nazwa kanalu]\" aby usunac kanal komunikacyjny\r\n", buffer, stream);
+                            StreamControl.sendText("\"unregister\" aby usunac uzytkownika\r\n", buffer, stream);
+                            StreamControl.sendText("\"add [nazwa kanalu] [nazwa uzytkownika]\" aby dodac uzytkownika do kanalu komunikacyjnego\r\n", buffer, stream);
+                            StreamControl.sendText("\"join [nazwa kanalu]\" aby wejsc na kanal komunikacyjny\r\n", buffer, stream);
+                            StreamControl.sendText("\"remove [nazwa kanalu] [nazwa uzytkownika]\" aby usunac uzytkownika z kanalu komunikacyjnego\r\n", buffer, stream);
+                            StreamControl.sendText("\"removeall\" aby usunac wszystkich uzytkownikow z kanalu komunikacyjnego\r\n", buffer, stream);
+                            StreamControl.sendText("\"exit\" aby sie wylogowac\r\n", buffer, stream);
                             break;
 
                         default:
@@ -151,6 +197,8 @@ namespace ServerLibrary
             }
             return new User(username, password);
         }
+
+       
 
         public override void Start()
         {
