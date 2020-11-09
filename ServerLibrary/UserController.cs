@@ -70,8 +70,27 @@ namespace ServerLibrary
                 return "Operacja zakończona niepowodzeniem.\r\n";
             }
         }
+        public bool IScorrectPassword(string oldPassword)
+        {
+            if (oldPassword == user.Password)
+                return true;
+            else
+                return false;
+        }
+        public string changePassword(string newpassword)
+        {
+            user.setPassword(newpassword);
+            if (UserDataAccess.changeUserPassword(user) == 0)
+            {
+                return "error";
+            }
+            else
+            {
+                return "Pomyślnie zmieniono hasło\r\n";
+            }
+        }
 
-        
+
     }
     
 }

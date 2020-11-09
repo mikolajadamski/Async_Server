@@ -25,5 +25,9 @@ namespace ServerLibrary
         {
             get => password;
         }
+        public void setPassword(string password)
+        {
+            this.password = password;
+        }
     }
 }
