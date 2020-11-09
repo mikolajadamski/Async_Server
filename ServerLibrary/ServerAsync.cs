@@ -53,7 +53,7 @@ namespace ServerLibrary
                     message = StreamControl.readText(stream, buffer);
                     if (message == "login" || message == "register")
                     {
-                        userController.User = getUser(Stream, buffer);
+                        userController.User = getUser(stream, buffer);
                         if (userController.User == null) continue;
                         if(message == "login")
                         {
