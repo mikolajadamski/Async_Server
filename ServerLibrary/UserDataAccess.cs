@@ -13,7 +13,7 @@ namespace ServerLibrary
     static public class UserDataAccess
     {
 
-       static public int insertUser(User user)
+        static public int insertUser(User user)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace ServerLibrary
             {
                 return 0;
             }
-            
+
         }
         static public int deleteUser(User user)
         {
@@ -64,74 +64,127 @@ namespace ServerLibrary
                 return name;
             }
         }
+        static public int changeUserPassword(User user)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                int result = databaseConnection.Execute(
+                    @"
+                     UPDATE users
+                     SET password = @password
+                     WHERE username = @name
+                 ", user);
+                return result;
+            };
+        }
 
-        static public int createCanal(string canalName,User user){
-           
-               using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
+        static public int createCanal(string canalName, User user) {
+
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
 
                 string pom4 = String.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
-                 var result = databaseConnection.QuerySingleOrDefault(@pom4);
+                var result = databaseConnection.QuerySingleOrDefault(@pom4);
 
 
-               if (result == null)
-               {
+                if (result == null)
+                {
                     string pom = String.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
                     string pom2 = String.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
                     string pom3 = String.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
                     int result1 = databaseConnection.Execute(@pom3);
                     int result2 = databaseConnection.Execute(@pom);
-                    int result3 =  databaseConnection.Execute(@pom2, user);
+                    int result3 = databaseConnection.Execute(@pom2, user);
                     return result2;
-               }
-                return 0;
-               }
-
-           }
-
-    static public void deleteCanal(string canalName,User user){
-        
-            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
-             var result = databaseConnection.QuerySingleOrDefault( String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-
-            if(result != null){
-                string command = String.Format("SELECT * FROM {0} WHERE username = @name", canalName);
-                var result2 = databaseConnection.QuerySingleOrDefault(@command, user);
-               
-            if(result2 != null){
-                if(result2.administrator){
-                    databaseConnection.Execute(String.Format("DROP TABLE {0}", canalName));
-                    databaseConnection.Execute(String.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
-                    }                                                       
                 }
+                return 0;
             }
-
-            }
-
-
-
-    }
-
-
-        public static void addtoCanal(string canalName, string username){
-            
-             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())){
-            var result = databaseConnection.QuerySingleOrDefault( String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-
-        if(result != null){
-                var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
-                if(check == null){
-                        databaseConnection.Execute(String.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
-                   }
-
-           }
 
         }
 
-      }
+        static public void deleteCanal(string canalName, User user) {
 
-        static public void joinCanal(string canalName, User user){
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
+                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+                if (result != null) {
+                    string command = String.Format("SELECT * FROM {0} WHERE username = @name", canalName);
+                    var result2 = databaseConnection.QuerySingleOrDefault(@command, user);
+
+                    if (result2 != null) {
+                        if (result2.administrator) {
+                            databaseConnection.Execute(String.Format("DROP TABLE {0}", canalName));
+                            databaseConnection.Execute(String.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
+                        }
+                    }
+                }
+
+            }
+        }
+
+
+        public static void addtoCanal(string canalName, string username) {
+
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
+                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+                if (result != null) {
+                    var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                    if (check == null) {
+                        databaseConnection.Execute(String.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
+                    }
+                }
+            }
+        }
+        static public void joinCanal(string canalName, User user)
+        {
             addtoCanal(canalName, user.Name);
-         }
+        }
+
+        public static void removefromCanal(string canalName, string username)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+                if (result != null)
+                {
+                    var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                    if (check != null)
+                    {
+                        databaseConnection.Execute(String.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,username));
+                    }
+                }
+            }
+        }
+        public static void removeAllfromCanal(string canalName)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals", canalName));
+                if (result != null)
+                {
+                    databaseConnection.Execute(String.Format("DELETE FROM {0}", canalName));
+                }
+            }
+        }
+        public static void leaveCanal(string canalname,User user)
+        {
+            removefromCanal(canalname, user.Name);
+        }
+
+        public static string[] listuserCanal(string canalName)
+        {
+            using(IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                return databaseConnection.Query<string>(String.Format(
+                    @"
+                    SELECT *
+                    FROM {0}
+                    ",canalName)).ToArray();
+            }
+        }
+
+        
 
         static public string[] selectOpenCanals()
         {
