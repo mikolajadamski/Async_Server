@@ -40,11 +40,16 @@ namespace ServerLibrary
                 {
                     string text = StreamControl.readText(canalUsers[username], buffer);
                     if (text == "//leave") break;
-                    foreach(KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+                    else if (text == "/r/n")
+                        continue;
+                    else
                     {
-                        if (canalUser.Key != username && text.Length != 0)
+                        foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
                         {
-                            StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                            if (canalUser.Key != username && text.Length != 0)
+                            {
+                                StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                            }
                         }
                     }
 
