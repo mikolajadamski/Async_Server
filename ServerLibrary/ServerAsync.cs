@@ -101,6 +101,7 @@ namespace ServerLibrary
                         case "create":
                             
                             UserDataAccess.createCanal(command[1], userController.User);
+                            Canals.add(command[1]);
                             StreamControl.sendText("Utworzono kanał " + command[1] + "\r\n", buffer, stream);
                             break;
 

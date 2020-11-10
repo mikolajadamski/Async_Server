@@ -14,7 +14,7 @@ namespace ServerLibrary
         /// <summary>
         /// Canal zawiera listę par(nazwa użytkownika i wiadomość)
         /// </summary>
-        Dictionary<string, NetworkStream> canalUsers;
+        private Dictionary<string, NetworkStream> canalUsers;
         string name;
 
         public Canal (string canalName)
@@ -85,5 +85,17 @@ namespace ServerLibrary
         }
         public static UTF8Encoding encoder = new UTF8Encoding();
 
+        public static string add(string canalName)
+        {
+            try
+            {
+                canals.Add(canalName, new Canal(canalName));
+                return "okejka";
+            }
+            catch(ArgumentException)
+            {
+                return "Już istnieje";
+            }
+        }
     }
 }
