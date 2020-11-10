@@ -125,7 +125,9 @@ namespace ServerLibrary
                             break;
 
                         case "join":
+                            
                             UserDataAccess.joinCanal(command[1], userController.User);
+                            userController.joinCanal(command[1], stream);
                             break;
 
                         case "remove":
@@ -205,6 +207,7 @@ namespace ServerLibrary
             running = true;
             StartListening();
             AcceptClient();
+            Canals.canals.Add(new Canal("canal1"));
 
         }
 
