@@ -190,53 +190,61 @@ namespace ServerLibrary
         }
 
 
-        public static int freecolumn(){
-            while(true){
-                for(int i=0; i<10; i++){
-                if(sharedbuffer[i,0] == null){ return i;}
-
+        public static int freecolumn()
+        {
+            while(true)
+            {
+                for(int i=0; i<10; i++)
+                {
+                    if(sharedbuffer[i,0] == null){ return i;}
                 }
-    }
+            }
         }
 
 
         private static UTF8Encoding encoder = new UTF8Encoding();
-          public static void canalCommunication(User user, NetworkStream stream){ 
-         
-           byte[] buffer = new byte[1024];
-           string message = "";
-            while(true){
-            int message_size = 0;
-            stream.ReadTimeout = 300;
-                try{
-            message_size = stream.Read(buffer, 0, buffer.Length); //tu troche redundancja z StreamControl.sendText ale z korzystamy z 2 warotsci z tamtej funkcji a nie tylko ze stringa zwrotnego wiec nwm na razie pozno juz 
-            stream.ReadByte();
-            stream.ReadByte();
-             message = encoder.GetString(buffer, 0, message_size);
-            if(message == "//leave"){ stream.ReadTimeout = 3600000; break;}
-            int pom = freecolumn();
-            if(message_size != 0)
-            sharedbuffer[pom,0] =user.Name+ ": "+ message + "\r\n";
-            sharedbuffer[pom,1] = user.Name;
-            sharedbuffer[pom,2] = user.CurrentCanal; 
-  }
-             catch (IOException e){}
+        public static void canalCommunication(User user, NetworkStream stream)
+        {
+            byte[] buffer = new byte[1024];
+            string message = "";
+            while (true)
+            {
+                int message_size = 0;
+                stream.ReadTimeout = 300;
+                try
+                {
+                    message_size = stream.Read(buffer, 0, buffer.Length); //tu troche redundancja z StreamControl.sendText ale z korzystamy z 2 warotsci z tamtej funkcji a nie tylko ze stringa zwrotnego wiec nwm na razie pozno juz 
+                    stream.ReadByte();
+                    stream.ReadByte();
+                    message = encoder.GetString(buffer, 0, message_size);
+                    if (message == "//leave") { stream.ReadTimeout = 3600000; break; }
+                    int pom = freecolumn();
+                    if (message_size != 0)
+                        sharedbuffer[pom, 0] = user.Name + ": " + message + "\r\n";
+                    sharedbuffer[pom, 1] = user.Name;
+                    sharedbuffer[pom, 2] = user.CurrentCanal;
+                }
+                catch (IOException e) { }
 
-            for(int i=0; i<10; i++){
-            if(sharedbuffer[i,2] == user.CurrentCanal && sharedbuffer[i,1] != user.Name && sharedbuffer[i,0] != null){
-                    StreamControl.sendText(sharedbuffer[i,0], buffer, stream);
-                      try{
-                          message_size = stream.Read(buffer, 0, buffer.Length); }
-                       catch (IOException e) {}
-                          if(message_size != 0){
-                              stream.ReadByte();
-                             stream.ReadByte();}
-                        sharedbuffer[i,0] = null;
-                }                                                                                                   
-               }
-         }
-
-
+                for (int i = 0; i < 10; i++)
+                {
+                    if (sharedbuffer[i, 2] == user.CurrentCanal && sharedbuffer[i, 1] != user.Name && sharedbuffer[i, 0] != null)
+                    {
+                        StreamControl.sendText(sharedbuffer[i, 0], buffer, stream);
+                        try
+                        {
+                            message_size = stream.Read(buffer, 0, buffer.Length);
+                        }
+                        catch (IOException e) { }
+                        if (message_size != 0)
+                        {
+                            stream.ReadByte();
+                            stream.ReadByte();
+                        }
+                        sharedbuffer[i, 0] = null;
+                    }
+                }
+            }
         }
 
 
