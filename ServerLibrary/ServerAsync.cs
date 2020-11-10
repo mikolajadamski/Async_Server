@@ -124,10 +124,8 @@ namespace ServerLibrary
                             UserDataAccess.addtoCanal(command[1], command[2]);
                             break;
 
-                        case "join":
-                            
+                        case "join":                       
                             UserDataAccess.joinCanal(command[1], userController.User);
-                            userController.joinCanal(command[1], stream);
                             break;
 
                         case "remove":
@@ -152,7 +150,7 @@ namespace ServerLibrary
 
                         case "help":
                             StreamControl.sendText("POMOC\r\n", buffer, stream);
-                            StreamControl.sendText("Wpisz\r\n", buffer, Stream);
+                            StreamControl.sendText("Wpisz\r\n", buffer, stream);
                             StreamControl.sendText("\"changepassword\" aby zmienic haslo\r\n", buffer, stream);
                             StreamControl.sendText("\"create [nazwa kanalu]\" aby stworzyc kanal komunikacyjny\r\n", buffer, stream);
                             StreamControl.sendText("\"delete [nazwa kanalu]\" aby usunac kanal komunikacyjny\r\n", buffer, stream);
@@ -166,9 +164,10 @@ namespace ServerLibrary
                             break;
 
                         case "switchto":
-                            StreamControl.sendText(  UserDataAccess.changeCanal(command[1], userController.User), buffer, stream);
+                            StreamControl.sendText(UserDataAccess.changeCanal(command[1], userController.User), buffer, stream);
+                            Canals.addToCanal(command[1], userController.User.Name, stream);
                             if(userController.User.CurrentCanal != "MENU"){
-                            canalCommunication(userController.User, stream);
+                            Canals.canalCommunication(userController.User, stream);
                             StreamControl.sendText("Opuszczono kanal\n", buffer, stream);
                             userController.User.CurrentCanal = "MENU";}
                             break;
@@ -200,48 +199,6 @@ namespace ServerLibrary
                 }
     }
         }
-
-
-        private static UTF8Encoding encoder = new UTF8Encoding();
-          public static void canalCommunication(User user, NetworkStream stream){ 
-         
-           byte[] buffer = new byte[1024];
-           string message = "";
-            while(true){
-            int message_size = 0;
-            stream.ReadTimeout = 300;
-                try{
-            message_size = stream.Read(buffer, 0, buffer.Length); //tu troche redundancja z StreamControl.sendText ale z korzystamy z 2 warotsci z tamtej funkcji a nie tylko ze stringa zwrotnego wiec nwm na razie pozno juz 
-            stream.ReadByte();
-            stream.ReadByte();
-             message = encoder.GetString(buffer, 0, message_size);
-            if(message == "//leave"){ stream.ReadTimeout = 3600000; break;}
-            int pom = freecolumn();
-            if(message_size != 0)
-            sharedbuffer[pom,0] =user.Name+ ": "+ message + "\r\n";
-            sharedbuffer[pom,1] = user.Name;
-            sharedbuffer[pom,2] = user.CurrentCanal; 
-  }
-             catch (IOException e){}
-
-            for(int i=0; i<10; i++){
-            if(sharedbuffer[i,2] == user.CurrentCanal && sharedbuffer[i,1] != user.Name && sharedbuffer[i,0] != null){
-                    StreamControl.sendText(sharedbuffer[i,0], buffer, stream);
-                      try{
-                          message_size = stream.Read(buffer, 0, buffer.Length); }
-                       catch (IOException e) {}
-                          if(message_size != 0){
-                              stream.ReadByte();
-                             stream.ReadByte();}
-                        sharedbuffer[i,0] = null;
-                }                                                                                                   
-               }
-         }
-
-
-        }
-
-
         public User getUser(NetworkStream stream, byte [] buffer)
         {
             StreamControl.sendText("nazwa użytkownika(8-25 znaków):", buffer, stream);
@@ -266,9 +223,10 @@ namespace ServerLibrary
         public override void Start()
         {
             running = true;
+            Canals.initializeCanals();
             StartListening();
             AcceptClient();
-            Canals.canals.Add(new Canal("canal1"));
+            
 
         }
 

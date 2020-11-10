@@ -88,9 +88,9 @@ namespace ServerLibrary
             }
         }
 
-        public void joinCanal(string canalName, NetworkStream stream)
+        public void joinCanal(string canalName)
         {
-            Canals.addToCanal(canalName, user.Name, stream);
+            Canals.addToCanal(canalName, user.Name);
         }
 
 
