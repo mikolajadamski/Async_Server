@@ -11,11 +11,11 @@ namespace ServerLibrary
     {
         User user;
         bool isLogged;
-        string currentCanal;
+        
         public UserController()
         {
             isLogged = false;
-            currentCanal = "MENU";
+           
         }
         public bool IsLogged
         {
@@ -54,11 +54,8 @@ namespace ServerLibrary
                 if (value != null) user = value;
             }
         }
-        public string CurrentCanal
-        {
-            get => currentCanal;
-            set => currentCanal = value;
-        }
+
+
         public string deleteUser()
         {
             int result = UserDataAccess.deleteUser(user);
