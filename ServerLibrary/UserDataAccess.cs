@@ -171,6 +171,7 @@ namespace ServerLibrary
                 if (result != null)
                 {
                     var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+
                     if (check != null)
                     {
                         databaseConnection.Execute(String.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,username));

@@ -40,7 +40,7 @@ namespace ServerLibrary
         protected override void BeginDataTransmission(NetworkStream stream)
         {
             stream.ReadTimeout = 3600000;
-
+            
             byte[] buffer = new byte[bufferSize];
             string message;
             UserController userController = new UserController();

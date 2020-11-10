@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerLibrary
@@ -34,11 +35,12 @@ namespace ServerLibrary
         }
         public void stayInCanal(string username, byte[] buffer)
         {
+            string text = "";
             while (true)
             {
                 try
                 {
-                    string text = StreamControl.readText(canalUsers[username], buffer);
+                    text = StreamControl.readText(canalUsers[username], buffer);
                     if (text == "//leave") break;
                     else if (text == "/r/n")
                         continue;
@@ -49,10 +51,10 @@ namespace ServerLibrary
                             if (canalUser.Key != username && text.Length != 0)
                             {
                                 StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                                canalUser.Value.Flush();
                             }
                         }
                     }
-
                 }
                 catch (IOException){ }
 
@@ -72,6 +74,7 @@ namespace ServerLibrary
     public static class Canals
     {
         private static Dictionary<string, Canal> canals = new Dictionary<string, Canal>();
+        //public static Mutex mutex = new Mutex();
 
         public static void initializeCanals()
         {
