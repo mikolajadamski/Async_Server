@@ -10,6 +10,8 @@ namespace ServerLibrary
 {
     static class StreamControl
     {
+        
+
         private static UTF8Encoding encoder = new UTF8Encoding();
         public static void sendText(string str, byte[] buffer, NetworkStream stream)
         {
@@ -25,5 +27,9 @@ namespace ServerLibrary
             stream.ReadByte();
             return encoder.GetString(buffer, 0, message_size);
         }
+
+
+
+      
     }
 }
