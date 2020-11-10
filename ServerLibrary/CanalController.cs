@@ -16,15 +16,12 @@ namespace ServerLibrary
         /// </summary>
         Dictionary<string, NetworkStream> canalUsers;
         string name;
-        int userCount;
-        int maxUserCount;
 
         public Canal (string canalName)
         {
             name = canalName;
             canalUsers = new Dictionary<string, NetworkStream>();
-            userCount = 0;
-            maxUserCount = 10;
+
         }
         public string Name
         {
@@ -33,11 +30,7 @@ namespace ServerLibrary
         }
         public void addToCanal(string username, NetworkStream stream)
         {
-            if (userCount < maxUserCount)
-            {
                 canalUsers.Add(username, stream);
-                userCount++;
-            }
         }
         public void stayInCanal(string username, byte[] buffer)
         {
@@ -64,7 +57,6 @@ namespace ServerLibrary
         public void removeFromCanal(string username)
         {
             canalUsers.Remove(username);
-            userCount--;
         }
         public Dictionary<string, NetworkStream> CanalUsers
         {
