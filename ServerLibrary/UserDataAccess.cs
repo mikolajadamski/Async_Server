@@ -140,6 +140,28 @@ namespace ServerLibrary
             addtoCanal(canalName, user.Name);
         }
 
+
+        static public string changeCanal(string canalName, User user){
+            
+               using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
+                    var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+                   if (result != null) {
+                      var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
+                         if(check != null){
+                            user.CurrentCanal = canalName;
+                            return canalName + "\r\n Wpisz \"//leave\" by wrocic do menu glownego \r\n";
+
+                         }
+                         return "Uzytkownik nie ma dostepu do tego kanalu\r\n";
+                    }
+                   return "Kanal o takiej nazwie nie istnieje\r\n";
+               }
+
+        
+        }
+
+
+
         public static void removefromCanal(string canalName, string username)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -186,7 +208,7 @@ namespace ServerLibrary
 
         
 
-        static public string[] selectOpenCanals()
+        static public string[] selectOpenCanals() 
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {

@@ -11,12 +11,22 @@ namespace ServerLibrary
         private string name;
         private string password;
         private bool isLogged;
-        
+        string currentCanal;
+
         public User(string username, string password)
         {
             this.name = username;
             this.password = password;
+            currentCanal = "MENU";
         }
+
+        
+        public string CurrentCanal
+        {
+            get => currentCanal;
+            set => currentCanal = value;
+        }
+
         public string Name
         {
             get => name;
