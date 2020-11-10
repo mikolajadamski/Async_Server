@@ -150,7 +150,7 @@ namespace ServerLibrary
 
                         case "help":
                             StreamControl.sendText("POMOC\r\n", buffer, stream);
-                            StreamControl.sendText("Wpisz\r\n", buffer, Stream);
+                            StreamControl.sendText("Wpisz\r\n", buffer, stream);
                             StreamControl.sendText("\"changepassword\" aby zmienic haslo\r\n", buffer, stream);
                             StreamControl.sendText("\"create [nazwa kanalu]\" aby stworzyc kanal komunikacyjny\r\n", buffer, stream);
                             StreamControl.sendText("\"delete [nazwa kanalu]\" aby usunac kanal komunikacyjny\r\n", buffer, stream);
