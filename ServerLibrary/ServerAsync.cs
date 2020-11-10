@@ -13,7 +13,6 @@ namespace ServerLibrary
 
     public class ServerAsync : Server
     {
-        public static string[,] sharedbuffer = new string [10,3];
         public delegate void TransmissionDataDelegate(NetworkStream stream);
         public ServerAsync(IPAddress IP, int port) : base(IP, port)
         {
@@ -165,9 +164,8 @@ namespace ServerLibrary
 
                         case "switchto":
                             StreamControl.sendText(UserDataAccess.changeCanal(command[1], userController.User), buffer, stream);
-                            Canals.addToCanal(command[1], userController.User.Name, stream);
                             if(userController.User.CurrentCanal != "MENU"){
-                            Canals.canalCommunication(userController.User, stream);
+                                Canals.joinCanal(command[1], userController.User.Name, stream, buffer);
                             StreamControl.sendText("Opuszczono kanal\n", buffer, stream);
                             userController.User.CurrentCanal = "MENU";}
                             break;
@@ -188,16 +186,6 @@ namespace ServerLibrary
                     break;
                 }
             }
-        }
-
-
-        public static int freecolumn(){
-            while(true){
-                for(int i=0; i<10; i++){
-                if(sharedbuffer[i,0] == null){ return i;}
-
-                }
-    }
         }
         public User getUser(NetworkStream stream, byte [] buffer)
         {

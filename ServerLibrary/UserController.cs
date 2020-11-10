@@ -87,13 +87,6 @@ namespace ServerLibrary
                 return "Pomyślnie zmieniono hasło\r\n";
             }
         }
-
-        public void joinCanal(string canalName)
-        {
-            Canals.addToCanal(canalName, user.Name);
-        }
-
-
     }
     
 }

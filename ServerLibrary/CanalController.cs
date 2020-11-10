@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,13 +11,20 @@ namespace ServerLibrary
 {
     public class Canal
     {
+        /// <summary>
+        /// Canal zawiera listę par(nazwa użytkownika i wiadomość)
+        /// </summary>
         Dictionary<string, NetworkStream> canalUsers;
         string name;
+        int userCount;
+        int maxUserCount;
 
         public Canal (string canalName)
         {
             name = canalName;
             canalUsers = new Dictionary<string, NetworkStream>();
+            userCount = 0;
+            maxUserCount = 10;
         }
         public string Name
         {
@@ -25,15 +33,38 @@ namespace ServerLibrary
         }
         public void addToCanal(string username, NetworkStream stream)
         {
-            canalUsers.Add(username, stream);
+            if (userCount < maxUserCount)
+            {
+                canalUsers.Add(username, stream);
+                userCount++;
+            }
         }
-        public void sendToUsers(string username, string message)
+        public void stayInCanal(string username, byte[] buffer)
         {
+            while (true)
+            {
+                try
+                {
+                    string text = StreamControl.readText(canalUsers[username], buffer);
+                    if (text == "//leave") break;
+                    foreach(KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+                    {
+                        if (canalUser.Key != username && text.Length != 0)
+                        {
+                            StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                        }
+                    }
+
+                }
+                catch (IOException){ }
+
+            }
 
         }
         public void removeFromCanal(string username)
         {
             canalUsers.Remove(username);
+            userCount--;
         }
         public Dictionary<string, NetworkStream> CanalUsers
         {
@@ -54,59 +85,13 @@ namespace ServerLibrary
             }
 
         }
-
-        public static void addToCanal(string canalName, string username, NetworkStream stream)
+        public static void joinCanal(string canalName, string username, NetworkStream stream, byte[] buffer)
         {
             canals[canalName].addToCanal(username, stream);
-        }
-
-        public static void removeFromCanal(string canalName, string username)
-        {
+            canals[canalName].stayInCanal(username, buffer);
             canals[canalName].removeFromCanal(username);
         }
-        private static UTF8Encoding encoder = new UTF8Encoding();
-        public static void canalCommunication(User user, NetworkStream stream)
-        {
-            string message = "";
-            byte[] buffer = new byte[1024];
-            while (true)
-            {
-                int message_size = 0;
-                stream.ReadTimeout = 300;
-                try
-                {
-                    message_size = stream.Read(buffer, 0, buffer.Length);
-                    stream.ReadByte();
-                    stream.ReadByte();
-                    message = encoder.GetString(buffer, 0, message_size);
-                    if (message == "//leave") { stream.ReadTimeout = 3600000; break; }
-                    if (message_size != 0)
-                        canals[user.CurrentCanal].setMessage(user.Name, message);
-                }
-                catch (IOException e) { }
-
-                foreach (KeyValuePair<string, string> canalUser in canals[user.CurrentCanal].CanalUsers)
-                {
-                    if (canalUser.Key != user.Name && canalUser.Value != null)
-                    {
-                        StreamControl.sendText(canalUser.Value, buffer, stream);
-                        try
-                        {
-                            message_size = stream.Read(buffer, 0, buffer.Length);
-                        }
-                        catch (IOException e) { }
-                        if (message_size != 0)
-                        {
-                            stream.ReadByte();
-                            stream.ReadByte();
-                        }
-                        canals[user.CurrentCanal].setMessage(canalUser.Key, null);
-                    }
-                }
-            }
-
-
-        }
+        public static UTF8Encoding encoder = new UTF8Encoding();
 
     }
 }
