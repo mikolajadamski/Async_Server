@@ -159,7 +159,7 @@ namespace ServerLibrary
                             StreamControl.sendText("\"join [nazwa kanalu]\" aby dolaczyc do kanalu komunikacyjnego\r\n", buffer, stream);
                             StreamControl.sendText("\"switchto [nazwa kanalu]\" aby dolaczyc do rozmowy na danym kanale komunikacyjnym\r\n", buffer, stream);
                             StreamControl.sendText("\"remove [nazwa kanalu] [nazwa uzytkownika]\" aby usunac uzytkownika z kanalu komunikacyjnego\r\n", buffer, stream);
-                            StreamControl.sendText("\"removeall\" aby usunac wszystkich uzytkownikow z kanalu komunikacyjnego\r\n", buffer, stream);
+                            StreamControl.sendText("\"removeall [nazwa kanalu]\" aby usunac wszystkich uzytkownikow z kanalu komunikacyjnego\r\n", buffer, stream);
                             StreamControl.sendText("\"exit\" aby sie wylogowac\r\n", buffer, stream);
                             break;
 
@@ -276,9 +276,6 @@ namespace ServerLibrary
             AcceptClient();
 
         }
-
-
-
     }
 
 }
