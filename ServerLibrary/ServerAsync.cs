@@ -219,6 +219,7 @@ namespace ServerLibrary
         public override void Start()
         {
             running = true;
+            DataAccess.initTables();
             CanalsController.initializeCanals();
             StartListening();
             AcceptClient();

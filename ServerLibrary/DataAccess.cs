@@ -95,11 +95,11 @@ namespace ServerLibrary
                 if (result == null)
                 {
                     string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
-                    string insertAdminOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
-                    string insertCanalNameIntoTableOperation = string.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
-                    int insertCanalResult = databaseConnection.Execute(@insertCanalNameIntoTableOperation);
+                    string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                    string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
+                    int insertCanalResult = databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
                     int createCanalResult = databaseConnection.Execute(@createCanalTableOperation);
-                    int insertAdminResult = databaseConnection.Execute(@insertAdminOperation, user);
+                    int insertAdminResult = databaseConnection.Execute(insertAdminIntoCanalOperation, user);
                     createCanalMutex.ReleaseMutex();
                     return createCanalResult;
                 }
@@ -226,6 +226,21 @@ namespace ServerLibrary
                     SELECT * 
                     FROM canals
                     ").ToArray();
+            }
+        }
+
+        static public void initTables()
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                string createUsersTableOperation = @"CREATE TABLE IF NOT EXISTS users (
+                                                    username VARCHAR (25) PRIMARY KEY UNIQUE NOT NULL, 
+                                                    password VARCHAR (25) NOT NULL)";
+                string createCanalsTableOperation = @"CREATE TABLE IF NOT EXISTS canals (
+                                                    name VARCHAR(25) NOT NULL UNIQUE,
+                                                    PRIMARY KEY(name))";
+                databaseConnection.Execute(createUsersTableOperation);
+                databaseConnection.Execute(createCanalsTableOperation);
             }
         }
         static private string LoadConnectionString(string id = "Default")
