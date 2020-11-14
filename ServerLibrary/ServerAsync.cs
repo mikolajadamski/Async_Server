@@ -195,6 +195,7 @@ namespace ServerLibrary
                 }
             }
         }
+
         public User getUser(NetworkStream stream, byte [] buffer)
         {
             StreamControl.sendText("nazwa użytkownika(8-25 znaków):", buffer, stream);
