@@ -30,7 +30,7 @@ namespace ServerLibrary
         }
         public static UTF8Encoding encoder = new UTF8Encoding();
 
-        public static string add(string canalName)
+        public static string addCanal(string canalName)
         {
             try
             {

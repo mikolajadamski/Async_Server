@@ -100,9 +100,16 @@ namespace ServerLibrary
 
                         case "create":
                             
-                            DataAccess.createCanal(command[1], userController.User);
-                            CanalsController.add(command[1]);
-                            StreamControl.sendText("Utworzono kanał " + command[1] + "\r\n", buffer, stream);
+                            int result = DataAccess.createCanal(command[1], userController.User);
+                            if (result == 1)
+                            {
+                                CanalsController.addCanal(command[1]);
+                                StreamControl.sendText("Utworzono kanał " + command[1] + "\r\n", buffer, stream);
+                            }
+                            else
+                            {
+                                StreamControl.sendText("Nie można utworzyć kanału \r\n", buffer, stream);
+                            }
                             break;
 
                         case "unregister":
