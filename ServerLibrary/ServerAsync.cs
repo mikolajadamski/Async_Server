@@ -100,8 +100,8 @@ namespace ServerLibrary
 
                         case "create":
                             
-                            UserDataAccess.createCanal(command[1], userController.User);
-                            Canals.add(command[1]);
+                            DataAccess.createCanal(command[1], userController.User);
+                            CanalsController.add(command[1]);
                             StreamControl.sendText("Utworzono kanał " + command[1] + "\r\n", buffer, stream);
                             break;
 
@@ -112,36 +112,36 @@ namespace ServerLibrary
                             break;
 
                         case "delete":
-                            UserDataAccess.deleteCanal(command[1], userController.User);
+                            DataAccess.deleteCanal(command[1], userController.User);
                             StreamControl.sendText("Usunięto kanał " + command[1] + "\r\n", buffer, stream);
                             break;
 
                         case "list":
-                            StreamControl.sendText(string.Join("\r\n", UserDataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
+                            StreamControl.sendText(string.Join("\r\n", DataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
                             break;
 
                         case "add":
-                            UserDataAccess.addtoCanal(command[1], command[2]);
+                            DataAccess.addtoCanal(command[1], command[2]);
                             break;
 
                         case "join":                       
-                            UserDataAccess.joinCanal(command[1], userController.User);
+                            DataAccess.joinCanal(command[1], userController.User);
                             break;
 
                         case "remove":
-                            UserDataAccess.removefromCanal(command[1], command[2]);
+                            DataAccess.removefromCanal(command[1], command[2]);
                             break;
 
                         case "removeall":
-                            UserDataAccess.removeAllfromCanal(command[1]);
+                            DataAccess.removeAllfromCanal(command[1]);
                             break;
 
                         case "leave":
-                            UserDataAccess.leaveCanal(command[1], userController.User);
+                            DataAccess.leaveCanal(command[1], userController.User);
                             break;
 
                         case "listofusers":
-                            StreamControl.sendText(string.Join("\r\n", UserDataAccess.listuserCanal(command[1])) + "\r\n", buffer, stream);
+                            StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(command[1])) + "\r\n", buffer, stream);
                             break;
                         
                         case "exit":
@@ -164,9 +164,9 @@ namespace ServerLibrary
                             break;
 
                         case "switchto":
-                            StreamControl.sendText(UserDataAccess.changeCanal(command[1], userController.User), buffer, stream);
+                            StreamControl.sendText(DataAccess.changeCanal(command[1], userController.User), buffer, stream);
                             if(userController.User.CurrentCanal != "MENU"){
-                                Canals.joinCanal(command[1], userController.User.Name, stream, buffer);
+                                CanalsController.joinCanal(command[1], userController.User.Name, stream, buffer);
                             StreamControl.sendText("Opuszczono kanal\n", buffer, stream);
                             userController.User.CurrentCanal = "MENU";}
                             break;
@@ -212,7 +212,7 @@ namespace ServerLibrary
         public override void Start()
         {
             running = true;
-            Canals.initializeCanals();
+            CanalsController.initializeCanals();
             StartListening();
             AcceptClient();
             

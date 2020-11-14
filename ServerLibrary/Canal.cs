@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Threading;
+using System.IO;
 
 namespace ServerLibrary
 {
@@ -15,13 +14,14 @@ namespace ServerLibrary
         string name;
         Dictionary<string, NetworkStream> canalUsers;
         Mutex mutex;
-        public Canal (string canalName)
+        public Canal(string canalName)
         {
             name = canalName;
             canalUsers = new Dictionary<string, NetworkStream>();
             mutex = new Mutex();
         }
         public string Name { get; set; }
+        public Dictionary<string, NetworkStream> CanalUsers { get; }
         public void addToCanal(string username, NetworkStream stream)
         {
             mutex.WaitOne();
@@ -53,7 +53,7 @@ namespace ServerLibrary
                         mutex.ReleaseMutex();
                     }
                 }
-                catch (IOException){ }
+                catch (IOException) { }
 
             }
 
@@ -64,41 +64,6 @@ namespace ServerLibrary
             canalUsers.Remove(username);
             mutex.ReleaseMutex();
         }
-        public Dictionary<string, NetworkStream> CanalUsers { get; }
 
-    }
-    public static class Canals
-    {
-        private static Dictionary<string, Canal> canals = new Dictionary<string, Canal>();
-
-        public static void initializeCanals()
-        {
-            string [] canalNames = UserDataAccess.selectOpenCanals();
-            foreach(string canalName in canalNames)
-            {
-                canals.Add(canalName, new Canal(canalName));
-            }
-
-        }
-        public static void joinCanal(string canalName, string username, NetworkStream stream, byte[] buffer)
-        {
-            canals[canalName].addToCanal(username, stream);
-            canals[canalName].stayInCanal(username, buffer);
-            canals[canalName].removeFromCanal(username);
-        }
-        public static UTF8Encoding encoder = new UTF8Encoding();
-
-        public static string add(string canalName)
-        {
-            try
-            {
-                canals.Add(canalName, new Canal(canalName));
-                return "okejka";
-            }
-            catch(ArgumentException)
-            {
-                return "Już istnieje";
-            }
-        }
     }
 }

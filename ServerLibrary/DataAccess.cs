@@ -6,17 +6,20 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerLibrary
 {
-    static public class UserDataAccess
+    static public class DataAccess
     {
-
+        private static Mutex addUserMutex = new Mutex();
+        private static Mutex createCanalMutex = new Mutex();
         static public int insertUser(User user)
         {
             try
             {
+                addUserMutex.WaitOne();
                 using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
                 {
                     int result = databaseConnection.Execute(
@@ -24,11 +27,13 @@ namespace ServerLibrary
                     INSERT INTO users (username, password)
                     VALUES (@name, @password)"
                         , user);
+                    addUserMutex.ReleaseMutex();
                     return result;
                 }
             }
             catch (System.Data.SQLite.SQLiteException)
             {
+                addUserMutex.ReleaseMutex();
                 return 0;
             }
 
@@ -80,22 +85,25 @@ namespace ServerLibrary
 
         static public int createCanal(string canalName, User user) {
 
+            createCanalMutex.WaitOne();
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
 
-                string pom4 = String.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
+                string pom4 = string.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
                 var result = databaseConnection.QuerySingleOrDefault(@pom4);
 
 
                 if (result == null)
                 {
-                    string pom = String.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
-                    string pom2 = String.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
-                    string pom3 = String.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
-                    int result1 = databaseConnection.Execute(@pom3);
-                    int result2 = databaseConnection.Execute(@pom);
-                    int result3 = databaseConnection.Execute(@pom2, user);
-                    return result2;
+                    string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
+                    string insertAdminOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                    string insertCanalNameIntoTableOperation = string.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
+                    int insertCanalResult = databaseConnection.Execute(@insertCanalNameIntoTableOperation);
+                    int createCanalResult = databaseConnection.Execute(@createCanalTableOperation);
+                    int insertAdminResult = databaseConnection.Execute(@insertAdminOperation, user);
+                    createCanalMutex.ReleaseMutex();
+                    return createCanalResult;
                 }
+                createCanalMutex.ReleaseMutex();
                 return 0;
             }
 
@@ -104,7 +112,7 @@ namespace ServerLibrary
         static public void deleteCanal(string canalName, User user) {
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
-                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
 
                 if (result != null) {
                     string command = String.Format("SELECT * FROM {0} WHERE username = @name", canalName);
@@ -112,8 +120,8 @@ namespace ServerLibrary
 
                     if (result2 != null) {
                         if (result2.administrator) {
-                            databaseConnection.Execute(String.Format("DROP TABLE {0}", canalName));
-                            databaseConnection.Execute(String.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
+                            databaseConnection.Execute(string.Format("DROP TABLE {0}", canalName));
+                            databaseConnection.Execute(string.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
                         }
                     }
                 }
@@ -125,12 +133,12 @@ namespace ServerLibrary
         public static void addtoCanal(string canalName, string username) {
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
-                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
 
                 if (result != null) {
-                    var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                    var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
                     if (check == null) {
-                        databaseConnection.Execute(String.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
+                        databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
                     }
                 }
             }
@@ -144,9 +152,9 @@ namespace ServerLibrary
         static public string changeCanal(string canalName, User user){
             
                using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
-                    var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+                    var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
                    if (result != null) {
-                      var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
+                      var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
                          if(check != null){
                             user.CurrentCanal = canalName;
                             return canalName + "\r\n Wpisz \"//leave\" by wrocic do menu glownego \r\n";
@@ -166,15 +174,15 @@ namespace ServerLibrary
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
 
                 if (result != null)
                 {
-                    var check = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                    var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
 
                     if (check != null)
                     {
-                        databaseConnection.Execute(String.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,username));
+                        databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,username));
                     }
                 }
             }
@@ -183,10 +191,10 @@ namespace ServerLibrary
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                var result = databaseConnection.QuerySingleOrDefault(String.Format("SELECT * FROM canals", canalName));
+                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals", canalName));
                 if (result != null)
                 {
-                    databaseConnection.Execute(String.Format("DELETE FROM {0}", canalName));
+                    databaseConnection.Execute(string.Format("DELETE FROM {0}", canalName));
                 }
             }
         }

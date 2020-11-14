@@ -25,7 +25,7 @@ namespace ServerLibrary
         public string login()
         {
 
-            if (UserDataAccess.selectUser(user) == User.Name)
+            if (DataAccess.selectUser(user) == User.Name)
             {
                 isLogged = true;
                 return "Zalogowano.\r\n";
@@ -37,7 +37,7 @@ namespace ServerLibrary
         }
         public string register()
         {
-            if (UserDataAccess.insertUser(user) == 0)
+            if (DataAccess.insertUser(user) == 0)
             {
                 return "Nazwa użytkownika już zajęta!\r\n";
             }
@@ -58,7 +58,7 @@ namespace ServerLibrary
 
         public string deleteUser()
         {
-            int result = UserDataAccess.deleteUser(user);
+            int result = DataAccess.deleteUser(user);
             if (result == 1)
             {
                 return "Pomyślnie usunięto użytkownika (5 sekund do zamknięcia).\r\n";
@@ -78,7 +78,7 @@ namespace ServerLibrary
         public string changePassword(string newpassword)
         {
             user.setPassword(newpassword);
-            if (UserDataAccess.changeUserPassword(user) == 0)
+            if (DataAccess.changeUserPassword(user) == 0)
             {
                 return "error";
             }
