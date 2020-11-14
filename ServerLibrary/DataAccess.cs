@@ -88,20 +88,30 @@ namespace ServerLibrary
             createCanalMutex.WaitOne();
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
 
-                string pom4 = string.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
-                var result = databaseConnection.QuerySingleOrDefault(@pom4);
-
-
-                if (result == null)
+                try
                 {
-                    string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
-                    string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
-                    string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
-                    int insertCanalResult = databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
-                    int createCanalResult = databaseConnection.Execute(@createCanalTableOperation);
-                    int insertAdminResult = databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                    string pom4 = string.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
+                    var result = databaseConnection.QuerySingleOrDefault(@pom4);
+
+
+                    if (result == null)
+                    {
+                    
+                            string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
+                            string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
+                            databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
+                            databaseConnection.Execute(@createCanalTableOperation);
+                            databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                            createCanalMutex.ReleaseMutex();
+                            return 1;
+                    }
+                   
+                }
+                catch (SQLiteException)
+                {
                     createCanalMutex.ReleaseMutex();
-                    return createCanalResult;
+                    return 0;
                 }
                 createCanalMutex.ReleaseMutex();
                 return 0;
