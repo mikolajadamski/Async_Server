@@ -219,11 +219,16 @@ namespace ServerLibrary
                 if (result != null)
                 {
                     var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
-
+                   
+                     var admincheck = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, user.Name));
+                    
                     if (check != null)
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,user.Name));
                     }
+
+                 
+
                 }
             }
         }
@@ -239,8 +244,7 @@ namespace ServerLibrary
                     var admincheck =  databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, user.Name));
                     if (check != null && admincheck != null)
                     {
-                         databaseConnection.Execute(string.Format("UPDATE {0} sET administrator = 1 WHERE username = \"{1}\"",canalName,username));
-    
+                         databaseConnection.Execute(string.Format("UPDATE {0} SET administrator = 1 WHERE username = \"{1}\"",canalName,username));
                     }
                  }
 
