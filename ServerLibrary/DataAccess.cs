@@ -15,6 +15,7 @@ namespace ServerLibrary
     {
         private static Mutex addUserMutex = new Mutex();
         private static Mutex createCanalMutex = new Mutex();
+        private static Mutex loginUserMutex = new Mutex();
         static public int insertUser(User user)
         {
             try
@@ -24,8 +25,8 @@ namespace ServerLibrary
                 {
                     int result = databaseConnection.Execute(
                         @"
-                    INSERT INTO users (username, password)
-                    VALUES (@name, @password)"
+                    INSERT INTO users (username, password, islogged)
+                    VALUES (@name, @password, 0)"
                         , user);
                     addUserMutex.ReleaseMutex();
                     return result;
@@ -53,6 +54,7 @@ namespace ServerLibrary
         }
         static public string selectUser(User user)
         {
+            loginUserMutex.WaitOne();
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
                 var result = databaseConnection.QuerySingleOrDefault(
@@ -61,12 +63,32 @@ namespace ServerLibrary
                         WHERE username = @name
                         AND password = @password
                     ", user);
-                string name = null;
+
                 if (result != null)
                 {
-                    name = result.username;
+                    if(result.islogged)
+                    {
+                        loginUserMutex.ReleaseMutex();
+                        return "Ktoś już jest zalogowany na tym koncie.\r\n";
+                    }
+                    else
+                    {
+                        databaseConnection.QuerySingleOrDefault(
+                            @"
+                            UPDATE users
+                            SET islogged = 1
+                            WHERE username = @name
+                            AND password = @password", user);
+                        loginUserMutex.ReleaseMutex();
+                        return result.username;
+                    }
                 }
-                return name;
+                else
+                {
+                    loginUserMutex.ReleaseMutex();
+                    return "Nie ma takiego użytkownika.\r\n";
+                }
+                
             }
         }
         static public int changeUserPassword(User user)
@@ -81,6 +103,18 @@ namespace ServerLibrary
                  ", user);
                 return result;
             };
+        }
+        static public void logOutUser(User user)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                databaseConnection.QuerySingleOrDefault(
+                    @"
+                    UPDATE users
+                    SET islogged = 0
+                    WHERE username = @name
+                    AND password = @password", user);
+            }
         }
 
         static public int createCanal(string canalName, User user) {
@@ -245,7 +279,8 @@ namespace ServerLibrary
             {
                 string createUsersTableOperation = @"CREATE TABLE IF NOT EXISTS users (
                                                     username VARCHAR (25) PRIMARY KEY UNIQUE NOT NULL, 
-                                                    password VARCHAR (25) NOT NULL)";
+                                                    password VARCHAR (25) NOT NULL,
+                                                    islogged BOOL DEFAULT 0)";
                 string createCanalsTableOperation = @"CREATE TABLE IF NOT EXISTS canals (
                                                     name VARCHAR(25) NOT NULL UNIQUE,
                                                     PRIMARY KEY(name))";
