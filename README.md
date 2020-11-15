@@ -18,4 +18,4 @@ Po zalogowaniu można sprawdzić dostępne komendy za pomocą komendy "help".
 8. Podobnie jak w pierwszym przypadku, utwórz konto i się zaloguj.
 9. Dołącz do listy użytkowników za pomocą komendy "join [nazwa_kanału]". (Możesz wylistować dostępne kanały za pomocą komendy "list").
 10. Wejdź na kanał do którego dołączyłeś/aś a pomocą komendy "switchto [nazwa_kanału]".
-11. Teraz obaj są na kanale i mogą się ze sobą komunikować.
+11. Teraz obaj klienci są na kanale i mogą się ze sobą komunikować.
