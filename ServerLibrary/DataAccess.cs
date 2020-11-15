@@ -228,6 +228,26 @@ namespace ServerLibrary
             }
         }
 
+        public static void makeAdmin (string canalName, string username, User user){
+                
+             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) 
+             {
+                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+                 if (result != null)
+                 {
+                    var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                    var admincheck =  databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, user.Name));
+                    if (check != null && admincheck != null)
+                    {
+                         databaseConnection.Execute(string.Format("UPDATE {0} sET administrator = 1 WHERE username = \"{1}\"",canalName,username));
+    
+                    }
+                 }
+
+             }
+        
+        }
+
         public static string[] listuserCanal(string canalName)
         {
             using(IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))

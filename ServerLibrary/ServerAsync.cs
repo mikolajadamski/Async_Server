@@ -155,6 +155,10 @@ namespace ServerLibrary
                             userController.IsLogged = false;
                             break;
 
+                        case "mkadmin":
+                            DataAccess.makeAdmin(command[1], command[2], userController.User);
+                            break;
+
                         case "help":
                             StreamControl.sendText("POMOC\r\n", buffer, stream);
                             StreamControl.sendText("Wpisz\r\n", buffer, stream);
