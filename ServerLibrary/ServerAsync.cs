@@ -136,7 +136,7 @@ namespace ServerLibrary
                             break;
 
                         case "remove":
-                            DataAccess.removefromCanal(command[1], command[2]);
+                            DataAccess.removefromCanal(command[1], command[2], userController.User);
                             break;
 
                         case "removeall":
@@ -155,6 +155,10 @@ namespace ServerLibrary
                             userController.IsLogged = false;
                             break;
 
+                        case "mkadmin":
+                            DataAccess.makeAdmin(command[1], command[2], userController.User);
+                            break;
+
                         case "help":
                             StreamControl.sendText("POMOC\r\n", buffer, stream);
                             StreamControl.sendText("Wpisz\r\n", buffer, stream);
@@ -168,6 +172,9 @@ namespace ServerLibrary
                             StreamControl.sendText("\"remove [nazwa kanalu] [nazwa uzytkownika]\" aby usunac uzytkownika z kanalu komunikacyjnego\r\n", buffer, stream);
                             StreamControl.sendText("\"removeall\" aby usunac wszystkich uzytkownikow z kanalu komunikacyjnego\r\n", buffer, stream);
                             StreamControl.sendText("\"exit\" aby sie wylogowac\r\n", buffer, stream);
+                            StreamControl.sendText("\"leave\" aby zrezygnować z bycia czlonkiem kanalu\r\n", buffer, stream);
+                            StreamControl.sendText("\"list\" aby uzyskac liste wszystkich dostepnych na serwerze kanalow\r\n", buffer, stream);
+                            StreamControl.sendText("\"listofusers [nazwa kanalu]\" aby uzyskac liste wszystkich czlonkow kanalu\r\n", buffer, stream);
                             break;
 
                         case "switchto":
