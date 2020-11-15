@@ -136,7 +136,7 @@ namespace ServerLibrary
                             break;
 
                         case "remove":
-                            DataAccess.removefromCanal(command[1], command[2]);
+                            DataAccess.removefromCanal(command[1], command[2], userController.User);
                             break;
 
                         case "removeall":
