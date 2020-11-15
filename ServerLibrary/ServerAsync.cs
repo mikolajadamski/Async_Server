@@ -168,6 +168,9 @@ namespace ServerLibrary
                             StreamControl.sendText("\"remove [nazwa kanalu] [nazwa uzytkownika]\" aby usunac uzytkownika z kanalu komunikacyjnego\r\n", buffer, stream);
                             StreamControl.sendText("\"removeall\" aby usunac wszystkich uzytkownikow z kanalu komunikacyjnego\r\n", buffer, stream);
                             StreamControl.sendText("\"exit\" aby sie wylogowac\r\n", buffer, stream);
+                            StreamControl.sendText("\"leave\" aby zrezygnować z bycia czlonkiem kanalu\r\n", buffer, stream);
+                            StreamControl.sendText("\"list\" aby uzyskac liste wszystkich dostepnych na serwerze kanalow\r\n", buffer, stream);
+                            StreamControl.sendText("\"listofusers [nazwa kanalu]\" aby uzyskac liste wszystkich czlonkow kanalu\r\n", buffer, stream);
                             break;
 
                         case "switchto":
