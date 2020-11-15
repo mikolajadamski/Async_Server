@@ -220,14 +220,13 @@ namespace ServerLibrary
                 {
                     var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
                    
-                     var admincheck = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, user.Name));
+                   
                     
                     if (check != null)
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,user.Name));
                     }
 
-                 
 
                 }
             }
