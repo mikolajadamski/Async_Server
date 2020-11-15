@@ -193,7 +193,9 @@ namespace ServerLibrary
                     // e.Message;
                     break;
                 }
+
             }
+            userController.IsLogged = false;
         }
 
         public User getUser(NetworkStream stream, byte [] buffer)
