@@ -119,8 +119,7 @@ namespace ServerLibrary
                             break;
 
                         case "delete":
-                            DataAccess.deleteCanal(command[1], userController.User);
-                            StreamControl.sendText("Usunięto kanał " + command[1] + "\r\n", buffer, stream);
+                            StreamControl.sendText(DataAccess.deleteCanal(command[1], userController.User), buffer, stream);
                             break;
 
                         case "list":
