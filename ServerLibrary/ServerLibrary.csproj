@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="Canal.cs" />
     <Compile Include="CanalsController.cs" />
+    <Compile Include="CommunicationProtocol.cs" />
     <Compile Include="ServerAsync.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
