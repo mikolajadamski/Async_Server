@@ -40,41 +40,16 @@ namespace ServerLibrary
         protected override void BeginDataTransmission(NetworkStream stream)
         {
             stream.ReadTimeout = 3600000;
-            
             byte[] buffer = new byte[bufferSize];
-            string message;
             UserController userController = new UserController();
             while (!userController.IsLogged)
             {
                 try
                 {
-                    StreamControl.sendText("Wpisz register lub login:", buffer, stream);
-                    message = StreamControl.readText(stream, buffer);
-                    if (message == "login" || message == "register")
-                    {
-                        userController.User = getUser(stream, buffer);
-                        if (userController.User == null) continue;
-                        if(message == "login")
-                        {
-                            StreamControl.sendText(userController.login(), buffer, stream);
-                        }
-                        else
-                        {
-                            StreamControl.sendText(userController.register(), buffer, stream);
-                        }
-                    }
-                    else if (message == "exit")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        StreamControl.sendText("Nieprawidłowa operacja\r\n", buffer, stream);
-                    }
+                    if (CommunicationProtocol.LogIn(stream, buffer, userController) == -1) break;
                 }
                 catch (IOException e)
                 {
-                    // e.Message;
                     break;
                 }
             }
@@ -82,11 +57,8 @@ namespace ServerLibrary
             {
                 try
                 {
-                    StreamControl.sendText(userController.User.CurrentCanal+"\r\n", buffer, stream);
-                    StreamControl.sendText("Wpisz \"help\" aby uzyskac pomoc\r\n", buffer, stream);
-                    string[] command = StreamControl.readText(stream, buffer).Split();
-                    CommunicationProtocol.executeCmd(stream, buffer, userController, command);
-                 
+                    CommunicationProtocol.CommandExecution(stream, buffer, userController);
+            
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -94,7 +66,6 @@ namespace ServerLibrary
                 }
                 catch (IOException e)
                 {
-                    // e.Message;
                     break;
                 }
             }

@@ -11,7 +11,45 @@ namespace ServerLibrary
      public class CommunicationProtocol
     {
 
-       static  public void executeCmd(NetworkStream stream, byte[] buffer, UserController userController, string[] cmd)
+      static public void CommandExecution(NetworkStream stream, byte[] buffer, UserController userController)
+       {
+            StreamControl.sendText(userController.User.CurrentCanal + "\r\n", buffer, stream);
+            StreamControl.sendText("Wpisz \"help\" aby uzyskac pomoc\r\n", buffer, stream);
+            string[] command = StreamControl.readText(stream, buffer).Split();
+            CommunicationProtocol.execute(stream, buffer, userController, command);
+        }
+
+
+        static public int LogIn(NetworkStream stream, byte[] buffer, UserController userController)
+        {
+            string message;
+            StreamControl.sendText("Wpisz register lub login:", buffer, stream);
+            message = StreamControl.readText(stream, buffer);
+            if (message == "login" || message == "register")
+            {
+                userController.User = getUser(stream, buffer);
+                if (userController.User == null) return 0 ;
+                if (message == "login")
+                {
+                    StreamControl.sendText(userController.login(), buffer, stream);
+                }
+                else
+                {
+                    StreamControl.sendText(userController.register(), buffer, stream);
+                }
+            }
+            else if (message == "exit")
+            {
+                return -1;
+            }
+            else
+            {
+                StreamControl.sendText("Nieprawidłowa operacja\r\n", buffer, stream);
+            }
+            return 0;
+        }
+
+       static private void execute(NetworkStream stream, byte[] buffer, UserController userController, string[] cmd)
         {
                 switch (cmd[0].ToLower())
                 {
@@ -114,6 +152,26 @@ namespace ServerLibrary
                 userController.User.CurrentCanal = "MENU";
             }
         }
+
+        public static User getUser(NetworkStream stream, byte[] buffer)
+        {
+            StreamControl.sendText("nazwa użytkownika(8-25 znaków):", buffer, stream);
+            string username = StreamControl.readText(stream, buffer);
+            if (username.Length < 8 || username.Length > 25)
+            {
+                StreamControl.sendText("Nieprawidłowa długość nazwy użytkownika!\r\n", buffer, stream);
+                return null;
+            }
+            StreamControl.sendText("hasło(8-25 znaków):", buffer, stream);
+            string password = StreamControl.readText(stream, buffer);
+            if (password.Length < 8 || password.Length > 25)
+            {
+                StreamControl.sendText("Nieprawidłowa długość hasła!\r\n", buffer, stream);
+                return null;
+            }
+            return new User(username, password);
+        }
+
 
     }
 }
