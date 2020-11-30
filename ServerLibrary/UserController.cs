@@ -39,22 +39,22 @@ namespace ServerLibrary
             if (result == User.Name)
             {
                 isLogged = true;
-                return "Zalogowano.\r\n";
+                return "OK";
             }
             else
             {
-                return result;
+                return "ERR_AUTH";
             }
         }
         public string register()
         {
             if (DataAccess.insertUser(user) == 0)
             {
-                return "Nazwa użytkownika już zajęta!\r\n";
+                return "ERR_EXISTS";
             }
             else
             {
-                return "Rejestracja zakończyła się powodzeniem.\r\n";
+                return "OK";
             }
         }
         public User User
