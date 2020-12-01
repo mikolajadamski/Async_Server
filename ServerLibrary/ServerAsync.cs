@@ -13,7 +13,6 @@ namespace ServerLibrary
 
     public class ServerAsync : Server
     {
-        public static string[,] sharedbuffer = new string [10,3];
         public delegate void TransmissionDataDelegate(NetworkStream stream);
         public ServerAsync(IPAddress IP, int port) : base(IP, port)
         {
@@ -41,41 +40,16 @@ namespace ServerLibrary
         protected override void BeginDataTransmission(NetworkStream stream)
         {
             stream.ReadTimeout = 3600000;
-
             byte[] buffer = new byte[bufferSize];
-            string message;
             UserController userController = new UserController();
             while (!userController.IsLogged)
             {
                 try
                 {
-                    StreamControl.sendText("Wpisz register lub login:", buffer, stream);
-                    message = StreamControl.readText(stream, buffer);
-                    if (message == "login" || message == "register")
-                    {
-                        userController.User = getUser(stream, buffer);
-                        if (userController.User == null) continue;
-                        if(message == "login")
-                        {
-                            StreamControl.sendText(userController.login(), buffer, stream);
-                        }
-                        else
-                        {
-                            StreamControl.sendText(userController.register(), buffer, stream);
-                        }
-                    }
-                    else if (message == "exit")
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        StreamControl.sendText("Nieprawidłowa operacja\r\n", buffer, stream);
-                    }
+                    if (CommunicationProtocol.LogIn(stream, buffer, userController) == -1) break;
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
-                    // e.Message;
                     break;
                 }
             }
@@ -83,169 +57,22 @@ namespace ServerLibrary
             {
                 try
                 {
-                    StreamControl.sendText(userController.User.CurrentCanal+"\r\n", buffer, stream);
-                    StreamControl.sendText("Wpisz \"help\" aby uzyskac pomoc\r\n", buffer, stream);
-                    string[] command = StreamControl.readText(stream, buffer).Split();
-                    switch(command[0].ToLower())
-                    {
-                        case "changepassword":
-                            StreamControl.sendText("Podaj stare haslo: ", buffer, stream);
-                            string oldPassword = StreamControl.readText(stream, buffer);
-                            if (userController.IScorrectPassword(oldPassword))
-                            {
-                                StreamControl.sendText("Podaj nowe haslo: ", buffer, stream);
-                                string newPassword = StreamControl.readText(stream, buffer);
-                                StreamControl.sendText(userController.changePassword(newPassword), buffer, stream);
-                            }
-                            break;
-
-                        case "create":
-                            
-                            UserDataAccess.createCanal(command[1], userController.User);
-                            StreamControl.sendText("Utworzono kanał " + command[1] + "\r\n", buffer, stream);
-                            break;
-
-                        case "unregister":
-                            StreamControl.sendText(userController.deleteUser(), buffer, stream);
-                            System.Threading.Thread.Sleep(5000);
-                            userController.IsLogged = false;
-                            break;
-
-                        case "delete":
-                            UserDataAccess.deleteCanal(command[1], userController.User);
-                            StreamControl.sendText("Usunięto kanał " + command[1] + "\r\n", buffer, stream);
-                            break;
-
-                        case "list":
-                            StreamControl.sendText(string.Join("\r\n", UserDataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
-                            break;
-
-                        case "add":
-                            UserDataAccess.addtoCanal(command[1], command[2]);
-                            break;
-
-                        case "join":
-                            UserDataAccess.joinCanal(command[1], userController.User);
-                            break;
-
-                        case "remove":
-                            UserDataAccess.removefromCanal(command[1], command[2]);
-                            break;
-
-                        case "removeall":
-                            UserDataAccess.removeAllfromCanal(command[1]);
-                            break;
-
-                        case "leave":
-                            UserDataAccess.leaveCanal(command[1], userController.User);
-                            break;
-
-                        case "listofusers":
-                            StreamControl.sendText(string.Join("\r\n", UserDataAccess.listuserCanal(command[1])) + "\r\n", buffer, stream);
-                            break;
-                        
-                        case "exit":
-                            userController.IsLogged = false;
-                            break;
-
-                        case "help":
-                            StreamControl.sendText("POMOC\r\n", buffer, stream);
-                            StreamControl.sendText("Wpisz\r\n", buffer, stream);
-                            StreamControl.sendText("\"changepassword\" aby zmienic haslo\r\n", buffer, stream);
-                            StreamControl.sendText("\"create [nazwa kanalu]\" aby stworzyc kanal komunikacyjny\r\n", buffer, stream);
-                            StreamControl.sendText("\"delete [nazwa kanalu]\" aby usunac kanal komunikacyjny\r\n", buffer, stream);
-                            StreamControl.sendText("\"unregister\" aby usunac uzytkownika\r\n", buffer, stream);
-                            StreamControl.sendText("\"add [nazwa kanalu] [nazwa uzytkownika]\" aby dodac uzytkownika do kanalu komunikacyjnego\r\n", buffer, stream);
-                            StreamControl.sendText("\"join [nazwa kanalu]\" aby dolaczyc do kanalu komunikacyjnego\r\n", buffer, stream);
-                            StreamControl.sendText("\"switchto [nazwa kanalu]\" aby dolaczyc do rozmowy na danym kanale komunikacyjnym\r\n", buffer, stream);
-                            StreamControl.sendText("\"remove [nazwa kanalu] [nazwa uzytkownika]\" aby usunac uzytkownika z kanalu komunikacyjnego\r\n", buffer, stream);
-                            StreamControl.sendText("\"removeall [nazwa kanalu]\" aby usunac wszystkich uzytkownikow z kanalu komunikacyjnego\r\n", buffer, stream);
-                            StreamControl.sendText("\"exit\" aby sie wylogowac\r\n", buffer, stream);
-                            break;
-
-                        case "switchto":
-                            StreamControl.sendText(  UserDataAccess.changeCanal(command[1], userController.User), buffer, stream);
-                            if(userController.User.CurrentCanal != "MENU"){
-                            canalCommunication(userController.User, stream);
-                            StreamControl.sendText("Opuszczono kanal\n", buffer, stream);
-                            userController.User.CurrentCanal = "MENU";}
-                            break;
-
-                        default:
-                            StreamControl.sendText("Nieznana komenda.\r\n", buffer, stream);
-                            break;
-
-                    }
+                    CommunicationProtocol.CommandExecution(stream, buffer, userController);
                 }
                 catch (System.IndexOutOfRangeException)
                 {
                     StreamControl.sendText("Za mało argumentów!\r\n", buffer, stream);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
-                    // e.Message;
                     break;
                 }
+
             }
+            userController.IsLogged = false;
         }
 
 
-        public static int freecolumn()
-        {
-            while(true)
-            {
-                for(int i=0; i<10; i++)
-                {
-                    if(sharedbuffer[i,0] == null){ return i;}
-                }
-            }
-        }
-
-
-        private static UTF8Encoding encoder = new UTF8Encoding();
-        public static void canalCommunication(User user, NetworkStream stream)
-        {
-            byte[] buffer = new byte[1024];
-            string message = "";
-            while (true)
-            {
-                int message_size = 0;
-                stream.ReadTimeout = 300;
-                try
-                {
-                    message_size = stream.Read(buffer, 0, buffer.Length); //tu troche redundancja z StreamControl.sendText ale z korzystamy z 2 warotsci z tamtej funkcji a nie tylko ze stringa zwrotnego wiec nwm na razie pozno juz 
-                    stream.ReadByte();
-                    stream.ReadByte();
-                    message = encoder.GetString(buffer, 0, message_size);
-                    if (message == "//leave") { stream.ReadTimeout = 3600000; break; }
-                    int pom = freecolumn();
-                    if (message_size != 0)
-                        sharedbuffer[pom, 0] = user.Name + ": " + message + "\r\n";
-                    sharedbuffer[pom, 1] = user.Name;
-                    sharedbuffer[pom, 2] = user.CurrentCanal;
-                }
-                catch (IOException e) { }
-
-                for (int i = 0; i < 10; i++)
-                {
-                    if (sharedbuffer[i, 2] == user.CurrentCanal && sharedbuffer[i, 1] != user.Name && sharedbuffer[i, 0] != null)
-                    {
-                        StreamControl.sendText(sharedbuffer[i, 0], buffer, stream);
-                        try
-                        {
-                            message_size = stream.Read(buffer, 0, buffer.Length);
-                        }
-                        catch (IOException e) { }
-                        if (message_size != 0)
-                        {
-                            stream.ReadByte();
-                            stream.ReadByte();
-                        }
-                        sharedbuffer[i, 0] = null;
-                    }
-                }
-            }
-        }
 
 
         public User getUser(NetworkStream stream, byte [] buffer)
@@ -272,8 +99,11 @@ namespace ServerLibrary
         public override void Start()
         {
             running = true;
+            DataAccess.initTables();
+            CanalsController.initializeCanals();
             StartListening();
             AcceptClient();
+            
 
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,30 +20,41 @@ namespace ServerLibrary
         public bool IsLogged
         {
             get => isLogged;
-            set => isLogged = value;
+            set
+            {
+                if(isLogged==true && value==false)
+                {
+                    DataAccess.logOutUser(user);
+                    isLogged = value;
+                }
+                else
+                {
+                    isLogged = value;
+                }
+            }
         }
         public string login()
         {
-
-            if (UserDataAccess.selectUser(user) == User.Name)
+            string result = DataAccess.selectUser(user);
+            if (result == User.Name)
             {
                 isLogged = true;
-                return "Zalogowano.\r\n";
+                return "OK";
             }
             else
             {
-                return "Nieprawidłowe dane!\r\n";
+                return "ERR_AUTH";
             }
         }
         public string register()
         {
-            if (UserDataAccess.insertUser(user) == 0)
+            if (DataAccess.insertUser(user) == 0)
             {
-                return "Nazwa użytkownika już zajęta!\r\n";
+                return "ERR_EXISTS";
             }
             else
             {
-                return "Rejestracja zakończyła się powodzeniem.\r\n";
+                return "OK";
             }
         }
         public User User
@@ -57,7 +69,7 @@ namespace ServerLibrary
 
         public string deleteUser()
         {
-            int result = UserDataAccess.deleteUser(user);
+            int result = DataAccess.deleteUser(user);
             if (result == 1)
             {
                 return "Pomyślnie usunięto użytkownika (5 sekund do zamknięcia).\r\n";
@@ -77,7 +89,7 @@ namespace ServerLibrary
         public string changePassword(string newpassword)
         {
             user.setPassword(newpassword);
-            if (UserDataAccess.changeUserPassword(user) == 0)
+            if (DataAccess.changeUserPassword(user) == 0)
             {
                 return "error";
             }
@@ -86,8 +98,6 @@ namespace ServerLibrary
                 return "Pomyślnie zmieniono hasło\r\n";
             }
         }
-
-
     }
     
 }
