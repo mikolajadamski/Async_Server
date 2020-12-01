@@ -6,6 +6,8 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,6 +54,30 @@ namespace ServerLibrary
                 return result;
             }
         }
+
+       static public void CanalHistory(NetworkStream stream, string canalName, byte[] buffer){
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                 var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                 string tableName = "";
+            if(query != null)
+                 tableName = "k" + query.msgID;
+            string query2 = string.Format("SELECT * from {0}", tableName);
+                var result = databaseConnection.Query(query2);
+                string msg = "";
+            for(int i=0; i < result.Count(); i++){
+                   
+             msg =  result.ElementAt(i).username + "(" + result.ElementAt(i).time + "): " + result.ElementAt(i).message + "\r\n";
+                    StreamControl.sendText(msg,buffer,stream);
+            }
+
+}         
+        
+
+       }
+
+
+
         static public string selectUser(User user)
         {
             loginUserMutex.WaitOne();
@@ -91,6 +117,26 @@ namespace ServerLibrary
                 
             }
         }
+
+        static public int addMsg(String text, String username, String canalName){
+                  using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {   
+            var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                 string tableName = "";
+            if(query != null)
+                 tableName = "k" + query.msgID;
+            string time = DateTime.Now.ToString("h:mm:ss tt");
+                    string query2 = string.Format(
+                        " INSERT INTO {0} (username, time, message) VALUES (\"{1}\", \"{2}\",\"{3}\")", tableName, username, time, text);
+                  
+   int result = databaseConnection.Execute(query2);
+                return result;
+}
+
+
+                  
+            }
+
         static public int changeUserPassword(User user)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -133,10 +179,23 @@ namespace ServerLibrary
                     
                             string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
                             string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
-                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name) VALUES(\"{0}\")", canalName);
+                        string idcheck = "SELECT max(msgID) as max FROM canals";
+                            var v = databaseConnection.QuerySingleOrDefault(@idcheck);
+                        int id = -1;
+                        if(v.max != null)
+                             id =(int)v.max;
+                      
+                              string name =  "k"+(id+1).ToString();
+                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID) VALUES(\"{0}\",{1})", canalName, id+1 );
+                              string initMsgTable = string.Format(@"CREATE TABLE IF NOT EXISTS {0} (
+                                                    username VARCHAR (25) NOT NULL, 
+                                                    time  TEXT,
+                                                    message TEXT)", name);
+                        
                             databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
                             databaseConnection.Execute(@createCanalTableOperation);
                             databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                             databaseConnection.Execute(initMsgTable);
                             createCanalMutex.ReleaseMutex();
                             return 1;
                     }
@@ -326,7 +385,8 @@ namespace ServerLibrary
                                                     islogged BOOL DEFAULT 0)";
                 string createCanalsTableOperation = @"CREATE TABLE IF NOT EXISTS canals (
                                                     name VARCHAR(25) NOT NULL UNIQUE,
-                                                    PRIMARY KEY(name))";
+                                                    msgID INT UNIQUE NOT NULL,
+                                                    PRIMARY KEY(name, msgID))";
                 databaseConnection.Execute(createUsersTableOperation);
                 databaseConnection.Execute(createCanalsTableOperation);
             }
