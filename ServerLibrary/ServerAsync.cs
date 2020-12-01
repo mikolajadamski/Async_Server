@@ -48,7 +48,7 @@ namespace ServerLibrary
                 {
                     if (CommunicationProtocol.LogIn(stream, buffer, userController) == -1) break;
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     break;
                 }
@@ -63,7 +63,7 @@ namespace ServerLibrary
                 {
                     StreamControl.sendText("Za mało argumentów!\r\n", buffer, stream);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     break;
                 }

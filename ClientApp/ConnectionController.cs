@@ -14,6 +14,7 @@ namespace ClientApp
         private UTF8Encoding encoder;
         public ConnectionController()
         { }
+        
         public bool initializeConnection()
         {
             try
@@ -59,6 +60,11 @@ namespace ClientApp
             return response;
         }
 
+        internal void setTimeout(int milis)
+        {
+            client.setTimeout(milis);
+        }
+
         internal string register(string username, string password)
         {
             sendText("register");
@@ -86,14 +92,19 @@ namespace ClientApp
             return response;
         }
 
-        private void sendText(string str)
+        internal string getUsername()
+        {
+            return client.Username;
+        }
+
+        public void sendText(string str)
         {
             byte[] encodedText = Encoding.UTF8.GetBytes(str);
             int length = encodedText.Length;
             Array.Copy(encodedText, buffer, length);
             client.Stream.Write(buffer, 0, length);
         }
-        private string readText()
+        public string readText()
         {
             int message_size = client.Stream.Read(buffer, 0, buffer.Length);
             return encoder.GetString(buffer, 0, message_size);
@@ -104,6 +115,10 @@ namespace ClientApp
         {
             get => client.IsLogged;
             set => client.IsLogged = true;
+        }
+        public void disconnectClient()
+        {
+            client.disconnect();
         }
     }
 }

@@ -24,6 +24,7 @@ namespace ClientApp
                 if(clientController.IsLogged)
                 {
                     Application.Run(new MenuWindow(clientController));
+                    clientController.disconnectClient();
                 }
             }
         }

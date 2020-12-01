@@ -51,6 +51,7 @@
             this.passwordBox.PasswordChar = '•';
             this.passwordBox.Size = new System.Drawing.Size(234, 20);
             this.passwordBox.TabIndex = 1;
+            this.passwordBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passwordBox_KeyDown);
             // 
             // usernameLabel
             // 

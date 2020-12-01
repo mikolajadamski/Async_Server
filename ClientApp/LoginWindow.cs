@@ -55,5 +55,15 @@ namespace ClientApp
                 serverResponse.Text = "Pomyślnie utworzono użykownika.";
             }
         }
+
+        private void passwordBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode.Equals(Keys.Enter))
+            {
+                loginButton_Click(this, new EventArgs());
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }

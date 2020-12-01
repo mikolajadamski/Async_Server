@@ -41,5 +41,13 @@ namespace ClientApp
             get => isLogged;
             set => isLogged = value;
         }
+        public void setTimeout(int milis)
+        {
+            stream.ReadTimeout = 1000;
+        }
+        public void disconnect()
+        {
+            client.Close();
+        }
     }
 }

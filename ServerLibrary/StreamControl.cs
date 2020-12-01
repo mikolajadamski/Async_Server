@@ -25,9 +25,5 @@ namespace ServerLibrary
             int message_size = stream.Read(buffer, 0, buffer.Length);
             return encoder.GetString(buffer, 0, message_size);
         }
-
-
-
-      
     }
 }

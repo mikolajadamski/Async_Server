@@ -28,20 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.loggerBox = new System.Windows.Forms.TextBox();
+            this.commandBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
+            // 
+            // loggerBox
+            // 
+            this.loggerBox.Location = new System.Drawing.Point(21, 12);
+            this.loggerBox.Multiline = true;
+            this.loggerBox.Name = "loggerBox";
+            this.loggerBox.ReadOnly = true;
+            this.loggerBox.Size = new System.Drawing.Size(655, 280);
+            this.loggerBox.TabIndex = 1;
+            // 
+            // commandBox
+            // 
+            this.commandBox.Location = new System.Drawing.Point(21, 298);
+            this.commandBox.Multiline = true;
+            this.commandBox.Name = "commandBox";
+            this.commandBox.Size = new System.Drawing.Size(655, 48);
+            this.commandBox.TabIndex = 2;
+            this.commandBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.commandBox_KeyDown);
             // 
             // MenuWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(702, 358);
+            this.Controls.Add(this.commandBox);
+            this.Controls.Add(this.loggerBox);
             this.Name = "MenuWindow";
-            this.Text = "MenuForm";
+            this.Text = "Chattoo";
             this.Load += new System.EventHandler(this.MenuWindow_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+        private System.Windows.Forms.TextBox loggerBox;
+        private System.Windows.Forms.TextBox commandBox;
     }
 }
