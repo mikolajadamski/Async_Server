@@ -24,7 +24,7 @@ namespace ServerLibrary
         }
         public static void joinCanal(string canalName, string username, NetworkStream stream, byte[] buffer)
         {
-            canals[canalName].addToCanal(username, stream);
+            canals[canalName].addToCanal(username, stream, buffer);
             canals[canalName].stayInCanal(username, buffer);
             canals[canalName].removeFromCanal(username);
         }
