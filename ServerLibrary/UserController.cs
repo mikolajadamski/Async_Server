@@ -20,19 +20,30 @@ namespace ServerLibrary
         public bool IsLogged
         {
             get => isLogged;
-            set => isLogged = value;
+            set
+            {
+                if(isLogged==true && value==false)
+                {
+                    DataAccess.logOutUser(user);
+                    isLogged = value;
+                }
+                else
+                {
+                    isLogged = value;
+                }
+            }
         }
         public string login()
         {
-
-            if (DataAccess.selectUser(user) == User.Name)
+            string result = DataAccess.selectUser(user);
+            if (result == User.Name)
             {
                 isLogged = true;
                 return "Zalogowano.\r\n";
             }
             else
             {
-                return "Nieprawidłowe dane!\r\n";
+                return result;
             }
         }
         public string register()
