@@ -62,7 +62,7 @@ namespace ServerLibrary
  
                     }
 
-                }
+                
                 catch (System.IndexOutOfRangeException)
                 {
                     StreamControl.sendText("Za mało argumentów!\r\n", buffer, stream);
