@@ -22,10 +22,11 @@ namespace ServerLibrary
         }
         public string Name { get; set; }
         public Dictionary<string, NetworkStream> CanalUsers { get; }
-        public void addToCanal(string username, NetworkStream stream)
+        public void addToCanal(string username, NetworkStream stream, byte[] buffer)
         {
             mutex.WaitOne();
             canalUsers.Add(username, stream);
+            DataAccess.CanalHistory(stream, name, buffer);
             mutex.ReleaseMutex();
         }
         public void stayInCanal(string username, byte[] buffer)
@@ -47,8 +48,13 @@ namespace ServerLibrary
                             if (canalUser.Key != username && text.Length != 0)
                             {
                                 StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                                DataAccess.addMsg(text, username, name);
+
                                 canalUser.Value.Flush();
                             }
+                            else if(text.Length != 0){
+                                  DataAccess.addMsg(text, username, name);
+                                }
                         }
                         mutex.ReleaseMutex();
                     }
