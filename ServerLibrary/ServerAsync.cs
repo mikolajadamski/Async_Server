@@ -58,9 +58,6 @@ namespace ServerLibrary
                 try
                 {
                     CommunicationProtocol.CommandExecution(stream, buffer, userController);
- 
-                    }
-
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -78,12 +75,12 @@ namespace ServerLibrary
 
 
 
-        public User getUser(NetworkStream stream, byte [] buffer)
+        public User getUser(NetworkStream stream, byte[] buffer)
         {
             StreamControl.sendText("nazwa użytkownika(8-25 znaków):", buffer, stream);
             string username = StreamControl.readText(stream, buffer);
-            if(username.Length<8 || username.Length>25)
-                {
+            if (username.Length < 8 || username.Length > 25)
+            {
                 StreamControl.sendText("Nieprawidłowa długość nazwy użytkownika!\r\n", buffer, stream);
                 return null;
             }
@@ -97,7 +94,7 @@ namespace ServerLibrary
             return new User(username, password);
         }
 
-       
+
 
         public override void Start()
         {
@@ -106,7 +103,7 @@ namespace ServerLibrary
             CanalsController.initializeCanals();
             StartListening();
             AcceptClient();
-            
+
 
         }
 
