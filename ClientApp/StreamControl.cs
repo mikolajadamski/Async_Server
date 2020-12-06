@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerLibrary
+namespace ClientApp
 {
     static class StreamControl
     {
-        
+
 
         private static UTF8Encoding encoder = new UTF8Encoding();
         public static void sendText(string str, byte[] buffer, NetworkStream stream)

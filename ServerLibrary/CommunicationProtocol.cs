@@ -23,10 +23,10 @@ namespace ServerLibrary
         static public int LogIn(NetworkStream stream, byte[] buffer, UserController userController)
         {
             string message;
-            StreamControl.sendText("Wpisz register lub login:", buffer, stream);
             message = StreamControl.readText(stream, buffer);
             if (message == "login" || message == "register")
             {
+                StreamControl.sendText("OK", buffer, stream);
                 userController.User = getUser(stream, buffer);
                 if (userController.User == null) return 0 ;
                 if (message == "login")
@@ -44,7 +44,7 @@ namespace ServerLibrary
             }
             else
             {
-                StreamControl.sendText("Nieprawidłowa operacja\r\n", buffer, stream);
+                StreamControl.sendText("Nieprawidłowa operacja", buffer, stream);
             }
             return 0;
         }
@@ -155,20 +155,20 @@ namespace ServerLibrary
 
         public static User getUser(NetworkStream stream, byte[] buffer)
         {
-            StreamControl.sendText("nazwa użytkownika(8-25 znaków):", buffer, stream);
             string username = StreamControl.readText(stream, buffer);
             if (username.Length < 8 || username.Length > 25)
             {
-                StreamControl.sendText("Nieprawidłowa długość nazwy użytkownika!\r\n", buffer, stream);
+                StreamControl.sendText("ERR_SIZE", buffer, stream);
                 return null;
             }
-            StreamControl.sendText("hasło(8-25 znaków):", buffer, stream);
+            StreamControl.sendText("OK", buffer, stream);
             string password = StreamControl.readText(stream, buffer);
             if (password.Length < 8 || password.Length > 25)
             {
-                StreamControl.sendText("Nieprawidłowa długość hasła!\r\n", buffer, stream);
+                StreamControl.sendText("ERR_SIZE", buffer, stream);
                 return null;
             }
+
             return new User(username, password);
         }
 
