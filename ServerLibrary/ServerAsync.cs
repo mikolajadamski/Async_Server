@@ -58,6 +58,9 @@ namespace ServerLibrary
                 try
                 {
                     CommunicationProtocol.CommandExecution(stream, buffer, userController);
+ 
+                    }
+
                 }
                 catch (System.IndexOutOfRangeException)
                 {
