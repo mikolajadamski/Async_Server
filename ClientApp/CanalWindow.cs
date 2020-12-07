@@ -15,6 +15,7 @@ namespace ClientApp
     {
         delegate void SafeCallDelegate(string text);
         ConnectionController connectionController;
+        Thread receiver;
         MenuWindow frmMain = (MenuWindow)Application.OpenForms["MenuWindow"];
         public CanalWindow()
         {
@@ -27,7 +28,7 @@ namespace ClientApp
             connectionController.sendText("switchto " + canalName);
             this.connectionController = connectionController;
             InitializeComponent();
-            Thread receiver = new Thread(receive);
+            receiver = new Thread(receive);
             receiver.Start();
             CanalName.Text = canalName;
         }
@@ -72,6 +73,7 @@ namespace ClientApp
             private void LeaveButton_Click(object sender, EventArgs e)
         {
             frmMain.closeCanal();
+            receiver.Abort();
             this.Close();
         }
 
