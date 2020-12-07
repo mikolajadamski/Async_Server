@@ -43,7 +43,10 @@ namespace ServerLibrary
                     else
                     {
                         mutex.WaitOne();
-                        foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+                        if(canalUsers.Count() < 2 && text.Length != 0) {
+                              DataAccess.addMsg(text, username, name);
+                        }
+                        else{foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
                         {
                             if (canalUser.Key != username && text.Length != 0)
                             {
@@ -52,10 +55,8 @@ namespace ServerLibrary
 
                                 canalUser.Value.Flush();
                             }
-                            else if(text.Length != 0){
-                                  DataAccess.addMsg(text, username, name);
-                                }
-                        }
+                            
+                        }}
                         mutex.ReleaseMutex();
                     }
                 }
