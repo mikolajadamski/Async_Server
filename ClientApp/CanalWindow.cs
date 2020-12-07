@@ -25,7 +25,7 @@ namespace ClientApp
         public CanalWindow(ConnectionController connectionController, string canalName)
         {
           
-            connectionController.sendText("switchto " + canalName);
+       
             this.connectionController = connectionController;
             InitializeComponent();
             receiver = new Thread(receive);

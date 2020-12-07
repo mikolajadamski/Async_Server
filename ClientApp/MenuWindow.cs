@@ -76,18 +76,13 @@ namespace ClientApp
                 string command = commandBox.Text;
                 connectionController.sendText(commandBox.Text);
                 string[] comms = command.Split();
-                //if (comms[0] == "//leave")
-                    //canalOpened = false;
-                if (canalOpened)
-                {
-                }
-                  //  printInLogger(connectionController.getUsername() +": "+ command + "\r\n");
+              
+    
                 if (comms[0] == "switchto")
                 {
+                    
+                  
                     canalOpened = true;
-                    //Form f2 = new CanalWindow(connectionController);
-                    //f2.ShowDialog();
-
                     var frm = new CanalWindow(connectionController, comms[1]);
                     frm.Location = this.Location;
                     frm.StartPosition = FormStartPosition.Manual;
@@ -100,7 +95,7 @@ namespace ClientApp
                 commandBox.Text = string.Empty;
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-               // canalOpened = false;
+              
             }
         }
 
