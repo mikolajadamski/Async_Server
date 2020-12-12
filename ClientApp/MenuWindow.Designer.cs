@@ -60,6 +60,7 @@
             this.Name = "MenuWindow";
             this.Text = "Chattoo";
             this.Load += new System.EventHandler(this.MenuWindow_Load);
+            this.Shown += new System.EventHandler(this.MenuWindow_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -16,7 +16,7 @@ namespace ClientApp
     {
         delegate void SafeCallDelegate(string text);
         ConnectionController connectionController;
-        bool canalOpened;
+        public bool canalOpened;
         public MenuWindow(ConnectionController connectionController)
         {
             this.connectionController = connectionController;
@@ -33,8 +33,11 @@ namespace ClientApp
             {
                 try
                 {
-                    text = connectionController.readText();
-                    printInLogger(text);
+                    if (!canalOpened)
+                    {
+                        text = connectionController.readText();
+                        printInLogger(text);
+                    }
                 }
                 catch(Exception)
                 {
@@ -42,6 +45,13 @@ namespace ClientApp
                 }
             }
         }
+
+        public void closeCanal()
+        {
+            canalOpened = false;
+            connectionController.sendText("//leave");
+        }
+      
         private void printInLogger(string text)
         {
             if(loggerBox.InvokeRequired)
@@ -66,17 +76,31 @@ namespace ClientApp
                 string command = commandBox.Text;
                 connectionController.sendText(commandBox.Text);
                 string[] comms = command.Split();
-                if (comms[0] == "//leave")
-                    canalOpened = false;
-                if (canalOpened)
-                    printInLogger(connectionController.getUsername() +": "+ command + "\r\n");
+              
+    
                 if (comms[0] == "switchto")
+                {
+                    
+                  
                     canalOpened = true;
+                    var frm = new CanalWindow(connectionController, comms[1]);
+                    frm.Location = this.Location;
+                    frm.StartPosition = FormStartPosition.Manual;
+                    frm.FormClosing += delegate { this.Show(); };
+                    frm.Show();
+                    this.Hide();
+
+                }
 
                 commandBox.Text = string.Empty;
                 e.Handled = true;
                 e.SuppressKeyPress = true;
+              
             }
+        }
+
+        private void MenuWindow_Shown(object sender, EventArgs e)
+        {
         }
     }
 }
