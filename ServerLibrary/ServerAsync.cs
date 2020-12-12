@@ -81,9 +81,6 @@ namespace ServerLibrary
             StartListening();
             AcceptClient();
         }
-
-
-
     }
 
 }
