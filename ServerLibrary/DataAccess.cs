@@ -76,7 +76,17 @@ namespace ServerLibrary
 
        }
 
-
+        internal static void initUsers()
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                databaseConnection.QuerySingleOrDefault(
+                            @"
+                            UPDATE users
+                            SET islogged = 0
+                            WHERE islogged = 1");
+            }
+        }
 
         static public string selectUser(User user)
         {

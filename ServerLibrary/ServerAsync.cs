@@ -72,39 +72,14 @@ namespace ServerLibrary
             userController.IsLogged = false;
         }
 
-
-
-
-        public User getUser(NetworkStream stream, byte[] buffer)
-        {
-            StreamControl.sendText("nazwa użytkownika(8-25 znaków):", buffer, stream);
-            string username = StreamControl.readText(stream, buffer);
-            if (username.Length < 8 || username.Length > 25)
-            {
-                StreamControl.sendText("Nieprawidłowa długość nazwy użytkownika!\r\n", buffer, stream);
-                return null;
-            }
-            StreamControl.sendText("hasło(8-25 znaków):", buffer, stream);
-            string password = StreamControl.readText(stream, buffer);
-            if (password.Length < 8 || password.Length > 25)
-            {
-                StreamControl.sendText("Nieprawidłowa długość hasła!\r\n", buffer, stream);
-                return null;
-            }
-            return new User(username, password);
-        }
-
-
-
         public override void Start()
         {
             running = true;
             DataAccess.initTables();
+            DataAccess.initUsers();
             CanalsController.initializeCanals();
             StartListening();
             AcceptClient();
-
-
         }
 
 
