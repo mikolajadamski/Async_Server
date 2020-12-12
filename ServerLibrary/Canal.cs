@@ -43,18 +43,23 @@ namespace ServerLibrary
                     else
                     {
                         mutex.WaitOne();
-                        foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+                        if (canalUsers.Count() < 2 && text.Length != 0)
                         {
-                            if (canalUser.Key != username && text.Length != 0)
+                            DataAccess.addMsg(text, username, name);
+                        }
+                        else
+                        {
+                            foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
                             {
-                                StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
-                                DataAccess.addMsg(text, username, name);
+                                if (canalUser.Key != username && text.Length != 0)
+                                {
+                                    StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                                    DataAccess.addMsg(text, username, name);
 
-                                canalUser.Value.Flush();
-                            }
-                            else if(text.Length != 0){
-                                  DataAccess.addMsg(text, username, name);
+                                    canalUser.Value.Flush();
                                 }
+
+                            }
                         }
                         mutex.ReleaseMutex();
                     }
