@@ -95,7 +95,7 @@
             // 
             this.serverResponse.AutoSize = true;
             this.serverResponse.ForeColor = System.Drawing.Color.Red;
-            this.serverResponse.Location = new System.Drawing.Point(117, 177);
+            this.serverResponse.Location = new System.Drawing.Point(117, 139);
             this.serverResponse.Name = "serverResponse";
             this.serverResponse.Size = new System.Drawing.Size(0, 13);
             this.serverResponse.TabIndex = 6;
@@ -104,7 +104,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(430, 167);
+            this.ClientSize = new System.Drawing.Size(458, 209);
             this.Controls.Add(this.serverResponse);
             this.Controls.Add(this.registerButton);
             this.Controls.Add(this.loginButton);

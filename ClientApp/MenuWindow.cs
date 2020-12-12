@@ -17,12 +17,13 @@ namespace ClientApp
         delegate void SafeCallDelegate(string text);
         ConnectionController connectionController;
         public bool canalOpened;
+        Thread receiver;
         public MenuWindow(ConnectionController connectionController)
         {
             this.connectionController = connectionController;
             canalOpened = false;
             InitializeComponent();
-            Thread receiver = new Thread(receive);
+            receiver = new Thread(receive);
             receiver.Start();
         }
         private void receive()
@@ -80,15 +81,19 @@ namespace ClientApp
     
                 if (comms[0] == "switchto")
                 {
-                    
-                  
-                    canalOpened = true;
-                    var frm = new CanalWindow(connectionController, comms[1]);
-                    frm.Location = this.Location;
-                    frm.StartPosition = FormStartPosition.Manual;
-                    frm.FormClosing += delegate { this.Show(); };
-                    frm.Show();
-                    this.Hide();
+
+                    try
+                    {
+                        canalOpened = true;
+                        var frm = new CanalWindow(connectionController, comms[1]);
+                        frm.Location = this.Location;
+                        frm.StartPosition = FormStartPosition.Manual;
+                        frm.FormClosing += delegate { this.Show(); };
+                        frm.Show();
+                        this.Hide();
+                    }
+                    catch(IndexOutOfRangeException)
+                    { }
 
                 }
 
@@ -101,6 +106,12 @@ namespace ClientApp
 
         private void MenuWindow_Shown(object sender, EventArgs e)
         {
+        }
+
+        private void MenuWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            receiver.Abort();
+            connectionController.disconnectClient();
         }
     }
 }

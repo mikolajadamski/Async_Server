@@ -26,7 +26,7 @@ namespace ServerLibrary
         {
             canals[canalName].addToCanal(username, stream, buffer);
             canals[canalName].stayInCanal(username, buffer);
-            canals[canalName].removeFromCanal(username);
+            canals[canalName].removeFromCanal(username, buffer);
         }
         public static UTF8Encoding encoder = new UTF8Encoding();
 

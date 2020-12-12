@@ -56,8 +56,9 @@ namespace ClientApp
                 {
                     if (frmMain.canalOpened)
                     {
+
                         text = connectionController.readText();
-                        print(text);
+                        processText(text);
                     }
                 }
                 catch (Exception)
@@ -66,11 +67,34 @@ namespace ClientApp
                 }
             }
         }
+        private void processText(string text)
+        {
+            if (text.Substring(0, 6) == "UPDATE")
+            {
+                string[] activeUsers = text.Substring(7).Split();
+                text = string.Join(" \r\n", activeUsers);
+                updateUsersList(text);
+            }
+            else
+            {
+                print(text);
+            }
+        }
 
+        private void updateUsersList(string text)
+        {
+            if (ActiveUsers.InvokeRequired)
+            {
+                var d = new SafeCallDelegate(updateUsersList);
+                ActiveUsers.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                ActiveUsers.Text = text;
+            }
+        }
 
-        
-
-            private void LeaveButton_Click(object sender, EventArgs e)
+        private void LeaveButton_Click(object sender, EventArgs e)
         {
             frmMain.closeCanal();
             receiver.Abort();
@@ -94,6 +118,11 @@ namespace ClientApp
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
+        }
+        private void CanalWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {         
+            frmMain.closeCanal();
+            receiver.Abort();
         }
     }
 }

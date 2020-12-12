@@ -103,6 +103,7 @@
             this.Controls.Add(this.UserInput);
             this.Name = "CanalWindow";
             this.Text = "Chatto";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.CanalWindow_FormClosed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

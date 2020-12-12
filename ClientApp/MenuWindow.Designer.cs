@@ -59,6 +59,7 @@
             this.Controls.Add(this.loggerBox);
             this.Name = "MenuWindow";
             this.Text = "Chattoo";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MenuWindow_FormClosing);
             this.Load += new System.EventHandler(this.MenuWindow_Load);
             this.Shown += new System.EventHandler(this.MenuWindow_Shown);
             this.ResumeLayout(false);

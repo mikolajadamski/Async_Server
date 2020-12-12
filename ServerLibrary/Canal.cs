@@ -26,6 +26,7 @@ namespace ServerLibrary
         {
             mutex.WaitOne();
             canalUsers.Add(username, stream);
+            sendCommand(buffer, prepareUpdateMsg());
             DataAccess.CanalHistory(stream, name, buffer);
             mutex.ReleaseMutex();
         }
@@ -37,7 +38,10 @@ namespace ServerLibrary
                 try
                 {
                     text = StreamControl.readText(canalUsers[username], buffer);
-                    if (text == "//leave") break;
+                    if (text == "//leave")
+                    {
+                        break;
+                    }
                     else if (text == "/r/n")
                         continue;
                     else
@@ -49,17 +53,7 @@ namespace ServerLibrary
                         }
                         else
                         {
-                            foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
-                            {
-                                if (canalUser.Key != username && text.Length != 0)
-                                {
-                                    StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
-                                    DataAccess.addMsg(text, username, name);
-
-                                    canalUser.Value.Flush();
-                                }
-
-                            }
+                            sendToOthers(username, buffer, text);
                         }
                         mutex.ReleaseMutex();
                     }
@@ -69,12 +63,47 @@ namespace ServerLibrary
             }
 
         }
-        public void removeFromCanal(string username)
+
+        private void sendToOthers(string username, byte[] buffer, string text)
+        {
+            foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+            {
+                if (canalUser.Key != username && text.Length != 0)
+                {
+                    StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                    DataAccess.addMsg(text, username, name);
+
+                    canalUser.Value.Flush();
+                }
+            }
+        }
+
+        private void sendCommand(byte[] buffer, string text)
+        {
+            foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+            {
+                if (text.Length != 0)
+                {
+                    StreamControl.sendText( text, buffer, canalUser.Value);
+                    canalUser.Value.Flush();
+                }
+            }
+        }
+
+        public void removeFromCanal(string username, byte[] buffer)
         {
             mutex.WaitOne();
             canalUsers.Remove(username);
+            sendCommand( buffer, prepareUpdateMsg());
             mutex.ReleaseMutex();
         }
 
+        private string prepareUpdateMsg()
+        {
+            return "UPDATE " + string.Join(" ", canalUsers.Keys);
+        }
+
     }
+
+    
 }
