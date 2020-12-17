@@ -96,12 +96,12 @@ namespace ClientApplication
         {
             return client.Username;
         }
-
+        
         public string getCanals()
         {
             sendText("list");
             string response = readText();
-            if (response != "OK")
+            if (response == "OK")
             {
                 return "Błąd";
             }

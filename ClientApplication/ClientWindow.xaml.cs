@@ -30,7 +30,7 @@ namespace ClientApplication
 
             InitializeComponent();
 
-            displayCanals();
+            displayAvailableCanals();
 
         }
 
@@ -52,7 +52,9 @@ namespace ClientApplication
 
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
         {
-            //SwitchToCanal(canalName, username);
+            string canalName = sender.ToString();
+
+            displayCanal(canalName);
         }
 
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
@@ -65,11 +67,12 @@ namespace ClientApplication
 
         }
 
-        private void displayCanals()
+        private void displayAvailableCanals()
         {
-            string canalName = connectionController.getCanals();
+            string canalName = "";
+            canalName = connectionController.getCanals();
 
-            createCanalButton(canalName);
+            createCanalButton("Bład");
         }
 
         private void createCanalButton(string name)
@@ -85,7 +88,7 @@ namespace ClientApplication
 
             button.Height = 40;
             button.Width = 100;
-            button.Name = name+"Button";
+            button.Name = name + "Button";
             button.VerticalAlignment = VerticalAlignment.Center;
             button.HorizontalAlignment = HorizontalAlignment.Left;
 
@@ -107,23 +110,34 @@ namespace ClientApplication
             button.Content = stackPanel;
             button.ContextMenu = contextMenu;
 
+            button.MouseDoubleClick += switchToCanal_Click;
 
-            CanalsPanel.Children.Insert(1,button);
+
+            CanalsPanel.Children.Add(button);
         }
 
-       
-
-        private void SwitchToCanal(string canalName, string username)
+        private void displayCanal(string name)
         {
-            throw new NotImplementedException();
-        }
+            StackPanel topInfoPanel = new StackPanel();
 
+            canalName.Text = name;
+
+        }
       
 
         private void createNewCanal()
         {
-            throw new NotImplementedException();
+            
         }
 
+        private void infoCanal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SendMessageToCanal_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
