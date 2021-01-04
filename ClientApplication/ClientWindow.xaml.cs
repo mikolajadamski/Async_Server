@@ -22,6 +22,8 @@ namespace ClientApplication
     {
         private ConnectionController connectionController;
 
+        private List<Page> listOfPages = new List<Page>();
+
         public ClientWindow(ConnectionController connectionController)
         {
             this.connectionController = connectionController;
@@ -30,6 +32,11 @@ namespace ClientApplication
 
             displayAvailableCanals();
 
+        }
+
+        private void createPages()
+        {
+            throw new NotImplementedException();
         }
 
         public ConnectionController GetConnectionController
@@ -62,7 +69,7 @@ namespace ClientApplication
 
             MessageBox.Show(canalName);
 
-            displayCanal();
+            displayCanal(canalName.Remove(buttonName.Length-6));
         }
 
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
@@ -98,7 +105,108 @@ namespace ClientApplication
             foreach (string canalName in canals)
             {
                 createCanalButton(canalName);
+
+                createPage(canalName);
             }
+        }
+
+        private void createPage(string name)
+        {
+            Page page = new Page();
+
+            StackPanel topStackPanel = new StackPanel();
+
+            StackPanel leftButtonPanel = new StackPanel();
+
+            StackPanel rightButtonPanel = new StackPanel();
+
+            #region topStackPanel
+            topStackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            topStackPanel.Orientation = Orientation.Horizontal;
+            topStackPanel.Name = name;
+            topStackPanel.Margin = new Thickness(0, 10, 0, 10);
+            topStackPanel.Width = 600;
+
+
+
+            leftButtonPanel.HorizontalAlignment = HorizontalAlignment.Left;
+            leftButtonPanel.Margin = new Thickness(0, 0, 200, 0);
+
+            rightButtonPanel.HorizontalAlignment = HorizontalAlignment.Right;
+            rightButtonPanel.Margin = new Thickness(200, 0, 0, 0);
+            #endregion
+
+            #region backButtonElements
+            Button backButton = new Button();
+            StackPanel backButtonPanel = new StackPanel();
+            PackIconMaterial backButtonIcon = new PackIconMaterial();
+            Label backButtonLabel = new Label();
+            #endregion
+
+            #region infoButtonElements
+            Button infoButton = new Button();
+            StackPanel infoButtonPanel = new StackPanel();
+            PackIconMaterial infoButtonIcon = new PackIconMaterial();
+            Label infoButtonLabel = new Label();
+            #endregion
+
+
+            #region backButtonProperties
+
+            backButton.Click += backCanalButton_Click;
+            backButton.Width = 100;
+            backButton.Height = 40;
+            backButton.Name = "backCanalButton";
+            backButton.HorizontalAlignment = HorizontalAlignment.Right;
+
+            backButtonPanel.Orientation = Orientation.Horizontal;
+
+            backButtonIcon.Kind = PackIconMaterialKind.LessThan;
+            backButtonIcon.VerticalAlignment = VerticalAlignment.Center;
+            backButtonIcon.HorizontalAlignment = HorizontalAlignment.Center;
+            backButtonIcon.FontSize = 40;
+            backButtonIcon.Foreground = Brushes.Black;
+
+            backButtonLabel.Content = name;
+            backButtonLabel.FontSize = 22;
+
+            backButtonPanel.Children.Add(backButtonIcon);
+            backButtonPanel.Children.Add(backButtonLabel);
+
+            backButton.Content = backButtonPanel;
+            #endregion
+
+            #region infoButtonProperties
+            infoButton.Click += infoCanalButton_Click;
+            infoButton.Width = 100;
+            infoButton.Height = 40;
+            infoButton.Name = "infoCanalButton";
+            infoButton.HorizontalAlignment = HorizontalAlignment.Right;
+
+            infoButtonPanel.Orientation = Orientation.Horizontal;
+
+            infoButtonIcon.Kind = PackIconMaterialKind.InformationOutline;
+            infoButtonIcon.VerticalAlignment = VerticalAlignment.Center;
+            infoButtonIcon.HorizontalAlignment = HorizontalAlignment.Center;
+            infoButtonIcon.FontSize = 40;
+            infoButtonIcon.Foreground = Brushes.Black;
+
+            infoButtonPanel.Children.Add(infoButtonIcon);
+
+            infoButton.Content = infoButtonPanel;
+            #endregion
+
+
+            leftButtonPanel.Children.Add(backButton);
+            rightButtonPanel.Children.Add(infoButton);
+
+            topStackPanel.Children.Add(leftButtonPanel);
+            topStackPanel.Children.Add(rightButtonPanel);
+
+            page.Content = topStackPanel;
+            page.Name = name + "Page";
+
+            listOfPages.Add(page);
         }
 
         private void createCanalButton(string name)
@@ -139,16 +247,28 @@ namespace ClientApplication
 
             button.Click += switchToCanal_Click;
 
-
             CanalsPanel.Children.Add(button);
         }
 
-        private void displayCanal()
+        private void displayCanal(string canalName)
         {
-            StackPanel topInfoPanel = new StackPanel();
-
+            pagesBorder.Visibility = Visibility.Visible;
+            framePages.Content = listOfPages.First(p => p.Name == canalName+"Page");
         }
-      
+
+        private void backCanalButton_Click(object sender, RoutedEventArgs e)
+        {
+            string res = connectionController.leaveCanal();
+            MessageBox.Show(res);
+
+            pagesBorder.Visibility = Visibility.Hidden;
+        }
+
+        private void infoCanalButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
 
         private void infoCanal_Click(object sender, RoutedEventArgs e)
         {
