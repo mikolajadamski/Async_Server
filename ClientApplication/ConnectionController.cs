@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ClientApplication
 {
-    class ConnectionController
+    public class ConnectionController
     {
         Client client;
         byte[] buffer;
@@ -96,6 +96,33 @@ namespace ClientApplication
         {
             return client.Username;
         }
+
+        public string createCanal(string canalName)
+        {
+            sendText("create " + canalName);
+
+            string response = readText();
+
+            return response;
+        }
+
+        public string deleteCanal(string canalName)
+        {
+            sendText("delete " + canalName);
+
+            string response = readText();
+
+            return response;
+        }
+
+        public string switchToCanal(string canalName)
+        {
+            sendText("switchto " + canalName);
+
+            string response = readText();
+
+            return response;
+        }
         
         public string getCanals()
         {
@@ -105,7 +132,6 @@ namespace ClientApplication
             {
                 return "Błąd";
             }
-            
             return response;
         }
 

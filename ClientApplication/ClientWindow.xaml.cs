@@ -20,18 +20,22 @@ namespace ClientApplication
     /// </summary>
     public partial class ClientWindow : Window
     {
-        ConnectionController connectionController = new ConnectionController();
+        private ConnectionController connectionController;
 
-        public ClientWindow()
+        public ClientWindow(ConnectionController connectionController)
         {
-            connectionController.initializeConnection();
-
-           
+            this.connectionController = connectionController;
 
             InitializeComponent();
 
             displayAvailableCanals();
 
+        }
+
+        public ConnectionController GetConnectionController
+        {
+            get => connectionController;
+            set => connectionController = value;
         }
 
         private void ExitButton_Click(object sender, ExecutedRoutedEventArgs e)
@@ -52,27 +56,49 @@ namespace ClientApplication
 
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
         {
-            string canalName = sender.ToString();
+            string buttonName = ((Button)sender).Name;
 
-            displayCanal(canalName);
+            string canalName = connectionController.switchToCanal(buttonName.Remove(buttonName.Length - 6, 6));
+
+            MessageBox.Show(canalName);
+
+            displayCanal();
         }
 
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
         {
-            createNewCanal();
+            string newCanal = connectionController.createCanal("NowyKanal");
+
+            displayAvailableCanals();
+
+            MessageBox.Show(newCanal);
         }
 
         private void deleteCanal_Click(object sender, RoutedEventArgs e)
         {
+            string buttonName = ((MenuItem)sender).Tag.ToString();
 
+            string canalName = connectionController.deleteCanal(buttonName.Remove(buttonName.Length - 6, 6));
+
+            displayAvailableCanals();
+
+            MessageBox.Show(canalName);
         }
 
         private void displayAvailableCanals()
         {
-            string canalName = "";
-            canalName = connectionController.getCanals();
+            CanalsPanel.Children.Clear();
+            
+            string canalsName = connectionController.getCanals();
 
-            createCanalButton("Bład");
+            char[] separators = new char[] { '\r', '\n' };
+
+            string[] canals = canalsName.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string canalName in canals)
+            {
+                createCanalButton(canalName);
+            }
         }
 
         private void createCanalButton(string name)
@@ -103,6 +129,7 @@ namespace ClientApplication
             stackPanel.Children.Add(label);
 
             menuItem.Click += deleteCanal_Click;
+            menuItem.Tag = button.Name;
             menuItem.Header = "Delete Canal";
 
             contextMenu.Items.Add(menuItem);
@@ -110,25 +137,18 @@ namespace ClientApplication
             button.Content = stackPanel;
             button.ContextMenu = contextMenu;
 
-            button.MouseDoubleClick += switchToCanal_Click;
+            button.Click += switchToCanal_Click;
 
 
             CanalsPanel.Children.Add(button);
         }
 
-        private void displayCanal(string name)
+        private void displayCanal()
         {
             StackPanel topInfoPanel = new StackPanel();
 
-            canalName.Text = name;
-
         }
       
-
-        private void createNewCanal()
-        {
-            
-        }
 
         private void infoCanal_Click(object sender, RoutedEventArgs e)
         {

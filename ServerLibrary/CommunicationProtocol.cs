@@ -13,8 +13,8 @@ namespace ServerLibrary
 
       static public void CommandExecution(NetworkStream stream, byte[] buffer, UserController userController)
        {
-            StreamControl.sendText(userController.User.CurrentCanal + "\r\n", buffer, stream);
-            StreamControl.sendText("Wpisz \"help\" aby uzyskac pomoc\r\n", buffer, stream);
+            //StreamControl.sendText(userController.User.CurrentCanal + "\r\n", buffer, stream);
+            //StreamControl.sendText("Wpisz \"help\" aby uzyskac pomoc\r\n", buffer, stream);
             string[] command = StreamControl.readText(stream, buffer).Split();
             CommunicationProtocol.execute(stream, buffer, userController, command);
         }
