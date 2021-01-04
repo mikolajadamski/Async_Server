@@ -26,8 +26,11 @@ namespace ClientApplication
 
         public MainWindow()
         {
+
             connectionController.initializeConnection();
+
             InitializeComponent();
+
         }
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -52,9 +55,12 @@ namespace ClientApplication
             {
                 connectionController.setUsername(UsernameBox.Text);
                 connectionController.IsLogged = true;
-                ClientWindow clientWindow = new ClientWindow();
+
+                ClientWindow clientWindow = new ClientWindow(connectionController);
+
+                clientWindow.Show();
+
                 Close();
-                clientWindow.ShowDialog();
                
             }
         }

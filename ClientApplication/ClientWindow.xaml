@@ -48,17 +48,8 @@
                     
                     <StackPanel x:Name="infoStackPanel" Margin="0,10,0,10">
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock x:Name="canalName"
-                                   Width="550"
-                                   Text="Kanały"
-                                   FontWeight="Light"
-                                   FontFamily="helvetica"
-                                   FontSize="30"
-                                   Foreground="Black"
-                                   HorizontalAlignment="Center"/>
-
-                                
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            
                                 <Button
                                     Click="infoCanal_Click"
                                     Width="100" Height="40" 
@@ -145,13 +136,13 @@
                        HorizontalAlignment="Left"
                        Margin="20,10,0,10"/>
 
-                    <Border BorderThickness="1" BorderBrush="#f083da"/>
+                    <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
                     <StackPanel x:Name="CanalsPanel" Height="310">
                         
                         
                     </StackPanel>
 
-                    <Border BorderThickness="1" BorderBrush="#f083da"/>
+                    <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
 
                     <StackPanel VerticalAlignment="Bottom">
                         <Button Click="createNewCanal_Click"
