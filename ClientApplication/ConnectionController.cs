@@ -123,6 +123,15 @@ namespace ClientApplication
 
             return response;
         }
+
+        public string leaveCanal()
+        {
+            sendText("//leave");
+
+            string response = readText();
+
+            return response;
+        }
         
         public string getCanals()
         {

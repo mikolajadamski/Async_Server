@@ -39,14 +39,14 @@
                 </Border.Background>
             </Border>
 
-            <Border CornerRadius="15" Grid.ColumnSpan="1" Grid.Column="1" Margin="0,3,3,3" Grid.Row="1">
+            <Border x:Name="pagesBorder" Visibility="Hidden" CornerRadius="15" Grid.ColumnSpan="1" Grid.Column="1" Margin="0,3,3,3" Grid.Row="1">
                 <Border.Background>
                     <SolidColorBrush Color="White"/>
                 </Border.Background>
                 
-                <StackPanel>
+                <Frame x:Name="framePages" NavigationUIVisibility="Hidden">
                     
-                    <StackPanel x:Name="infoStackPanel" Margin="0,10,0,10">
+                    <!--<StackPanel x:Name="infoStackPanel" Margin="0,10,0,10">
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                             
@@ -99,14 +99,11 @@
                             </StackPanel>
                             
                         </Button>
-                    </StackPanel>
+                    </StackPanel>-->
                     
                     
 
-
-
-
-                </StackPanel>
+                </Frame>
                 
             </Border>
 
