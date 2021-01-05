@@ -61,11 +61,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Pages\LeftPages\choseCanalPage.xaml.cs">
+      <DependentUpon>choseCanalPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\RightPages\addPage.xaml.cs">
+      <DependentUpon>addPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\RightPages\canalPage.xaml.cs">
+      <DependentUpon>canalPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="StreamControl.cs" />
+    <Compile Include="Pages\LeftPages\usersPage.xaml.cs">
+      <DependentUpon>usersPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Pages\LeftPages\choseCanalPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\RightPages\addPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ButtonTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\RightPages\canalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -87,6 +111,10 @@
       <DependentUpon>LoginWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Pages\LeftPages\usersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -118,5 +146,6 @@
   <ItemGroup>
     <Resource Include="Images\Logo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

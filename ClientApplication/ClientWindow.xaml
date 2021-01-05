@@ -119,50 +119,12 @@
 
 
             <Border CornerRadius="15" Margin="20,200,20,100">
-                <Border.Background>
-                    <SolidColorBrush Color="White"/>
-                </Border.Background>
 
-                <StackPanel  >
-
-                    <TextBlock Text="Kanały"
-                       FontWeight="Light"
-                       FontFamily="helvetica"
-                       FontSize="20"
-                       Foreground="Black"
-                       HorizontalAlignment="Left"
-                       Margin="20,10,0,10"/>
-
-                    <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
-                    <StackPanel x:Name="CanalsPanel" Height="310">
-                        
-                        
-                    </StackPanel>
-
-                    <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
-
-                    <StackPanel VerticalAlignment="Bottom">
-                        <Button Click="createNewCanal_Click"
-                        Width="100" Height="40" 
-                        Margin="0,0,0,0" 
-                        x:Name="CreateNewCanal" 
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom">
-                            <StackPanel Orientation="Horizontal">
-                                <iconPacks:PackIconMaterial 
-                            Kind="Plus"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Foreground="Black"/>
-                                <Label x:Name="createCanalLabael" Content="Stwórz kanał"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-
-
-                </StackPanel>
-
-                
+                <Frame
+                    x:Name="smallFrame"
+                    NavigationUIVisibility="Hidden">
+                    
+                </Frame>
 
             </Border>
             
