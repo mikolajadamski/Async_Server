@@ -24,6 +24,12 @@ namespace ClientApplication
 
         private List<Page> listOfPages = new List<Page>();
 
+        private List<Page> listOfSmallPages = new List<Page>();
+
+        private addPage AddPage = new addPage();
+
+        private choseCanalPage ChoseCanalPage = new choseCanalPage();
+
         public ClientWindow(ConnectionController connectionController)
         {
             this.connectionController = connectionController;
@@ -32,11 +38,10 @@ namespace ClientApplication
 
             displayAvailableCanals();
 
-        }
+            createNecessaryPages();
 
-        private void createPages()
-        {
-            throw new NotImplementedException();
+            smallFrame.Content = ChoseCanalPage;
+
         }
 
         public ConnectionController GetConnectionController
@@ -61,24 +66,31 @@ namespace ClientApplication
 
         }
 
-        private void switchToCanal_Click(object sender, RoutedEventArgs e)
-        {
-            string buttonName = ((Button)sender).Name;
-
-            string canalName = connectionController.switchToCanal(buttonName.Remove(buttonName.Length - 6, 6));
-
-            MessageBox.Show(canalName);
-
-            displayCanal(canalName.Remove(buttonName.Length-6));
-        }
+       
 
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
         {
-            string newCanal = connectionController.createCanal("NowyKanal");
+            displayCanal("Add");
+        }
 
-            displayAvailableCanals();
+        private void createCanal_Click(object sender, RoutedEventArgs e)
+        {
+            string canalName = AddPage.getCenterPanelTextBox();
+            if (canalName.Length != 0)
+            {
+                string newCanal = connectionController.createCanal(canalName);
 
-            MessageBox.Show(newCanal);
+                displayAvailableCanals();
+
+                //MessageBox.Show(newCanal);
+            }
+            else
+            {
+                MessageBox.Show("Error");
+            }
+
+            pagesBorder.Visibility = Visibility.Hidden;
+           
         }
 
         private void deleteCanal_Click(object sender, RoutedEventArgs e)
@@ -94,7 +106,7 @@ namespace ClientApplication
 
         private void displayAvailableCanals()
         {
-            CanalsPanel.Children.Clear();
+            ChoseCanalPage.getCanalsPanel().Children.Clear();
             
             string canalsName = connectionController.getCanals();
 
@@ -104,112 +116,52 @@ namespace ClientApplication
 
             foreach (string canalName in canals)
             {
-                createCanalButton(canalName);
+                createCanalButton(canalName, ChoseCanalPage.getCanalsPanel());
 
-                createPage(canalName);
+                createCanalPage(canalName);
+
+                createCanalUsersPage(canalName);
             }
         }
 
-        private void createPage(string name)
+        private void createCanalUsersPage(string canalName)
         {
-            Page page = new Page();
+            usersPage UsersPage = new usersPage();
 
-            StackPanel topStackPanel = new StackPanel();
+            UsersPage.addNewUserButton.Click += AddNewUserButton_Click;
+            UsersPage.Name = canalName + "UsersPage";
 
-            StackPanel leftButtonPanel = new StackPanel();
-
-            StackPanel rightButtonPanel = new StackPanel();
-
-            #region topStackPanel
-            topStackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-            topStackPanel.Orientation = Orientation.Horizontal;
-            topStackPanel.Name = name;
-            topStackPanel.Margin = new Thickness(0, 10, 0, 10);
-            topStackPanel.Width = 600;
-
-
-
-            leftButtonPanel.HorizontalAlignment = HorizontalAlignment.Left;
-            leftButtonPanel.Margin = new Thickness(0, 0, 200, 0);
-
-            rightButtonPanel.HorizontalAlignment = HorizontalAlignment.Right;
-            rightButtonPanel.Margin = new Thickness(200, 0, 0, 0);
-            #endregion
-
-            #region backButtonElements
-            Button backButton = new Button();
-            StackPanel backButtonPanel = new StackPanel();
-            PackIconMaterial backButtonIcon = new PackIconMaterial();
-            Label backButtonLabel = new Label();
-            #endregion
-
-            #region infoButtonElements
-            Button infoButton = new Button();
-            StackPanel infoButtonPanel = new StackPanel();
-            PackIconMaterial infoButtonIcon = new PackIconMaterial();
-            Label infoButtonLabel = new Label();
-            #endregion
-
-
-            #region backButtonProperties
-
-            backButton.Click += backCanalButton_Click;
-            backButton.Width = 100;
-            backButton.Height = 40;
-            backButton.Name = "backCanalButton";
-            backButton.HorizontalAlignment = HorizontalAlignment.Right;
-
-            backButtonPanel.Orientation = Orientation.Horizontal;
-
-            backButtonIcon.Kind = PackIconMaterialKind.LessThan;
-            backButtonIcon.VerticalAlignment = VerticalAlignment.Center;
-            backButtonIcon.HorizontalAlignment = HorizontalAlignment.Center;
-            backButtonIcon.FontSize = 40;
-            backButtonIcon.Foreground = Brushes.Black;
-
-            backButtonLabel.Content = name;
-            backButtonLabel.FontSize = 22;
-
-            backButtonPanel.Children.Add(backButtonIcon);
-            backButtonPanel.Children.Add(backButtonLabel);
-
-            backButton.Content = backButtonPanel;
-            #endregion
-
-            #region infoButtonProperties
-            infoButton.Click += infoCanalButton_Click;
-            infoButton.Width = 100;
-            infoButton.Height = 40;
-            infoButton.Name = "infoCanalButton";
-            infoButton.HorizontalAlignment = HorizontalAlignment.Right;
-
-            infoButtonPanel.Orientation = Orientation.Horizontal;
-
-            infoButtonIcon.Kind = PackIconMaterialKind.InformationOutline;
-            infoButtonIcon.VerticalAlignment = VerticalAlignment.Center;
-            infoButtonIcon.HorizontalAlignment = HorizontalAlignment.Center;
-            infoButtonIcon.FontSize = 40;
-            infoButtonIcon.Foreground = Brushes.Black;
-
-            infoButtonPanel.Children.Add(infoButtonIcon);
-
-            infoButton.Content = infoButtonPanel;
-            #endregion
-
-
-            leftButtonPanel.Children.Add(backButton);
-            rightButtonPanel.Children.Add(infoButton);
-
-            topStackPanel.Children.Add(leftButtonPanel);
-            topStackPanel.Children.Add(rightButtonPanel);
-
-            page.Content = topStackPanel;
-            page.Name = name + "Page";
-
-            listOfPages.Add(page);
+            listOfSmallPages.Add(UsersPage);
         }
 
-        private void createCanalButton(string name)
+       
+
+        public void createNecessaryPages()
+        { 
+            AddPage.setBottomButton_Click(createCanal_Click);
+            AddPage.setLeftTopButton_Click(backAddPage_Click);
+            AddPage.Name = "AddPage";
+
+            listOfPages.Add(AddPage);
+
+            ChoseCanalPage.setCreateNewCanalButton_Click(createNewCanal_Click);
+        }
+
+        private void createCanalPage(string name)
+        {
+            canalPage CanalPage = new canalPage();
+
+            CanalPage.setLeftTopButton_Click(leaveCanalButton_Click);
+            CanalPage.setRightTopButton_Click(infoCanalButton_Click);
+            CanalPage.setRightBottomButton_Click(SendMessageToCanal_Click);
+            CanalPage.setCenterTopNamePanel(name);
+            CanalPage.Name = name+"Page";
+
+            listOfPages.Add(CanalPage);
+        }
+
+        //to do
+        private void createCanalButton(string name, StackPanel canalsPanel)
         {
             Button button = new Button();
             StackPanel stackPanel = new StackPanel();
@@ -247,16 +199,34 @@ namespace ClientApplication
 
             button.Click += switchToCanal_Click;
 
-            CanalsPanel.Children.Add(button);
+            canalsPanel.Children.Add(button);
+        }
+
+        private void switchToCanal_Click(object sender, RoutedEventArgs e)
+        {
+            string buttonName = ((Button)sender).Name;
+
+            string canalName = connectionController.switchToCanal(buttonName.Remove(buttonName.Length - 6, 6));
+
+            //MessageBox.Show(canalName);
+
+            displayCanal(canalName.Remove(buttonName.Length - 6));
+        }
+
+        private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Dodaj nowego uzytkownika do kanalu!");
         }
 
         private void displayCanal(string canalName)
         {
             pagesBorder.Visibility = Visibility.Visible;
             framePages.Content = listOfPages.First(p => p.Name == canalName+"Page");
+            if(canalName != "Add")
+                smallFrame.Content = listOfSmallPages.First(p => p.Name == canalName + "UsersPage");
         }
 
-        private void backCanalButton_Click(object sender, RoutedEventArgs e)
+        private void backAddPage_Click(object sender, RoutedEventArgs e)
         {
             string res = connectionController.leaveCanal();
             MessageBox.Show(res);
@@ -264,9 +234,17 @@ namespace ClientApplication
             pagesBorder.Visibility = Visibility.Hidden;
         }
 
+        private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
+        {
+            string res = connectionController.leaveCanal();
+            //MessageBox.Show(res);
+
+            pagesBorder.Visibility = Visibility.Hidden;
+            smallFrame.Content = ChoseCanalPage;
+        }
+
         private void infoCanalButton_Click(object sender, RoutedEventArgs e)
         {
-            
         }
 
 
@@ -279,5 +257,16 @@ namespace ClientApplication
         {
 
         }
+
+
+
+        #region canalPageProperties
+
+        private void LeftTopButton_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
