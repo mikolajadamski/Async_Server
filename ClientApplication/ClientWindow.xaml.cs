@@ -75,7 +75,7 @@ namespace ClientApplication
 
         private void createCanal_Click(object sender, RoutedEventArgs e)
         {
-            string canalName = AddPage.getCenterPanelTextBox();
+            string canalName = AddPage.getCenterPanelTextBox;
             if (canalName.Length != 0)
             {
                 string newCanal = connectionController.createCanal(canalName);
@@ -106,7 +106,7 @@ namespace ClientApplication
 
         private void displayAvailableCanals()
         {
-            ChoseCanalPage.getCanalsPanel().Children.Clear();
+            ChoseCanalPage.getCanalsPanel.Children.Clear();
             
             string canalsName = connectionController.getCanals();
 
@@ -116,7 +116,7 @@ namespace ClientApplication
 
             foreach (string canalName in canals)
             {
-                createCanalButton(canalName, ChoseCanalPage.getCanalsPanel());
+                createCanalButton(canalName, ChoseCanalPage.getCanalsPanel);
 
                 createCanalPage(canalName);
 
@@ -137,69 +137,53 @@ namespace ClientApplication
        
 
         public void createNecessaryPages()
-        { 
-            AddPage.setBottomButton_Click(createCanal_Click);
-            AddPage.setLeftTopButton_Click(backAddPage_Click);
+        {
+            AddPage.setBottomButton_Click = createCanal_Click;
+            AddPage.setLeftTopButton_Click = backAddPage_Click;
             AddPage.Name = "AddPage";
 
             listOfPages.Add(AddPage);
 
-            ChoseCanalPage.setCreateNewCanalButton_Click(createNewCanal_Click);
+            ChoseCanalPage.setCreateNewCanalButton_Click = createNewCanal_Click;
         }
 
         private void createCanalPage(string name)
         {
             canalPage CanalPage = new canalPage();
 
-            CanalPage.setLeftTopButton_Click(leaveCanalButton_Click);
-            CanalPage.setRightTopButton_Click(infoCanalButton_Click);
-            CanalPage.setRightBottomButton_Click(SendMessageToCanal_Click);
-            CanalPage.setCenterTopNamePanel(name);
+            CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
+            CanalPage.setRightTopButton_Click = infoCanalButton_Click;
+            CanalPage.setRightBottomButton_Click = SendMessageToCanal_Click;
+            CanalPage.setCenterTopNamePanel = name;
             CanalPage.Name = name+"Page";
 
             listOfPages.Add(CanalPage);
         }
 
-        //to do
+        
+
+        //to do ContextMenu
         private void createCanalButton(string name, StackPanel canalsPanel)
         {
-            Button button = new Button();
-            StackPanel stackPanel = new StackPanel();
-            PackIconMaterial packIconMaterial = new PackIconMaterial();
-            Label label = new Label();
             ContextMenu contextMenu = new ContextMenu();
             MenuItem menuItem = new MenuItem();
 
-            stackPanel.Orientation = Orientation.Horizontal;
+            CanalButton canalButton = new CanalButton();
+            canalButton.getCanalNameButtonLabel = name;
+            canalButton.setCanalButton_Click = switchToCanal_Click;
+            canalButton.setCanalButtonMargin = new Thickness(0, 2, 0, 2);
 
-            button.Height = 40;
-            button.Width = 100;
-            button.Name = name + "Button";
-            button.VerticalAlignment = VerticalAlignment.Center;
-            button.HorizontalAlignment = HorizontalAlignment.Left;
-
-            packIconMaterial.Kind = PackIconMaterialKind.Phone;
-            packIconMaterial.VerticalAlignment = VerticalAlignment.Center;
-            packIconMaterial.HorizontalAlignment = HorizontalAlignment.Center;
-            packIconMaterial.Foreground = Brushes.Black;
-
-            label.Content = name;
-
-            stackPanel.Children.Add(packIconMaterial);
-            stackPanel.Children.Add(label);
+            canalButton.getCanalButtonName = name + "Button";
 
             menuItem.Click += deleteCanal_Click;
-            menuItem.Tag = button.Name;
+            menuItem.Tag = canalButton.getCanalButtonName;
             menuItem.Header = "Delete Canal";
 
             contextMenu.Items.Add(menuItem);
 
-            button.Content = stackPanel;
-            button.ContextMenu = contextMenu;
+            canalButton.setContextMenu = contextMenu;
 
-            button.Click += switchToCanal_Click;
-
-            canalsPanel.Children.Add(button);
+            canalsPanel.Children.Add(canalButton);
         }
 
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
@@ -213,6 +197,7 @@ namespace ClientApplication
             displayCanal(canalName.Remove(buttonName.Length - 6));
         }
 
+        //to do
         private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Dodaj nowego uzytkownika do kanalu!");
@@ -228,9 +213,6 @@ namespace ClientApplication
 
         private void backAddPage_Click(object sender, RoutedEventArgs e)
         {
-            string res = connectionController.leaveCanal();
-            MessageBox.Show(res);
-
             pagesBorder.Visibility = Visibility.Hidden;
         }
 
@@ -242,31 +224,23 @@ namespace ClientApplication
             pagesBorder.Visibility = Visibility.Hidden;
             smallFrame.Content = ChoseCanalPage;
         }
-
-        private void infoCanalButton_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-
+        
+        //to do
         private void infoCanal_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
+        //to do
         private void SendMessageToCanal_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-
-
-        #region canalPageProperties
-
-        private void LeftTopButton_Click(object sender, RoutedEventArgs e)
+        //to do
+        private void infoCanalButton_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
-
-        #endregion
     }
 }
