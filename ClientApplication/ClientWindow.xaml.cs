@@ -22,7 +22,7 @@ namespace ClientApplication
     {
         private ConnectionController connectionController;
 
-        private List<Page> listOfPages = new List<Page>();
+        private List<canalPage> listOfPages = new List<canalPage>();
 
         private List<Page> listOfSmallPages = new List<Page>();
 
@@ -61,16 +61,16 @@ namespace ClientApplication
                 DragMove();
         }
 
+        //to do
         private void SettingButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-       
-
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
         {
-            displayCanal("Add");
+            pagesBorder.Visibility = Visibility.Visible;
+            framePages.Content = AddPage;
         }
 
         private void createCanal_Click(object sender, RoutedEventArgs e)
@@ -104,6 +104,7 @@ namespace ClientApplication
             MessageBox.Show(canalName);
         }
 
+        //to do scroll
         private void displayAvailableCanals()
         {
             ChoseCanalPage.getCanalsPanel.Children.Clear();
@@ -134,15 +135,11 @@ namespace ClientApplication
             listOfSmallPages.Add(UsersPage);
         }
 
-       
-
         public void createNecessaryPages()
         {
             AddPage.setBottomButton_Click = createCanal_Click;
             AddPage.setLeftTopButton_Click = backAddPage_Click;
             AddPage.Name = "AddPage";
-
-            listOfPages.Add(AddPage);
 
             ChoseCanalPage.setCreateNewCanalButton_Click = createNewCanal_Click;
         }
@@ -153,14 +150,15 @@ namespace ClientApplication
 
             CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
             CanalPage.setRightTopButton_Click = infoCanalButton_Click;
-            CanalPage.setRightBottomButton_Click = SendMessageToCanal_Click;
+            CanalPage.setSendButton_Click = sendMessageButton_Click;
             CanalPage.setCenterTopNamePanel = name;
+            CanalPage.getSendButtonTag = name;
             CanalPage.Name = name+"Page";
+
+            string mess= CanalPage.getMessageText;
 
             listOfPages.Add(CanalPage);
         }
-
-        
 
         //to do ContextMenu
         private void createCanalButton(string name, StackPanel canalsPanel)
@@ -207,8 +205,7 @@ namespace ClientApplication
         {
             pagesBorder.Visibility = Visibility.Visible;
             framePages.Content = listOfPages.First(p => p.Name == canalName+"Page");
-            if(canalName != "Add")
-                smallFrame.Content = listOfSmallPages.First(p => p.Name == canalName + "UsersPage");
+            smallFrame.Content = listOfSmallPages.First(p => p.Name == canalName + "UsersPage");
         }
 
         private void backAddPage_Click(object sender, RoutedEventArgs e)
@@ -232,9 +229,12 @@ namespace ClientApplication
         }
 
         //to do
-        private void SendMessageToCanal_Click(object sender, RoutedEventArgs e)
+        private void sendMessageButton_Click(object sender, RoutedEventArgs e)
         {
+            string canalName = ((Button)sender).Tag.ToString();
 
+            string message = listOfPages.First(p => p.Name == canalName).getMessageText;
+            connectionController.sendText(message);
         }
 
         //to do

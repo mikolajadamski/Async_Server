@@ -56,14 +56,20 @@ namespace ClientApplication
             set { centerPanel.Children.Add(value); }
         }
 
-        public string insertBottomBlockText
+        public string getMessageText
         {
-            set { insertBottomBlock.Text = value; }
+            set { messageBox.Text = value; }
+            get { return messageBox.Text; }
         }
 
-        public RoutedEventHandler setRightBottomButton_Click
+        public RoutedEventHandler setSendButton_Click
         {
-           set{ rightBottomButton.Click += value; }
+           set{ sendButton.Click += value; }
+        }
+
+        public string getSendButtonTag
+        {
+            set { sendButton.Tag = value; }
         }
     }
 }
