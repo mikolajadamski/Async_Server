@@ -25,27 +25,14 @@ namespace ClientApplication
             InitializeComponent();
         }
 
-        public string setCreateNewCanalButton_Click(RoutedEventHandler createNewCanalButton_Click)
+        public RoutedEventHandler setCreateNewCanalButton_Click
         {
-            try
-            {
-                CreateNewCanalButton.Click += createNewCanalButton_Click;
-            }
-            catch
-            {
-                return "error";
-            }
-            return "OK";
+            set { CreateNewCanalButton.Click += value; }
         }
 
-        public StackPanel getCanalsPanel()
+        public StackPanel getCanalsPanel
         {
-            return CanalsPanel;
-        }
-
-        private void CanalsPanel_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
-        {
-
+            get { return CanalsPanel; }
         }
     }
 }

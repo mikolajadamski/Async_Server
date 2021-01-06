@@ -61,6 +61,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CanalButton.xaml.cs">
+      <DependentUpon>CanalButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CanalButtonContexMenu.xaml.cs">
+      <DependentUpon>CanalButtonContexMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LeftPages\choseCanalPage.xaml.cs">
       <DependentUpon>choseCanalPage.xaml</DependentUpon>
     </Compile>
@@ -77,6 +83,14 @@
     <Compile Include="Pages\LeftPages\usersPage.xaml.cs">
       <DependentUpon>usersPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="CanalButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CanalButtonContexMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\LeftPages\choseCanalPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

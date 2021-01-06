@@ -16,28 +16,19 @@ using System.Windows.Shapes;
 namespace ClientApplication
 {
     /// <summary>
-    /// Interaction logic for addPage.xaml
+    /// Interaction logic for CanalButtonContexMenu.xaml
     /// </summary>
-    public partial class addPage : Page
+    public partial class CanalButtonContexMenu : UserControl
     {
-        public addPage()
+        public CanalButtonContexMenu()
         {
             InitializeComponent();
         }
 
-        public RoutedEventHandler setLeftTopButton_Click
+        public string getCanalButtonContextMenuName 
         {
-            set { leftTopButton.Click += value; }
-        }
-
-        public RoutedEventHandler setBottomButton_Click
-        {
-            set{ bottomButton.Click += value; }
-        }
-
-        public string getCenterPanelTextBox
-        {
-            get { return centerPanelTextBox.Text; }
+            set { canalButtonContextMenu.Name = value; }
+            get { return canalButtonContextMenu.Name; }
         }
     }
 }

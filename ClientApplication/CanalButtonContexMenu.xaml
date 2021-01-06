@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="ClientApplication.CanalButtonContexMenu"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientApplication" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             Height="30" 
+             Width="100">
+    
+
+    <Grid
+        x:Name="canalButtonContextMenu">
+
+        <MenuItem>
+
+            <iconPacks:PackIconMaterial 
+                        Kind="Delete"
+                        Height="10"
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center"
+                        Foreground="Black"/>
+
+            <Label
+                        FontSize="10"
+                        Content="Usuń kanał"/>
+
+        </MenuItem>
+        <!--<Border
+            CornerRadius="10" 
+            BorderThickness="3"
+            Background="White">
+
+            <Button
+                x:Name="canalButtonContextMenuButton">
+
+                <StackPanel
+                    Orientation="Horizontal">
+
+                    <iconPacks:PackIconMaterial 
+                        Kind="Delete"
+                        Height="10"
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center"
+                        Foreground="Black"/>
+
+                    <Label
+                        FontSize="10"
+                        Content="Usuń kanał"/>
+
+                </StackPanel>
+
+            </Button>
+
+        </Border>-->
+        
+    </Grid>
+
+    
+</UserControl>

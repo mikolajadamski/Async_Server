@@ -25,114 +25,45 @@ namespace ClientApplication
             InitializeComponent();
         }
 
-        public string setLeftTopButtonVisibility(Visibility visibility)
+        public Visibility setLeftTopButtonVisibility
         {
-            try
-            {
-                leftTopButtonPanel.Visibility = visibility;
-            }
-            catch(Exception e)
-            {
-                return "Error";
-            }
-            return "OK";
+            set { leftTopButtonPanel.Visibility = value; }
         }
 
-        public string setLeftTopButton_Click(RoutedEventHandler LeftTopButton_Click)
+        public RoutedEventHandler setLeftTopButton_Click
         {
-            try
-            {
-                leftTopButton.Click += LeftTopButton_Click;
-            }
-            catch
-            {
-                return "error";
-            }
-            return "OK";
+            set { leftTopButton.Click += value; }
+           
         }
 
-        public string setCenterTopNamePanel(string content)
+        public string setCenterTopNamePanel
         {
-            try
-            {
-                centerTopNameLabel.Content = content;
-            }
-            catch(Exception e)
-            {
-                return "Error";
-            }
-
-            return "OK";
+            set { centerTopNameLabel.Content = value; }
         }
 
-        public string setRightTopButtonVisibility(Visibility visibility)
+        public Visibility setRightTopButtonVisibility
         {
-            try
-            {
-                rightTopButtonPanel.Visibility = visibility;
-            }
-            catch (Exception e)
-            {
-                return "Error";
-            }
-            return "OK";
+            set { rightTopButtonPanel.Visibility = value; }
         }
 
-        public string setRightTopButton_Click(RoutedEventHandler RightTopButton_Click)
+        public RoutedEventHandler setRightTopButton_Click
         {
-            try
-            {
-                rightTopButton.Click += RightTopButton_Click;
-            }
-            catch
-            {
-                return "Error";
-            }
-            return "OK";
+            set { rightTopButton.Click += value; }
         }
 
-
-        public string setCenterStackPanel(StackPanel stackPanel)
+        public StackPanel setCenterStackPanel
         {
-            try
-            {
-                centerPanel.Children.Add(stackPanel);
-            }
-            catch (Exception e) 
-            {
-                return "Error";
-            }
-
-            return "OK";
+            set { centerPanel.Children.Add(value); }
         }
 
-
-        public string insertBottomBlockText(string text)
+        public string insertBottomBlockText
         {
-            try
-            {
-                insertBottomBlock.Text = text;
-            }
-            catch(Exception e)
-            {
-                return "Error";
-            }
-
-            return "OK";
+            set { insertBottomBlock.Text = value; }
         }
 
-        public string setRightBottomButton_Click(RoutedEventHandler RightBottomButton_Click)
+        public RoutedEventHandler setRightBottomButton_Click
         {
-            try
-            {
-                rightBottomButton.Click += RightBottomButton_Click;
-            }
-            catch (Exception e)
-            {
-                return "Error";
-            }
-
-            return "OK";
+           set{ rightBottomButton.Click += value; }
         }
     }
 }
