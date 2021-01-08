@@ -10,7 +10,7 @@
         x:Name="canalButtonGrid">
 
         <Border CornerRadius="10" 
-                BorderThickness="3">
+                BorderThickness="0,0,0,3">
 
             <Border.BorderBrush>
 
