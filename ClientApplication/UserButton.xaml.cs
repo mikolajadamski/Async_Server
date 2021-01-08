@@ -16,31 +16,18 @@ using System.Windows.Shapes;
 namespace ClientApplication
 {
     /// <summary>
-    /// Interaction logic for usersPage.xaml
+    /// Interaction logic for CanalButton.xaml
     /// </summary>
-    public partial class usersPage : Page
+    public partial class UserButton : UserControl
     {
-        public usersPage()
+        public UserButton()
         {
             InitializeComponent();
         }
-
-        public string setCreateNewCanalButton_Click(RoutedEventHandler addNewUserButton_Click)
+        public object UserButtonLabel
         {
-            try
-            {
-                addNewUserButton.Click += addNewUserButton_Click;
-            }
-            catch
-            {
-                return "error";
-            }
-            return "OK";
-        }
-
-        public StackPanel UsersPanel
-        {
-            get { return usersPanel; }
+            set { userButtonLabel.Content = value; }
+            get { return userButtonLabel.Content; }
         }
     }
 }

@@ -15,7 +15,8 @@
                 <SolidColorBrush Color="White"/>
             </Border.Background>
 
-            <StackPanel>
+            <StackPanel
+                x:Name="mainPanel">
 
                 <TextBlock 
                     Text="Uzytkownicy"

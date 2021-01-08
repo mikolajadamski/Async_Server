@@ -67,8 +67,7 @@ namespace ClientApplication
             if (text.Substring(0, 6) == "UPDATE")
             {
                 string[] activeUsers = text.Substring(7).Split();
-                text = string.Join(" \r\n", activeUsers);
-                updateUsersList(text);
+                updateUsersList(activeUsers);
             }
             else if (text.Substring(0, 4) == "RESP")
             {
@@ -87,6 +86,10 @@ namespace ClientApplication
             {
                 case "SWITCHTO":
                     processSwitchTo(response[2]);
+                    break;
+
+                case "CREATE":
+                    processCreate(response[2]);
                     break;
             }
         }
@@ -109,6 +112,18 @@ namespace ClientApplication
             }
         }
 
+        private void processCreate(string response)
+        {
+            if(response == "OK")
+            {
+                //do nothing, canal has been created and can be seen
+            }
+            else if(response == "ERR")
+                    {
+                //TODO: inform about error
+            }
+        }
+
         private void print(string text)
         {
             this.Dispatcher.Invoke(() =>
@@ -118,9 +133,19 @@ namespace ClientApplication
             });
         }
 
-        private void updateUsersList(string text)
+        private void updateUsersList(string[] users)
         {
-            throw new NotImplementedException();
+            this.Dispatcher.Invoke(() =>
+            {
+                usersPage UsersPage = (usersPage)listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage");
+                UsersPage.UsersPanel.Children.Clear();
+                foreach (string user in users)
+                {
+                    UserButton userButton = new UserButton();
+                    userButton.UserButtonLabel = user;
+                    UsersPage.UsersPanel.Children.Add(userButton);
+                }
+            });
         }
 
         /*
@@ -172,8 +197,7 @@ namespace ClientApplication
             string canalName = AddPage.getCenterPanelTextBox;
             if (canalName.Length != 0)
             {
-                string newCanal = connectionController.createCanal(canalName);
-
+                connectionController.createCanal(canalName);
                 displayAvailableCanals();
 
                 //MessageBox.Show(newCanal);

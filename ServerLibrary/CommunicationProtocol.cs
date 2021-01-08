@@ -114,11 +114,11 @@ namespace ServerLibrary
             if (result == 1)
             {
                 CanalsController.addCanal(name);
-                StreamControl.sendText("Utworzono kanał " +name + "\r\n", buffer, stream);
+                StreamControl.sendText("RESP CREATE OK", buffer, stream);
             }
             else
             {
-                StreamControl.sendText("Nie można utworzyć kanału \r\n", buffer, stream);
+                StreamControl.sendText("RESP CREATE ERR", buffer, stream);
             }
         }
 
