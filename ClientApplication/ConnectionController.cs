@@ -115,13 +115,9 @@ namespace ClientApplication
             return response;
         }
 
-        public string switchToCanal(string canalName)
+        public void switchToCanal(string canalName)
         {
             sendText("switchto " + canalName);
-
-            string response = readText();
-
-            return response;
         }
 
         public string leaveCanal()
