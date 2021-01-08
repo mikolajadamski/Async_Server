@@ -67,6 +67,9 @@
     <Compile Include="CanalButtonContexMenu.xaml.cs">
       <DependentUpon>CanalButtonContexMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\LeftPages\choseCanalPage.xaml.cs">
       <DependentUpon>choseCanalPage.xaml</DependentUpon>
     </Compile>
@@ -89,6 +92,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="CanalButtonContexMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Message.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
