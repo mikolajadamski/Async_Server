@@ -308,9 +308,7 @@ namespace ClientApplication
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
-            string res = connectionController.leaveCanal();
-            //MessageBox.Show(res);
-
+            connectionController.leaveCanal();
             pagesBorder.Visibility = Visibility.Hidden;
             smallFrame.Content = ChoseCanalPage;
         }
@@ -328,6 +326,7 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
+            page.setMessagesBoxText(message + "\r\n");
             connectionController.sendText(message);
 
         }

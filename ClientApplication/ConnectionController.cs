@@ -120,13 +120,9 @@ namespace ClientApplication
             sendText("switchto " + canalName);
         }
 
-        public string leaveCanal()
+        public void leaveCanal()
         {
             sendText("//leave");
-
-            string response = readText();
-
-            return response;
         }
         
         public string getCanals()
