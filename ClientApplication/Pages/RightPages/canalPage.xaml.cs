@@ -71,5 +71,18 @@ namespace ClientApplication
         {
             set { sendButton.Tag = value; }
         }
+        public void setMessagesBoxText(string text)
+        {
+            messagesBox.Text += "\r\n" + text;
+        }
+        public void flushMessageText()
+        {
+            messageBox.Text = string.Empty;
+        }
+
+        private void sendButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

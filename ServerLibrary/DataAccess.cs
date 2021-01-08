@@ -275,12 +275,12 @@ namespace ServerLibrary
                       var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
                          if(check != null){
                             user.CurrentCanal = canalName;
-                            return canalName + "\r\n Wpisz \"//leave\" by wrocic do menu glownego \r\n";
+                            return "RESP SWITCHTO OK";
 
                          }
-                         return "Uzytkownik nie ma dostepu do tego kanalu\r\n";
+                         return "RESP SWITCHTO AUTH_ERROR";
                     }
-                   return "Kanal o takiej nazwie nie istnieje\r\n";
+                   return "RESP SWITCHTO INVALID_ERROR";
                }
 
         

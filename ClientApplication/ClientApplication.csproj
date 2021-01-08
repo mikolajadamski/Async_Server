@@ -79,6 +79,7 @@
     <Compile Include="ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SendBuffer.cs" />
     <Compile Include="StreamControl.cs" />
     <Compile Include="Pages\LeftPages\usersPage.xaml.cs">
       <DependentUpon>usersPage.xaml</DependentUpon>
