@@ -128,7 +128,8 @@ namespace ClientApplication
         {
             sendText("//leave");
 
-            string response = readText();
+            string response = "ok";
+                //readText();
 
             return response;
         }

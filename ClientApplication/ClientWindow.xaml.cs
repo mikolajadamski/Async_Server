@@ -233,7 +233,7 @@ namespace ClientApplication
         {
             string canalName = ((Button)sender).Tag.ToString();
 
-            string message = listOfPages.First(p => p.Name == canalName).getMessageText;
+            string message = listOfPages.First(p => p.Name == canalName + "Page").getMessageText;
             connectionController.sendText(message);
         }
 
