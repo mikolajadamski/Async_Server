@@ -131,8 +131,8 @@ namespace ServerLibrary
 
         private static void delete(NetworkStream stream, byte[] buffer, UserController userController, string name)
         {
-            DataAccess.deleteCanal(name, userController.User);
-            StreamControl.sendText("Usunięto kanał " + name + "\r\n", buffer, stream);
+            string resp = DataAccess.deleteCanal(name, userController.User);
+            StreamControl.sendText(resp, buffer, stream);
         }
 
         private static void list(NetworkStream stream, byte[] buffer)

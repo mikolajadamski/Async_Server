@@ -236,13 +236,13 @@ namespace ServerLibrary
                         if (result2.administrator) {
                             databaseConnection.Execute(string.Format("DROP TABLE {0}", canalName));
                             databaseConnection.Execute(string.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
-                            return "Usunięto kanał.\r\n";
+                            return "RESP DEL OK";
                         }
-                        return "Nie masz uprawnień.\r\n";
+                        return "RESP DEL AUTH_ERR";
                     }
-                    return "Nie jesteś członkiem tego kanału.\r\n";
+                    return "RESP DEL AUTH_ERR";
                 }
-                return "Kanał nie istnieje.\r\n";
+                return "RESP DEL INVALID";
 
             }
         }

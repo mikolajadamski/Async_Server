@@ -91,6 +91,29 @@ namespace ClientApplication
                 case "CREATE":
                     processCreate(response[2]);
                     break;
+
+                case "DEL":
+                    processDelete(response[2]);
+                    break;
+            }
+        }
+
+        private void processDelete(string response)
+        {
+            if (response == "OK")
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    displayAvailableCanals();
+                });
+            }
+            else if(response == "AUTH_ERR")
+            {
+                MessageBox.Show("Brak uprawnień!");
+            }
+            else if(response == "INVALID")
+            {
+                MessageBox.Show("Taki kanał nie istnieje!");
             }
         }
 
@@ -119,7 +142,7 @@ namespace ClientApplication
                 //do nothing, canal has been created and can be seen
             }
             else if(response == "ERR")
-                    {
+            {
                 //TODO: inform about error
             }
         }
@@ -171,6 +194,12 @@ namespace ClientApplication
 
         private void ExitButton_Click(object sender, ExecutedRoutedEventArgs e)
         {
+            if(currentCanal != string.Empty)
+            {
+                connectionController.leaveCanal();
+            }
+            receiver.Abort();
+            connectionController.disconnectClient();
             this.Close();
         }
 
@@ -214,12 +243,7 @@ namespace ClientApplication
         private void deleteCanal_Click(object sender, RoutedEventArgs e)
         {
             string buttonName = ((MenuItem)sender).Tag.ToString();
-
-            string canalName = connectionController.deleteCanal(buttonName.Remove(buttonName.Length - 6, 6));
-
-            displayAvailableCanals();
-
-            MessageBox.Show(canalName);
+            connectionController.deleteCanal(buttonName.Remove(buttonName.Length - 6, 6));
         }
 
         //to do scroll
@@ -332,6 +356,7 @@ namespace ClientApplication
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
+            currentCanal = string.Empty;
             connectionController.leaveCanal();
             pagesBorder.Visibility = Visibility.Hidden;
             smallFrame.Content = ChoseCanalPage;

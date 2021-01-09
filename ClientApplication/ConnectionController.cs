@@ -102,13 +102,9 @@ namespace ClientApplication
             sendText("create " + canalName);
         }
 
-        public string deleteCanal(string canalName)
+        public void deleteCanal(string canalName)
         {
             sendText("delete " + canalName);
-
-            string response = readText();
-
-            return response;
         }
 
         public void switchToCanal(string canalName)
