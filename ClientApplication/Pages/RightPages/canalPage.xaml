@@ -96,14 +96,21 @@
                 <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
 
                 <!---center-->
-                <StackPanel
-                    x:Name="centerPanel"
-                    Width="600"
+                <ScrollViewer
+                    x:Name="centerPanelScroll"
                     Height="558"
-                    Margin="0,10,0,10">
-                    <TextBox x:Name="messagesBox" Height="552" TextWrapping="Wrap" Text=""/>
-
-                </StackPanel>
+                    Width="600"
+                    HorizontalScrollBarVisibility="Hidden">
+                    <StackPanel
+                        x:Name="centerPanel"
+                        Margin="0,10,0,10"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Stretch">
+                        <!--<TextBox x:Name="messagesBox" Height="552" TextWrapping="Wrap" Text=""/>-->
+                       
+                    </StackPanel>
+                    
+                </ScrollViewer>
 
                 <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
                 

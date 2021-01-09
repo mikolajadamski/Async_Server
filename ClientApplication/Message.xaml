@@ -5,34 +5,67 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ClientApplication"
              mc:Ignorable="d" 
-             Height="38" d:DesignWidth="540">
+             x:Name="messageControl"
+             MinHeight="53" MaxWidth="360"
+             HorizontalAlignment="Left">
     <Grid>
-        
-        <Border 
-            CornerRadius="15"
-            BorderThickness="0,0,3,3">
+
+        <Border
+            Margin="0,0,0,10">
             
-            <Border.Background>
-                <SolidColorBrush Color="#f5f5f5"/>
-            </Border.Background>
+            <StackPanel>
+                <StackPanel 
+                    x:Name="addtionalMessageInfo"
+                    Height="20"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        x:Name="userMessageName"
+                        Foreground="DarkGray"
+                        FontSize="14"
+                        Text="userName"
+                        Margin="15,0"/>
+                    <TextBlock
+                        VerticalAlignment="Bottom"
+                        x:Name="userMessageTime"
+                        Foreground="DarkGray"
+                        FontSize="10"
+                        Text="11:10:34:PM"/>
+                </StackPanel>
+                <Border 
+                    x:Name="messageBorder"
+                    CornerRadius="15"
+                    BorderThickness="3,0,0,3"
+                    MinHeight="35">
 
-            <Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="#f5f5f5"/>
+                    </Border.Background>
 
-                <LinearGradientBrush>
+                    <Border.BorderBrush>
 
-                    <GradientStop Color="LightGray" Offset="0.0"/>
-                    <GradientStop Color="DarkGray" Offset="1"/>
+                        <LinearGradientBrush x:Name="linearBrush">
 
-                </LinearGradientBrush>
+                            <GradientStop Color="DarkGray" Offset="0.0"/>
+                            <GradientStop Color="LightGray" Offset="1"/>
 
-            </Border.BorderBrush>
+                        </LinearGradientBrush>
 
-            <TextBlock
-                x:Name="messageBlock"
-                FontSize="20"
-                Foreground="White"/>
+                    </Border.BorderBrush>
+
+                    <TextBlock
+                        x:Name="messageBlockText"
+                        FontSize="20"
+                        Foreground="Black"
+                        Margin="15,0"
+                        VerticalAlignment="Center"
+                        Text="Wiadomość"/>
+
+                </Border>
+
+            </StackPanel>
 
         </Border>
-        
+
     </Grid>
+    
 </UserControl>

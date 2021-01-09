@@ -24,5 +24,31 @@ namespace ClientApplication
         {
             InitializeComponent();
         }
+        public void setMessage(string[] message)
+        {
+            userMessageName.Text = message[0];
+            userMessageTime.Text = message[1];
+            messageBlockText.Text = message[2];
+        }
+        public HorizontalAlignment setHorizontalAlignment
+        {
+            set { messageControl.HorizontalAlignment = value; }
+        }
+
+        public void setOwnMessage()
+        {
+            messageControl.HorizontalAlignment = HorizontalAlignment.Right;
+            messageBorder.BorderThickness = new Thickness(0, 0, 3, 3);
+            messageBorder.Background = Brushes.LightSkyBlue;
+            GradientStop leftGradient = new GradientStop(Brushes.LightBlue.Color, 0.0);
+            GradientStop rightGradient = new GradientStop(Brushes.DarkBlue.Color, 1);
+            userMessageName.Visibility=Visibility.Hidden;
+            addtionalMessageInfo.HorizontalAlignment = HorizontalAlignment.Right;
+        }
+
+        public string setmess
+        {
+            set { messageBlockText.Text = value; }
+        }
     }
 }

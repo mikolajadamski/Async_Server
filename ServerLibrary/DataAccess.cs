@@ -67,7 +67,7 @@ namespace ServerLibrary
                 string msg = "";
             for(int i=0; i < result.Count(); i++){
                    
-             msg =  result.ElementAt(i).username + "(" + result.ElementAt(i).time + "): " + result.ElementAt(i).message + "\r\n";
+             msg =  result.ElementAt(i).username + "\t" + result.ElementAt(i).time + "\t" + result.ElementAt(i).message + "\r\n";
                     StreamControl.sendText(msg,buffer,stream);
             }
 
@@ -128,24 +128,26 @@ namespace ServerLibrary
             }
         }
 
-        static public int addMsg(String text, String username, String canalName){
-                  using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
-            {   
-            var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
-                 string tableName = "";
-            if(query != null)
-                 tableName = "k" + query.msgID;
-            string time = DateTime.Now.ToString("h:mm:ss tt");
-                    string query2 = string.Format(
-                        " INSERT INTO {0} (username, time, message) VALUES (\"{1}\", \"{2}\",\"{3}\")", tableName, username, time, text);
-                  
-   int result = databaseConnection.Execute(query2);
+        static public int addMsg(String text, String time, String username, String canalName)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                string tableName = "";
+                if (query != null)
+                    tableName = "k" + query.msgID;
+                string query2 = string.Format(
+                    " INSERT INTO {0} (username, time, message) VALUES (\"{1}\", \"{2}\",\"{3}\")", tableName, username, time, text);
+
+                int result = databaseConnection.Execute(query2);
+
+
                 return result;
-}
-
-
-                  
             }
+
+
+
+        }
 
         static public int changeUserPassword(User user)
         {
