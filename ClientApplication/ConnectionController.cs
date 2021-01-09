@@ -97,13 +97,9 @@ namespace ClientApplication
             return client.Username;
         }
 
-        public string createCanal(string canalName)
+        public void createCanal(string canalName)
         {
             sendText("create " + canalName);
-
-            string response = readText();
-
-            return response;
         }
 
         public string deleteCanal(string canalName)
