@@ -148,7 +148,6 @@ namespace ServerLibrary
             if (userController.User.CurrentCanal != "MENU")
             {
                 CanalsController.joinCanal(name, userController.User.Name, stream, buffer);
-                StreamControl.sendText("Opuszczono kanal\n", buffer, stream);
                 userController.User.CurrentCanal = "MENU";
             }
         }
