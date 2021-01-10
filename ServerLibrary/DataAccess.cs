@@ -55,26 +55,25 @@ namespace ServerLibrary
             }
         }
 
-       static public void CanalHistory(NetworkStream stream, string canalName, byte[] buffer){
+        static public void CanalHistory(NetworkStream stream, string canalName, byte[] buffer)
+        {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                 var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
-                 string tableName = "";
-            if(query != null)
-                 tableName = "k" + query.msgID;
-            string query2 = string.Format("SELECT * from {0}", tableName);
+                var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                string tableName = "";
+                if (query != null)
+                    tableName = "k" + query.msgID;
+                string query2 = string.Format("SELECT * from {0}", tableName);
                 var result = databaseConnection.Query(query2);
                 string msg = "";
-            for(int i=0; i < result.Count(); i++){
-                   
-             msg =  "MSG " + result.ElementAt(i).username + "(" + result.ElementAt(i).time + "): " + result.ElementAt(i).message + " ENDMSG\r\n";
-                    StreamControl.sendText(msg,buffer,stream);
+                for (int i = 0; i < result.Count(); i++)
+                {
+
+                    msg = "MSG " + result.ElementAt(i).username + "\t" + result.ElementAt(i).time + "\t" + result.ElementAt(i).message + " ENDMSG\r\n";
+                    StreamControl.sendText(msg, buffer, stream);
+                }
             }
-
-}         
-        
-
-       }
+        }
 
         internal static void initUsers()
         {
@@ -128,24 +127,20 @@ namespace ServerLibrary
             }
         }
 
-        static public int addMsg(String text, String username, String canalName){
-                  using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
-            {   
-            var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
-                 string tableName = "";
-            if(query != null)
-                 tableName = "k" + query.msgID;
-            string time = DateTime.Now.ToString("h:mm:ss tt");
-                    string query2 = string.Format(
-                        " INSERT INTO {0} (username, time, message) VALUES (\"{1}\", \"{2}\",\"{3}\")", tableName, username, time, text);
-                  
-   int result = databaseConnection.Execute(query2);
+        static public int addMsg(string text, string time, string username, string canalName)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                string tableName = "";
+                if (query != null)
+                    tableName = "k" + query.msgID;
+                string query2 = string.Format(
+                    " INSERT INTO {0} (username, time, message) VALUES (\"{1}\", \"{2}\",\"{3}\")", tableName, username, time, text);
+                int result = databaseConnection.Execute(query2);
                 return result;
-}
-
-
-                  
             }
+        }
 
         static public int changeUserPassword(User user)
         {

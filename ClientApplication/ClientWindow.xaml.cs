@@ -186,7 +186,30 @@ namespace ClientApplication
             this.Dispatcher.Invoke(() =>
             {
                 var page = listOfPages.First(p => p.Name == currentCanal + "Page");
-                page.setMessagesBoxText(text);
+                char[] separators = new char[] { '\r', '\n' };
+
+                string[] textMessages = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string textMessage in textMessages)
+                {
+                    if (textMessage != "Opuszczono kanal")
+                    {
+                        Message message = new Message();
+
+                        char[] messageSeparators = new char[] { '\t' };
+                        string[] messageData = textMessage.Split(messageSeparators, StringSplitOptions.RemoveEmptyEntries);
+                        message.setMessage(messageData);
+
+                        if (messageData[0] != connectionController.getUsername())
+                            message.setHorizontalAlignment = HorizontalAlignment.Left;
+                        else
+                        {
+                            message.setOwnMessage();
+                        }
+
+                        page.setMessage(message);
+                    }
+                }
             });
         }
 

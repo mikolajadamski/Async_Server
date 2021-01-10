@@ -73,7 +73,12 @@ namespace ClientApplication
         }
         public void setMessagesBoxText(string text)
         {
-            messagesBox.Text += "\r\n" + text;
+            //messagesBox.Text += "\r\n" + text;
+        }
+        public void setMessage(Message message)
+        {
+            centerPanel.Children.Add(message);
+            centerPanelScroll.ScrollToEnd();
         }
         public void flushMessageText()
         {

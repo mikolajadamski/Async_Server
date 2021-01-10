@@ -10,7 +10,7 @@
         x:Name="userButtonGrid">
 
         <Border CornerRadius="10" 
-                BorderThickness="3">
+                BorderThickness="0,0,0,3">
 
             <Border.BorderBrush>
 
@@ -48,7 +48,7 @@
                         VerticalAlignment="Center"
                         FontFamily="helvetica"
                         Content="Nazwa użytkownika"
-                        Margin="0,7,0,0"/>
+                        Margin="0,9,0,0"/>
 
                     </StackPanel>
 

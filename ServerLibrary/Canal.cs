@@ -47,12 +47,10 @@ namespace ServerLibrary
                     else
                     {
                         mutex.WaitOne();
-                        if (canalUsers.Count() < 2 && text.Length != 0)
+                        if (text.Length != 0)
                         {
-                            DataAccess.addMsg(text, username, name);
-                        }
-                        else
-                        {
+                            string time = DateTime.Now.ToString("h:mm:ss tt");
+                            DataAccess.addMsg(text, time, username, name);
                             sendToOthers(username, buffer, text);
                         }
                         mutex.ReleaseMutex();
@@ -68,11 +66,11 @@ namespace ServerLibrary
         {
             foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
             {
-                if (canalUser.Key != username && text.Length != 0)
+                if (text.Length != 0)
                 {
-                    StreamControl.sendText("MSG " + username + ": " + text + " ENDMSG\r\n", buffer, canalUser.Value);
-                    DataAccess.addMsg(text, username, name);
-
+                    string time = DateTime.Now.ToString("h:mm:ss tt");
+                    DataAccess.addMsg(text, time, username, name);
+                    StreamControl.sendText("MSG " + username + "\t" + time + "\t" + text + " ENDMSG\r\n", buffer, canalUser.Value);
                     canalUser.Value.Flush();
                 }
             }
