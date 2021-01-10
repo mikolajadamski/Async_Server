@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,6 +29,8 @@ namespace ClientApplication
         private choseCanalPage ChoseCanalPage = new choseCanalPage();
         Thread receiver;
         private string currentCanal;
+        Regex msgFinder;
+        MatchCollection matchCollection;
 
 
         public ClientWindow(ConnectionController connectionController)
@@ -40,6 +43,7 @@ namespace ClientApplication
             receiver = new Thread(receive);
             receiver.Start();
             currentCanal = string.Empty;
+            msgFinder = new Regex("MSG (.+) ENDMSG\r\n");
         }
 
         private void receive()
@@ -73,9 +77,19 @@ namespace ClientApplication
             {
                 processResponse(text);
             }
+            else if(text.Substring(0,3) == "MSG")
+            {
+                
+                matchCollection = msgFinder.Matches(text);
+                foreach (Match match in matchCollection)
+                {
+
+                    print(match.Groups[1].Value);
+                }
+            }
             else
             {
-                print(text);
+                //do nothing, not part of communication protocol
             }
         }
 
@@ -91,6 +105,49 @@ namespace ClientApplication
                 case "CREATE":
                     processCreate(response[2]);
                     break;
+
+                case "DEL":
+                    processDelete(response[2]);
+                    break;
+
+                case "JOIN":
+                    processJoin(response[2]);
+                    break;
+            }
+        }
+
+        private void processJoin(string response)
+        {
+            if (response == "OK")
+            {
+                MessageBox.Show("Dołączono do kanału");
+            }
+            else if (response == "ALREADY_MEMBER")
+            {
+                MessageBox.Show("Użytkownik już jest członkiem tego kanału");
+            }
+            else if (response == "INVALID")
+            {
+                MessageBox.Show("Kanał nie istnieje");
+            }
+        }
+
+        private void processDelete(string response)
+        {
+            if (response == "OK")
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    displayAvailableCanals();
+                });
+            }
+            else if(response == "AUTH_ERR")
+            {
+                MessageBox.Show("Brak uprawnień!");
+            }
+            else if(response == "INVALID")
+            {
+                MessageBox.Show("Taki kanał nie istnieje!");
             }
         }
 
@@ -102,7 +159,7 @@ namespace ClientApplication
             }
             else if (response == "AUTH_ERROR")
             {
-                //brak dostępu
+                MessageBox.Show("Nie jesteś członkiem tego kanału");
                 currentCanal = string.Empty;
             }
             else if (response == "INVALID_ERROR")
@@ -119,7 +176,7 @@ namespace ClientApplication
                 //do nothing, canal has been created and can be seen
             }
             else if(response == "ERR")
-                    {
+            {
                 //TODO: inform about error
             }
         }
@@ -129,32 +186,7 @@ namespace ClientApplication
             this.Dispatcher.Invoke(() =>
             {
                 var page = listOfPages.First(p => p.Name == currentCanal + "Page");
-
-                char[] separators = new char[] { '\r', '\n' };
-
-                string[] textMessages = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (string textMessage in textMessages)
-                {
-                    if (textMessage != "Opuszczono kanal")
-                    {
-                        Message message = new Message();
-
-                        char[] messageSeparators = new char[] { '\t' };
-                        string[] messageData = textMessage.Split(messageSeparators, StringSplitOptions.RemoveEmptyEntries);
-                        message.setMessage(messageData);
-
-                        if (messageData[0] != connectionController.getUsername())
-                            message.setHorizontalAlignment = HorizontalAlignment.Left;
-                        else
-                        {
-                            message.setOwnMessage();
-                        }
-
-                        page.setMessage(message);
-                    }
-                }
-                //page.setMessagesBoxText(text);
+                page.setMessagesBoxText(text);
             });
         }
 
@@ -196,6 +228,12 @@ namespace ClientApplication
 
         private void ExitButton_Click(object sender, ExecutedRoutedEventArgs e)
         {
+            if(currentCanal != string.Empty)
+            {
+                connectionController.leaveCanal();
+            }
+            receiver.Abort();
+            connectionController.disconnectClient();
             this.Close();
         }
 
@@ -239,12 +277,7 @@ namespace ClientApplication
         private void deleteCanal_Click(object sender, RoutedEventArgs e)
         {
             string buttonName = ((MenuItem)sender).Tag.ToString();
-
-            string canalName = connectionController.deleteCanal(buttonName.Remove(buttonName.Length - 6, 6));
-
-            displayAvailableCanals();
-
-            MessageBox.Show(canalName);
+            connectionController.deleteCanal(buttonName.Remove(buttonName.Length - 6, 6));
         }
 
         //to do scroll
@@ -306,27 +339,36 @@ namespace ClientApplication
         //to do ContextMenu
         private void createCanalButton(string name, StackPanel canalsPanel)
         {
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem menuItem = new MenuItem();
-
+    
             CanalButton canalButton = new CanalButton();
             canalButton.getCanalNameButtonLabel = name;
             canalButton.setCanalButton_Click = switchToCanal_Click;
             canalButton.setCanalButtonMargin = new Thickness(0, 2, 0, 2);
-
             canalButton.getCanalButtonName = name + "Button";
 
-            menuItem.Click += deleteCanal_Click;
-            menuItem.Tag = canalButton.getCanalButtonName;
-            menuItem.Header = "Delete Canal";
+            MenuItem joinBar = new MenuItem();
+            joinBar.Click += joinCanalClick;
+            joinBar.Tag = canalButton.getCanalButtonName;
+            joinBar.Header = "Join Canal";
 
-            contextMenu.Items.Add(menuItem);
+            MenuItem deleteBar = new MenuItem();
+            deleteBar.Click += deleteCanal_Click;
+            deleteBar.Tag = canalButton.getCanalButtonName;
+            deleteBar.Header = "Delete Canal";
+
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.Items.Add(joinBar);
+            contextMenu.Items.Add(deleteBar);
 
             canalButton.setContextMenu = contextMenu;
-
             canalsPanel.Children.Add(canalButton);
+        }
 
-
+        private void joinCanalClick(object sender, RoutedEventArgs e)
+        {
+            string name = ((MenuItem)sender).Tag.ToString();
+            string canalName = name.Remove(name.Length - 6);
+            connectionController.joinCanal(canalName);
         }
 
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
@@ -364,6 +406,7 @@ namespace ClientApplication
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
+            currentCanal = string.Empty;
             connectionController.leaveCanal();
             pagesBorder.Visibility = Visibility.Hidden;
             smallFrame.Content = ChoseCanalPage;
@@ -382,7 +425,8 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
-            page.setMessagesBoxText(message + "\r\n");
+            page.setMessagesBoxText(connectionController.getUsername()+": " +message);
+>>>>>>>>> Temporary merge branch 2
             connectionController.sendText(message);
 
         }

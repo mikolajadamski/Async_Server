@@ -99,7 +99,7 @@
                 <ScrollViewer
                     x:Name="centerPanelScroll"
                     Height="558"
-                    Width="600"
+                   Width="600"
                     HorizontalScrollBarVisibility="Hidden">
                     <StackPanel
                         x:Name="centerPanel"
@@ -107,9 +107,9 @@
                         Orientation="Vertical"
                         HorizontalAlignment="Stretch">
                         <!--<TextBox x:Name="messagesBox" Height="552" TextWrapping="Wrap" Text=""/>-->
-                       
+
                     </StackPanel>
-                    
+
                 </ScrollViewer>
 
                 <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>

@@ -42,7 +42,7 @@ namespace ClientApplication
             messageBorder.Background = Brushes.LightSkyBlue;
             GradientStop leftGradient = new GradientStop(Brushes.LightBlue.Color, 0.0);
             GradientStop rightGradient = new GradientStop(Brushes.DarkBlue.Color, 1);
-            userMessageName.Visibility=Visibility.Hidden;
+            userMessageName.Visibility = Visibility.Hidden;
             addtionalMessageInfo.HorizontalAlignment = HorizontalAlignment.Right;
         }
 

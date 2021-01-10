@@ -53,13 +53,10 @@ namespace ServerLibrary
                     else
                     {
                         mutex.WaitOne();
-                        if (canalUsers.Count() < 2 && text.Length != 0)
+                        if (text.Length != 0)
                         {
                             string time = DateTime.Now.ToString("h:mm:ss tt");
                             DataAccess.addMsg(text, time, username, name);
-                        }
-                        else
-                        {
                             sendToOthers(username, buffer, text);
                         }
                         mutex.ReleaseMutex();
@@ -79,8 +76,7 @@ namespace ServerLibrary
                 {
                     string time = DateTime.Now.ToString("h:mm:ss tt");
                     DataAccess.addMsg(text, time, username, name);
-                    StreamControl.sendText(username + "\t" + time + "\t" + text + "\r\n", buffer, canalUser.Value);
-
+                    StreamControl.sendText("MSG " + username + "\t" + time + "\t" + text + " ENDMSG\r\n", buffer, canalUser.Value);
                     canalUser.Value.Flush();
                 }
             }

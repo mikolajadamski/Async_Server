@@ -55,26 +55,25 @@ namespace ServerLibrary
             }
         }
 
-       static public void CanalHistory(NetworkStream stream, string canalName, byte[] buffer){
+        static public void CanalHistory(NetworkStream stream, string canalName, byte[] buffer)
+        {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                 var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
-                 string tableName = "";
-            if(query != null)
-                 tableName = "k" + query.msgID;
-            string query2 = string.Format("SELECT * from {0}", tableName);
+                var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                string tableName = "";
+                if (query != null)
+                    tableName = "k" + query.msgID;
+                string query2 = string.Format("SELECT * from {0}", tableName);
                 var result = databaseConnection.Query(query2);
                 string msg = "";
-            for(int i=0; i < result.Count(); i++){
-                   
-             msg =  result.ElementAt(i).username + "\t" + result.ElementAt(i).time + "\t" + result.ElementAt(i).message + "\r\n";
-                    StreamControl.sendText(msg,buffer,stream);
+                for (int i = 0; i < result.Count(); i++)
+                {
+
+                    msg = "MSG " + result.ElementAt(i).username + "\t" + result.ElementAt(i).time + "\t" + result.ElementAt(i).message + " ENDMSG\r\n";
+                    StreamControl.sendText(msg, buffer, stream);
+                }
             }
-
-}         
-        
-
-       }
+        }
 
         internal static void initUsers()
         {
@@ -128,7 +127,7 @@ namespace ServerLibrary
             }
         }
 
-        static public int addMsg(String text, String time, String username, String canalName)
+        static public int addMsg(string text, string time, string username, string canalName)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
@@ -138,15 +137,9 @@ namespace ServerLibrary
                     tableName = "k" + query.msgID;
                 string query2 = string.Format(
                     " INSERT INTO {0} (username, time, message) VALUES (\"{1}\", \"{2}\",\"{3}\")", tableName, username, time, text);
-
                 int result = databaseConnection.Execute(query2);
-
-
                 return result;
             }
-
-
-
         }
 
         static public int changeUserPassword(User user)
@@ -238,34 +231,43 @@ namespace ServerLibrary
                         if (result2.administrator) {
                             databaseConnection.Execute(string.Format("DROP TABLE {0}", canalName));
                             databaseConnection.Execute(string.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
-                            return "Usunięto kanał.\r\n";
+                            return "RESP DEL OK";
                         }
-                        return "Nie masz uprawnień.\r\n";
+                        return "RESP DEL AUTH_ERR";
                     }
-                    return "Nie jesteś członkiem tego kanału.\r\n";
+                    return "RESP DEL AUTH_ERR";
                 }
-                return "Kanał nie istnieje.\r\n";
+                return "RESP DEL INVALID";
 
             }
         }
 
 
-        public static void addtoCanal(string canalName, string username) {
+        public static string addtoCanal(string canalName, string username) {
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
                 var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-
+                
                 if (result != null) {
                     var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
                     if (check == null) {
                         databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
+                        return "RESP JOIN OK";
                     }
+                    else
+                    {
+                        return "RESP JOIN ALREADY_MEMBER";
+                    }
+                }
+                else
+                {
+                    return "RESP JOIN INVALID";
                 }
             }
         }
-        static public void joinCanal(string canalName, User user)
+        static public string joinCanal(string canalName, User user)
         {
-            addtoCanal(canalName, user.Name);
+            return addtoCanal(canalName, user.Name);
         }
 
 
