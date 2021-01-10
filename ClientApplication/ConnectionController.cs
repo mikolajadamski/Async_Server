@@ -92,9 +92,9 @@ namespace ClientApplication
             return response;
         }
 
-        internal string getUsername()
+        internal string Username
         {
-            return client.Username;
+            get{ return client.Username; }
         }
 
         public void createCanal(string canalName)
@@ -127,15 +127,17 @@ namespace ClientApplication
             sendText("join " + canalName);
         }
 
-        public string getCanals()
+        public void getCanals()
         {
             sendText("list");
-            string response = readText();
-            if (response == "OK")
-            {
-                return "Błąd";
-            }
-            return response;
+            /*
+             * string response = readText();
+             * if (response == "OK")
+             * {
+             * return "Błąd";
+             * }
+             * return response;
+            */
         }
 
         public void addUserToCanal(string canalName, string userName)

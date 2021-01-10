@@ -30,9 +30,15 @@ namespace ClientApplication
             set { CreateNewCanalButton.Click += value; }
         }
 
+        public RoutedEventHandler setResetCanalListButton_Click
+        {
+            set { resetCanalListButton.Click += value; }
+        }
+
         public StackPanel getCanalsPanel
         {
             get { return CanalsPanel; }
         }
+
     }
 }

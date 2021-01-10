@@ -10,7 +10,6 @@ namespace ServerLibrary
 {
     public class CommunicationProtocol
     {
-
         static public void CommandExecution(NetworkStream stream, byte[] buffer, UserController userController)
         {
             //StreamControl.sendText(userController.User.CurrentCanal + "\r\n", buffer, stream);
@@ -18,7 +17,6 @@ namespace ServerLibrary
             string[] command = StreamControl.readText(stream, buffer).Split();
             CommunicationProtocol.execute(stream, buffer, userController, command);
         }
-
 
         static public int LogIn(NetworkStream stream, byte[] buffer, UserController userController)
         {
@@ -51,27 +49,27 @@ namespace ServerLibrary
 
         static private void execute(NetworkStream stream, byte[] buffer, UserController userController, string[] cmd)
         {
-                switch (cmd[0].ToLower())
-                {
-                    case "changepassword": changepassword(stream, buffer, userController); break;
-                    case "create": create(stream, buffer, userController, cmd[1]); break;
-                    case "unregister": unregister(stream, buffer, userController); break;
-                    case "delete": delete(stream, buffer, userController, cmd[1]); break;
-                    case "help": help(stream, buffer); break;
-                    case "list": list(stream, buffer); break;
-                    case "add": DataAccess.addtoCanal(cmd[1], cmd[2]); break;
-                    case "join": join(stream, buffer, userController, cmd[1]); break;
-                    case "remove": DataAccess.removefromCanal(cmd[1], cmd[2], userController.User); break;
-                    case "removeall": DataAccess.removeAllfromCanal(cmd[1]); break;
-                    case "leave": DataAccess.leaveCanal(cmd[1], userController.User); break;
-                    case "listofusers": StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(cmd[1])) + "\r\n", buffer, stream); break;
-                    case "exit": userController.IsLogged = false; break;
-                    case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User); break;
-                    case "switchto": switchto(stream, buffer, userController, cmd[1]); break;
-                    default:
-                        StreamControl.sendText("Nieznana komenda.\r\n", buffer, stream);
-                        break;
-                }
+            switch (cmd[0].ToLower())
+            {
+                case "changepassword": changepassword(stream, buffer, userController); break;
+                case "create": create(stream, buffer, userController, cmd[1]); break;
+                case "unregister": unregister(stream, buffer, userController); break;
+                case "delete": delete(stream, buffer, userController, cmd[1]); break;
+                case "help": help(stream, buffer); break;
+                case "list": list(stream, buffer); break;
+                case "add": DataAccess.addtoCanal(cmd[1], cmd[2]); break;
+                case "join": join(stream, buffer, userController, cmd[1]); break;
+                case "remove": DataAccess.removefromCanal(cmd[1], cmd[2], userController.User); break;
+                case "removeall": DataAccess.removeAllfromCanal(cmd[1]); break;
+                case "leave": DataAccess.leaveCanal(cmd[1], userController.User); break;
+                case "listofusers": StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(cmd[1])) + "\r\n", buffer, stream); break;
+                case "exit": userController.IsLogged = false; break;
+                case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User); break;
+                case "switchto": switchto(stream, buffer, userController, cmd[1]); break;
+                default:
+                    StreamControl.sendText("Nieznana komenda.\r\n", buffer, stream);
+                    break;
+            }
 
         }
 
@@ -94,7 +92,6 @@ namespace ServerLibrary
             StreamControl.sendText("\"listofusers [nazwa kanalu]\" aby uzyskac liste wszystkich czlonkow kanalu\r\n", buffer, stream);
             StreamControl.sendText("\"mkadmin [nazwa kanalu] [nazwa uzytkownika]\" aby nadac prawa admina kanalu danemu uzytkownikowi\r\n", buffer, stream);
         }
-
 
         static private void changepassword(NetworkStream stream, byte[] buffer, UserController userController)
         {
@@ -137,16 +134,13 @@ namespace ServerLibrary
 
         private static void list(NetworkStream stream, byte[] buffer)
         {
-            StreamControl.sendText(string.Join("\r\n", DataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
-
+            StreamControl.sendText("CANALS\r\n" + string.Join("\r\n", DataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
         }
 
         private static void join(NetworkStream stream, byte[] buffer, UserController userController, string name)
         {
-
             StreamControl.sendText(DataAccess.joinCanal(name, userController.User), buffer, stream);
         }
-
 
         private static void switchto(NetworkStream stream, byte[] buffer, UserController userController, string name)
         {
@@ -176,7 +170,5 @@ namespace ServerLibrary
 
             return new User(username, password);
         }
-
-
     }
 }

@@ -37,13 +37,14 @@ namespace ClientApplication
         {
             this.connectionController = connectionController;
             InitializeComponent();
-            displayAvailableCanals();
-            createNecessaryPages();
-            smallFrame.Content = ChoseCanalPage;
             receiver = new Thread(receive);
             receiver.Start();
             currentCanal = string.Empty;
             msgFinder = new Regex("MSG (.+) ENDMSG\r\n");
+
+            displayAvailableCanals();
+            createNecessaryPages();
+            smallFrame.Content = ChoseCanalPage;
         }
 
         private void receive()
@@ -54,7 +55,6 @@ namespace ClientApplication
             {
                 try
                 {
-
                     text = connectionController.readText();
                     processText(text);
                     text = string.Empty;
@@ -89,6 +89,19 @@ namespace ClientApplication
             else if (text.Substring(0, 3) == "ADD")
             {
                 MessageBox.Show(text);
+            }
+            else if (text.Substring(0, 6) == "CANALS")
+            {
+
+                char[] separators = new char[] { '\r', '\n' };
+
+                string[] canals = text.Substring(7).Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                canals.ElementAt(0);
+
+                canals.ElementAt(0).Remove(0, 6);
+
+                updateCanalsList(canals);
             }
             else
             {
@@ -132,6 +145,10 @@ namespace ClientApplication
             else if (response == "INVALID")
             {
                 MessageBox.Show("Kanał nie istnieje");
+            }
+            else if (response == "INVALID_MEMBER")
+            {
+                MessageBox.Show("Użytkownik nie istnieje");
             }
         }
 
@@ -203,7 +220,7 @@ namespace ClientApplication
                         string[] messageData = textMessage.Split(messageSeparators, StringSplitOptions.RemoveEmptyEntries);
                         message.setMessage(messageData);
 
-                        if (messageData[0] != connectionController.getUsername())
+                        if (messageData[0] != connectionController.Username)
                             message.setHorizontalAlignment = HorizontalAlignment.Left;
                         else
                         {
@@ -216,9 +233,6 @@ namespace ClientApplication
             });
         }
 
-
-
-
         private void updateUsersList(string[] users)
         {
             this.Dispatcher.Invoke(() =>
@@ -227,29 +241,31 @@ namespace ClientApplication
                 UsersPage.UsersPanel.Children.Clear();
                 foreach (string user in users)
                 {
-                    UserButton userButton = new UserButton();
-                    userButton.UserButtonLabel = user;
-                    UsersPage.UsersPanel.Children.Add(userButton);
+                    if (user != connectionController.Username)
+                    {
+                        UserButton userButton = new UserButton();
+                        userButton.UserButtonLabel = user;
+                        UsersPage.UsersPanel.Children.Add(userButton);
+                    }
                 }
             });
         }
 
-
-
-        /*
-        private void printInLogger(string text)
+        private void updateCanalsList(string[] canals)
         {
-            if (loggerBox.InvokeRequired)
+            this.Dispatcher.Invoke(() =>
             {
-                var d = new SafeCallDelegate(printInLogger);
-                loggerBox.Invoke(d, new object[] { text });
-            }
-            else
-            {
-                loggerBox.AppendText(text);
-            }
+                ChoseCanalPage.CanalsPanel.Children.Clear();
+                foreach (string canalName in canals)
+                {
+                    createCanalButton(canalName, ChoseCanalPage.getCanalsPanel);
+
+                    createCanalPage(canalName);
+
+                    createCanalUsersPage(canalName);
+                }
+            });
         }
-        */
 
         public ConnectionController GetConnectionController
         {
@@ -293,8 +309,6 @@ namespace ClientApplication
             {
                 connectionController.createCanal(canalName);
                 displayAvailableCanals();
-
-                //MessageBox.Show(newCanal);
             }
             else
             {
@@ -316,20 +330,7 @@ namespace ClientApplication
         {
             ChoseCanalPage.getCanalsPanel.Children.Clear();
 
-            string canalsName = connectionController.getCanals();
-
-            char[] separators = new char[] { '\r', '\n' };
-
-            string[] canals = canalsName.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string canalName in canals)
-            {
-                createCanalButton(canalName, ChoseCanalPage.getCanalsPanel);
-
-                createCanalPage(canalName);
-
-                createCanalUsersPage(canalName);
-            }
+            connectionController.getCanals();
         }
 
         private void createCanalUsersPage(string canalName)
@@ -349,6 +350,12 @@ namespace ClientApplication
             AddPage.Name = "AddPage";
 
             ChoseCanalPage.setCreateNewCanalButton_Click = createNewCanal_Click;
+            ChoseCanalPage.setResetCanalListButton_Click = resetCanalListButton_Click;
+        }
+
+        private void resetCanalListButton_Click(object sender, RoutedEventArgs e)
+        {
+            displayAvailableCanals();
         }
 
         private void createCanalPage(string name)
@@ -406,8 +413,6 @@ namespace ClientApplication
         {
             currentCanal = ((Button)sender).Name.Remove(((Button)sender).Name.Length - 6);
 
-            //MessageBox.Show(connectionController.getListOfUsers(currentCanal));
-
             connectionController.switchToCanal(currentCanal);
 
             
@@ -458,7 +463,7 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
-            page.setMessagesBoxText(connectionController.getUsername()+": " +message);
+            page.setMessagesBoxText(connectionController.Username + ": " + message);
             connectionController.sendText(message);
 
         }
