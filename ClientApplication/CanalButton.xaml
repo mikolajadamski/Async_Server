@@ -73,9 +73,20 @@
                         Margin="0,7,0,0"/>
 
                     </StackPanel>
+                    <StackPanel>
+                        <Popup
+                            x:Name="canalButtonPopup"
+                            IsOpen="False"
+                            Placement="RelativePoint">
+                            <local:CanalButtonContexMenu>
+                                
+                            </local:CanalButtonContexMenu>
+                        </Popup>
+                    </StackPanel>
 
                 </StackPanel>
-                
+
+
             </Button>
 
         </Border>

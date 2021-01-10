@@ -51,6 +51,9 @@ namespace ClientApplication
         {
             set { canalButton.ContextMenu = value; }
         }
-
+        public bool getPopupIsOpen
+        {
+            set { canalButtonPopup.IsOpen = value; }
+        }
     }
 }

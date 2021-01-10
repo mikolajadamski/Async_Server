@@ -42,6 +42,12 @@ namespace ServerLibrary
                     {
                         break;
                     }
+                    else if (text.Substring(0, 5) == "//add")
+                    {
+                        string[] data = text.Substring(5).Split();
+                        DataAccess.addtoCanal(data[1], data[2]);
+                        sendToOthers(username, buffer, text);
+                    }
                     else if (text == "/r/n")
                         continue;
                     else

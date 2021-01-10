@@ -23,7 +23,7 @@ namespace ClientApplication
     {
         private ConnectionController connectionController;
         private List<canalPage> listOfPages = new List<canalPage>();
-        private List<Page> listOfSmallPages = new List<Page>();
+        private List<usersPage> listOfSmallPages = new List<usersPage>();
         private addPage AddPage = new addPage();
         private choseCanalPage ChoseCanalPage = new choseCanalPage();
         Thread receiver;
@@ -272,7 +272,7 @@ namespace ClientApplication
         {
             usersPage UsersPage = new usersPage();
 
-            UsersPage.addNewUserButton.Click += AddNewUserButton_Click;
+            UsersPage.setAddUser_Click = AddNewUserButton_Click;
             UsersPage.Name = canalName + "UsersPage";
 
             listOfSmallPages.Add(UsersPage);
@@ -325,18 +325,25 @@ namespace ClientApplication
             canalButton.setContextMenu = contextMenu;
 
             canalsPanel.Children.Add(canalButton);
+
+
         }
 
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
         {
             currentCanal = ((Button)sender).Name.Remove(((Button)sender).Name.Length - 6);
+
+            //MessageBox.Show(connectionController.getListOfUsers(currentCanal));
+
             connectionController.switchToCanal(currentCanal);
+
+            
         }
 
         //to do
         private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Dodaj nowego uzytkownika do kanalu!");
+            string userName = listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage").getUserName;
         }
 
         private void displayCanal(string canalName)

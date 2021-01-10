@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="ClientApplication.AddUser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClientApplication" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d" 
+             Height="30" Width="260">
+    <Grid>
+        
+        <StackPanel
+            Height="30"
+            Orientation="Horizontal">
+
+            <Button
+                x:Name="addButton"
+                Background="#7be9f6"
+                Margin="10,0,0,0"
+                Width="30">
+                
+                <iconPacks:PackIconMaterial
+                    Kind="Plus"
+                    Height="10"
+                    Foreground="White"/>
+
+            </Button>
+
+            <TextBox
+                x:Name="userNameText"
+                BorderThickness="0"
+                Width="200"
+                FontSize="16"
+                Text="Użytkownik"
+                Margin="10,2,10,2">
+
+            </TextBox>
+
+        </StackPanel>
+        
+    </Grid>
+</UserControl>

@@ -9,8 +9,10 @@
     <Grid 
         x:Name="userButtonGrid">
 
-        <Border CornerRadius="10" 
-                BorderThickness="0,0,0,3">
+        <Border 
+            x:Name="userBorder"
+            CornerRadius="10" 
+            BorderThickness="0,0,0,3">
 
             <Border.BorderBrush>
 

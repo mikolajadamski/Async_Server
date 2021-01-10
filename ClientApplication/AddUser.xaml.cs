@@ -16,22 +16,26 @@ using System.Windows.Shapes;
 namespace ClientApplication
 {
     /// <summary>
-    /// Interaction logic for CanalButton.xaml
+    /// Interaction logic for AddUser.xaml
     /// </summary>
-    public partial class UserButton : UserControl
+    public partial class AddUser : UserControl
     {
-        public UserButton()
+
+        public AddUser()
         {
             InitializeComponent();
         }
-        public object UserButtonLabel
+
+        public RoutedEventHandler setAddButton_Click
         {
-            set { userButtonLabel.Content = value; }
-            get { return userButtonLabel.Content; }
+            set{ addButton.Click += value; }
         }
-        public Brush setBorderColor
+
+        public string getUserName
         {
-            set { userBorder.BorderBrush = value; }
+            get { return userNameText.Text; }
         }
+
+
     }
 }

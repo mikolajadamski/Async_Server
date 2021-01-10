@@ -116,6 +116,14 @@ namespace ClientApplication
             sendText("switchto " + canalName);
         }
 
+        public string getListOfUsers(string canalName)
+        {
+            sendText("listofusers" + canalName);
+            string response = readText();
+
+            return response;
+        }
+
         public void leaveCanal()
         {
             sendText("//leave");
@@ -130,6 +138,13 @@ namespace ClientApplication
                 return "Błąd";
             }
             return response;
+        }
+
+        public void addUserToCanal(string canalName, string userName)
+        {
+            string mess = "//add " + canalName + " " + userName;
+            sendText(mess);
+            
         }
 
         public void sendText(string str)
