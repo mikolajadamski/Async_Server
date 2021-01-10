@@ -420,7 +420,7 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
-            page.setMessagesBoxText(connectionController.getUsername()+": " +message + "\r\n");
+            page.setMessagesBoxText(connectionController.getUsername()+": " +message);
             connectionController.sendText(message);
 
         }
