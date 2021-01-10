@@ -112,12 +112,9 @@ namespace ClientApplication
             sendText("switchto " + canalName);
         }
 
-        public string getListOfUsers(string canalName)
+        public void getListOfUsers(string canalName)
         {
             sendText("listofusers" + canalName);
-            string response = readText();
-
-            return response;
         }
 
         public void leaveCanal()
