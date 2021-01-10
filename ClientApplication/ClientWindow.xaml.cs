@@ -83,9 +83,12 @@ namespace ClientApplication
                 matchCollection = msgFinder.Matches(text);
                 foreach (Match match in matchCollection)
                 {
-
                     print(match.Groups[1].Value);
                 }
+            }
+            else if (text.Substring(0, 3) == "ADD")
+            {
+                MessageBox.Show(text);
             }
             else
             {
@@ -186,9 +189,35 @@ namespace ClientApplication
             this.Dispatcher.Invoke(() =>
             {
                 var page = listOfPages.First(p => p.Name == currentCanal + "Page");
-                page.setMessagesBoxText(text);
+                char[] separators = new char[] { '\r', '\n' };
+
+                string[] textMessages = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string textMessage in textMessages)
+                {
+                    if (textMessage != "Opuszczono kanal")
+                    {
+                        Message message = new Message();
+
+                        char[] messageSeparators = new char[] { '\t' };
+                        string[] messageData = textMessage.Split(messageSeparators, StringSplitOptions.RemoveEmptyEntries);
+                        message.setMessage(messageData);
+
+                        if (messageData[0] != connectionController.getUsername())
+                            message.setHorizontalAlignment = HorizontalAlignment.Left;
+                        else
+                        {
+                            message.setOwnMessage();
+                        }
+
+                        page.setMessage(message);
+                    }
+                }
             });
         }
+
+
+
 
         private void updateUsersList(string[] users)
         {
@@ -204,6 +233,8 @@ namespace ClientApplication
                 }
             });
         }
+
+
 
         /*
         private void printInLogger(string text)
@@ -386,6 +417,8 @@ namespace ClientApplication
         private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
         {
             string userName = listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage").getUserName;
+
+            connectionController.addUserToCanal(currentCanal, userName);
         }
 
         private void displayCanal(string canalName)
@@ -426,7 +459,6 @@ namespace ClientApplication
             string message = page.getMessageText;
             page.flushMessageText();
             page.setMessagesBoxText(connectionController.getUsername()+": " +message);
->>>>>>>>> Temporary merge branch 2
             connectionController.sendText(message);
 
         }

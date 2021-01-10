@@ -42,11 +42,11 @@ namespace ServerLibrary
                     {
                         break;
                     }
-                    else if (text.Substring(0, 5) == "//add")
+                    else if (text.Length>=5 && text.Substring(0, 5) == "//add")
                     {
                         string[] data = text.Substring(5).Split();
                         DataAccess.addtoCanal(data[1], data[2]);
-                        sendToOthers(username, buffer, text);
+                        sendToOthers(username, buffer, "ADD "+data[1]+" "+data[2]);
                     }
                     else if (text == "/r/n")
                         continue;
@@ -55,8 +55,6 @@ namespace ServerLibrary
                         mutex.WaitOne();
                         if (text.Length != 0)
                         {
-                            string time = DateTime.Now.ToString("h:mm:ss tt");
-                            DataAccess.addMsg(text, time, username, name);
                             sendToOthers(username, buffer, text);
                         }
                         mutex.ReleaseMutex();
