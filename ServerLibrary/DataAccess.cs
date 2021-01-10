@@ -67,7 +67,7 @@ namespace ServerLibrary
                 string msg = "";
             for(int i=0; i < result.Count(); i++){
                    
-             msg =  result.ElementAt(i).username + "(" + result.ElementAt(i).time + "): " + result.ElementAt(i).message + "\r\n";
+             msg =  "MSG " + result.ElementAt(i).username + "(" + result.ElementAt(i).time + "): " + result.ElementAt(i).message + " ENDMSG\r\n";
                     StreamControl.sendText(msg,buffer,stream);
             }
 
@@ -248,22 +248,31 @@ namespace ServerLibrary
         }
 
 
-        public static void addtoCanal(string canalName, string username) {
+        public static string addtoCanal(string canalName, string username) {
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
                 var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-
+                
                 if (result != null) {
                     var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
                     if (check == null) {
                         databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
+                        return "RESP JOIN OK";
                     }
+                    else
+                    {
+                        return "RESP JOIN ALREADY_MEMBER";
+                    }
+                }
+                else
+                {
+                    return "RESP JOIN INVALID";
                 }
             }
         }
-        static public void joinCanal(string canalName, User user)
+        static public string joinCanal(string canalName, User user)
         {
-            addtoCanal(canalName, user.Name);
+            return addtoCanal(canalName, user.Name);
         }
 
 

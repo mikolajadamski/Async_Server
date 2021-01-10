@@ -70,7 +70,7 @@ namespace ServerLibrary
             {
                 if (canalUser.Key != username && text.Length != 0)
                 {
-                    StreamControl.sendText(username + ": " + text + "\r\n", buffer, canalUser.Value);
+                    StreamControl.sendText("MSG " + username + ": " + text + " ENDMSG\r\n", buffer, canalUser.Value);
                     DataAccess.addMsg(text, username, name);
 
                     canalUser.Value.Flush();

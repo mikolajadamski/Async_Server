@@ -116,7 +116,12 @@ namespace ClientApplication
         {
             sendText("//leave");
         }
-        
+
+        public void joinCanal(string canalName)
+        {
+            sendText("join " + canalName);
+        }
+
         public string getCanals()
         {
             sendText("list");
@@ -151,5 +156,7 @@ namespace ClientApplication
         {
             client.disconnect();
         }
+
+   
     }
 }

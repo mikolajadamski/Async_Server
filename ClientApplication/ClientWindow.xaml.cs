@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,6 +29,8 @@ namespace ClientApplication
         private choseCanalPage ChoseCanalPage = new choseCanalPage();
         Thread receiver;
         private string currentCanal;
+        Regex msgFinder;
+        MatchCollection matchCollection;
 
 
         public ClientWindow(ConnectionController connectionController)
@@ -40,6 +43,7 @@ namespace ClientApplication
             receiver = new Thread(receive);
             receiver.Start();
             currentCanal = string.Empty;
+            msgFinder = new Regex("MSG (.+) ENDMSG\r\n");
         }
 
         private void receive()
@@ -73,9 +77,19 @@ namespace ClientApplication
             {
                 processResponse(text);
             }
+            else if(text.Substring(0,3) == "MSG")
+            {
+                
+                matchCollection = msgFinder.Matches(text);
+                foreach (Match match in matchCollection)
+                {
+
+                    print(match.Groups[1].Value);
+                }
+            }
             else
             {
-                print(text);
+                //do nothing, not part of communication protocol
             }
         }
 
@@ -95,6 +109,26 @@ namespace ClientApplication
                 case "DEL":
                     processDelete(response[2]);
                     break;
+
+                case "JOIN":
+                    processJoin(response[2]);
+                    break;
+            }
+        }
+
+        private void processJoin(string response)
+        {
+            if (response == "OK")
+            {
+                MessageBox.Show("Dołączono do kanału");
+            }
+            else if (response == "ALREADY_MEMBER")
+            {
+                MessageBox.Show("Użytkownik już jest członkiem tego kanału");
+            }
+            else if (response == "INVALID")
+            {
+                MessageBox.Show("Kanał nie istnieje");
             }
         }
 
@@ -125,7 +159,7 @@ namespace ClientApplication
             }
             else if (response == "AUTH_ERROR")
             {
-                //brak dostępu
+                MessageBox.Show("Nie jesteś członkiem tego kanału");
                 currentCanal = string.Empty;
             }
             else if (response == "INVALID_ERROR")
@@ -305,25 +339,36 @@ namespace ClientApplication
         //to do ContextMenu
         private void createCanalButton(string name, StackPanel canalsPanel)
         {
-            ContextMenu contextMenu = new ContextMenu();
-            MenuItem menuItem = new MenuItem();
-
+    
             CanalButton canalButton = new CanalButton();
             canalButton.getCanalNameButtonLabel = name;
             canalButton.setCanalButton_Click = switchToCanal_Click;
             canalButton.setCanalButtonMargin = new Thickness(0, 2, 0, 2);
-
             canalButton.getCanalButtonName = name + "Button";
 
-            menuItem.Click += deleteCanal_Click;
-            menuItem.Tag = canalButton.getCanalButtonName;
-            menuItem.Header = "Delete Canal";
+            MenuItem joinBar = new MenuItem();
+            joinBar.Click += joinCanalClick;
+            joinBar.Tag = canalButton.getCanalButtonName;
+            joinBar.Header = "Join Canal";
 
-            contextMenu.Items.Add(menuItem);
+            MenuItem deleteBar = new MenuItem();
+            deleteBar.Click += deleteCanal_Click;
+            deleteBar.Tag = canalButton.getCanalButtonName;
+            deleteBar.Header = "Delete Canal";
+
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.Items.Add(joinBar);
+            contextMenu.Items.Add(deleteBar);
 
             canalButton.setContextMenu = contextMenu;
-
             canalsPanel.Children.Add(canalButton);
+        }
+
+        private void joinCanalClick(object sender, RoutedEventArgs e)
+        {
+            string name = ((MenuItem)sender).Tag.ToString();
+            string canalName = name.Remove(name.Length - 6);
+            connectionController.joinCanal(canalName);
         }
 
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
@@ -375,7 +420,7 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
-            page.setMessagesBoxText(message + "\r\n");
+            page.setMessagesBoxText(connectionController.getUsername()+": " +message + "\r\n");
             connectionController.sendText(message);
 
         }

@@ -60,7 +60,7 @@ namespace ServerLibrary
                     case "help": help(stream, buffer); break;
                     case "list": list(stream, buffer); break;
                     case "add": DataAccess.addtoCanal(cmd[1], cmd[2]); break;
-                    case "join": DataAccess.joinCanal(cmd[1], userController.User); break;
+                    case "join": join(stream, buffer, userController, cmd[1]); break;
                     case "remove": DataAccess.removefromCanal(cmd[1], cmd[2], userController.User); break;
                     case "removeall": DataAccess.removeAllfromCanal(cmd[1]); break;
                     case "leave": DataAccess.leaveCanal(cmd[1], userController.User); break;
@@ -139,6 +139,12 @@ namespace ServerLibrary
         {
             StreamControl.sendText(string.Join("\r\n", DataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
            
+        }
+
+        private static void join(NetworkStream stream, byte[] buffer, UserController userController, string name)
+        {
+
+            StreamControl.sendText(DataAccess.joinCanal(name, userController.User), buffer, stream);
         }
 
 
