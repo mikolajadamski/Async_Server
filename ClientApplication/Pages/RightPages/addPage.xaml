@@ -104,6 +104,11 @@
 
                         <Border Margin="10,0,10,40" BorderThickness="1" BorderBrush="#f083da"/>
 
+                        <CheckBox
+                            x:Name="isPrivate"
+                            Margin="100,0,100,0"
+                            Content="private"/>
+
                         <Button
                             x:Name="bottomButton"
                             Width="200"

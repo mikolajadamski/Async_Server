@@ -304,10 +304,20 @@ namespace ClientApplication
 
         private void createCanal_Click(object sender, RoutedEventArgs e)
         {
+            string type;
+            if (AddPage.isPrivate.IsChecked == true)
+            {
+                type = "private";
+            }
+            else
+            {
+                type = "public";
+            }
+
             string canalName = AddPage.getCenterPanelTextBox;
             if (canalName.Length != 0)
             {
-                connectionController.createCanal(canalName);
+                connectionController.createCanal(type + " " + canalName);
                 displayAvailableCanals();
             }
             else
@@ -444,7 +454,11 @@ namespace ClientApplication
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
+            var page = listOfPages.First(p => p.Name == currentCanal + "Page");
+            page.clearMessages();
+
             currentCanal = string.Empty;
+            
             connectionController.leaveCanal();
             pagesBorder.Visibility = Visibility.Hidden;
             smallFrame.Content = ChoseCanalPage;

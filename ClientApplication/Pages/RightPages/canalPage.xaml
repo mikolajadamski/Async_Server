@@ -144,8 +144,7 @@
                             x:Name="sendButton"
                             Width="100"
                             Height="40"
-                            HorizontalAlignment="Left" 
-                            MouseLeftButtonDown="sendButton_MouseLeftButtonDown">
+                            HorizontalAlignment="Left">
 
                             <StackPanel 
                                 Orientation="Horizontal">

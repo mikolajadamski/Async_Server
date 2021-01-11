@@ -39,5 +39,6 @@ namespace ClientApplication
         {
             get { return centerPanelTextBox.Text; }
         }
+
     }
 }
