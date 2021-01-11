@@ -129,7 +129,7 @@ namespace ClientApplication
 
         public void getCanals()
         {
-            sendText("list");
+            sendText("list " + Username);
             /*
              * string response = readText();
              * if (response == "OK")
