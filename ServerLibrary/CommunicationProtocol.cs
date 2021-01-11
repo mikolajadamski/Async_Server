@@ -52,11 +52,11 @@ namespace ServerLibrary
             switch (cmd[0].ToLower())
             {
                 case "changepassword": changepassword(stream, buffer, userController); break;
-                case "create": create(stream, buffer, userController, cmd[1]); break;
+                case "create": create(stream, buffer, userController, cmd[1], cmd[2]); break;
                 case "unregister": unregister(stream, buffer, userController); break;
                 case "delete": delete(stream, buffer, userController, cmd[1]); break;
                 case "help": help(stream, buffer); break;
-                case "list": list(stream, buffer); break;
+                case "list": list(stream, buffer, cmd[1]); break;
                 case "add": DataAccess.addtoCanal(cmd[1], cmd[2]); break;
                 case "join": join(stream, buffer, userController, cmd[1]); break;
                 case "remove": DataAccess.removefromCanal(cmd[1], cmd[2], userController.User); break;
@@ -105,9 +105,9 @@ namespace ServerLibrary
             }
         }
 
-        private static void create(NetworkStream stream, byte[] buffer, UserController userController, string name)
+        private static void create(NetworkStream stream, byte[] buffer, UserController userController, string name, string type)
         {
-            int result = DataAccess.createCanal(name, userController.User);
+            int result = DataAccess.createCanal(name, userController.User, type);
             if (result == 1)
             {
                 CanalsController.addCanal(name);
@@ -132,9 +132,9 @@ namespace ServerLibrary
             StreamControl.sendText(resp, buffer, stream);
         }
 
-        private static void list(NetworkStream stream, byte[] buffer)
+        private static void list(NetworkStream stream, byte[] buffer, string username)
         {
-            StreamControl.sendText("CANALS\r\n" + string.Join("\r\n", DataAccess.selectOpenCanals()) + "\r\n", buffer, stream);
+            StreamControl.sendText("CANALS\r\n" + string.Join("\r\n", DataAccess.selectOpenCanals2(username)) + "\r\n", buffer, stream);
         }
 
         private static void join(NetworkStream stream, byte[] buffer, UserController userController, string name)

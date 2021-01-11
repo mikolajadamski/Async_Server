@@ -168,7 +168,7 @@ namespace ServerLibrary
             }
         }
 
-        static public int createCanal(string canalName, User user) {
+        static public int createCanal(string canalName, User user, string type) {
 
             createCanalMutex.WaitOne();
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
@@ -182,6 +182,7 @@ namespace ServerLibrary
                     if (result == null)
                     {
                     
+
                             string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
                             string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
                         string idcheck = "SELECT max(msgID) as max FROM canals";
@@ -191,7 +192,7 @@ namespace ServerLibrary
                              id =(int)v.max;
                       
                               string name =  "k"+(id+1).ToString();
-                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID) VALUES(\"{0}\",{1})", canalName, id+1 );
+                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID, type) VALUES(\"{0}\",{1}, \"{2}\")", canalName, id+1, type);
                               string initMsgTable = string.Format(@"CREATE TABLE IF NOT EXISTS {0} (
                                                     username VARCHAR (25) NOT NULL, 
                                                     time  TEXT,
@@ -200,7 +201,7 @@ namespace ServerLibrary
                             databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
                             databaseConnection.Execute(@createCanalTableOperation);
                             databaseConnection.Execute(insertAdminIntoCanalOperation, user);
-                             databaseConnection.Execute(initMsgTable);
+                            databaseConnection.Execute(initMsgTable);
                             createCanalMutex.ReleaseMutex();
                             return 1;
                     }
@@ -396,6 +397,27 @@ namespace ServerLibrary
             }
         }
 
+        static public string[] selectOpenCanals2(string username)
+        {
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                string querypub = string.Format("SELECT * FROM canals WHERE type = \"public\"");
+                string querypriv = string.Format("SELECT * FROM canals WHERE type = \"private\"");
+                string[] userCanals = databaseConnection.Query<string>(querypub).ToArray();
+                string[] privateCanals = databaseConnection.Query<string>(querypriv).ToArray();
+            
+                for(int i = 0; i < privateCanals.Length; i++)
+                {
+                   var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", privateCanals[i], username));
+                    if (check != null)
+                        userCanals = userCanals.Append(privateCanals[i]).ToArray();
+                }
+
+                return userCanals;
+                
+            }
+        }
+
         static public void initTables()
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -407,6 +429,7 @@ namespace ServerLibrary
                 string createCanalsTableOperation = @"CREATE TABLE IF NOT EXISTS canals (
                                                     name VARCHAR(25) NOT NULL UNIQUE,
                                                     msgID INT UNIQUE NOT NULL,
+                                                    type VARCHAR(7) NOT NULL,
                                                     PRIMARY KEY(name, msgID))";
                 databaseConnection.Execute(createUsersTableOperation);
                 databaseConnection.Execute(createCanalsTableOperation);
