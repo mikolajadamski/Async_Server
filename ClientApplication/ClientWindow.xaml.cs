@@ -96,12 +96,8 @@ namespace ClientApplication
                 char[] separators = new char[] { '\r', '\n' };
 
                 string[] canals = text.Substring(7).Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                canals.ElementAt(0);
-
-                canals.ElementAt(0).Remove(0, 6);
-
                 updateCanalsList(canals);
+
             }
             else
             {
@@ -197,7 +193,7 @@ namespace ClientApplication
             }
             else if(response == "ERR")
             {
-                //TODO: inform about error
+                MessageBox.Show("Nazwa kanału zajęta");
             }
         }
 
