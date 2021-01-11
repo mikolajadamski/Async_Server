@@ -246,22 +246,29 @@ namespace ServerLibrary
         public static string addtoCanal(string canalName, string username) {
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
-                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-                
-                if (result != null) {
-                    var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
-                    if (check == null) {
-                        databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
-                        return "RESP JOIN OK";
+                var isuser = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM users WHERE username = \"{0}\"", username));
+                if (isuser != null) {
+                    var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+                    if (result != null) {
+                        var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                        if (check == null) {
+                            databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
+                            return "RESP JOIN OK";
+                        }
+                        else
+                        {
+                            return "RESP JOIN ALREADY_MEMBER";
+                        }
                     }
                     else
                     {
-                        return "RESP JOIN ALREADY_MEMBER";
+                        return "RESP JOIN INVALID";
                     }
                 }
                 else
                 {
-                    return "RESP JOIN INVALID";
+                    return "RESP JOIN INVALID_MEMBER";
                 }
             }
         }

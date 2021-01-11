@@ -16,29 +16,26 @@ using System.Windows.Shapes;
 namespace ClientApplication
 {
     /// <summary>
-    /// Interaction logic for addPage.xaml
+    /// Interaction logic for AddUser.xaml
     /// </summary>
-    public partial class addPage : Page
+    public partial class AddUser : UserControl
     {
-        public addPage()
+
+        public AddUser()
         {
             InitializeComponent();
         }
 
-        public RoutedEventHandler setLeftTopButton_Click
+        public RoutedEventHandler setAddButton_Click
         {
-            set { leftTopButton.Click += value; }
+            set{ addButton.Click += value; }
         }
 
-        public RoutedEventHandler setBottomButton_Click
+        public string getUserName
         {
-            set{ bottomButton.Click += value; }
+            get { return userNameText.Text; }
         }
 
-        public string getCenterPanelTextBox
-        {
-            get { return centerPanelTextBox.Text; }
-        }
 
     }
 }

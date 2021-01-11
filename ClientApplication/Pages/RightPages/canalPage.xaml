@@ -84,7 +84,6 @@
                                     HorizontalAlignment="Center"
                                     Foreground="Black"/>  
                                 
-                                
                             </StackPanel>
 
                         </Button>
@@ -99,7 +98,7 @@
                 <ScrollViewer
                     x:Name="centerPanelScroll"
                     Height="558"
-                   Width="600"
+                    Width="600"
                     HorizontalScrollBarVisibility="Hidden">
                     <StackPanel
                         x:Name="centerPanel"
@@ -145,8 +144,7 @@
                             x:Name="sendButton"
                             Width="100"
                             Height="40"
-                            HorizontalAlignment="Left" 
-                            MouseLeftButtonDown="sendButton_MouseLeftButtonDown">
+                            HorizontalAlignment="Left">
 
                             <StackPanel 
                                 Orientation="Horizontal">

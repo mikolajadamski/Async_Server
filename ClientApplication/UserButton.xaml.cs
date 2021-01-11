@@ -29,5 +29,9 @@ namespace ClientApplication
             set { userButtonLabel.Content = value; }
             get { return userButtonLabel.Content; }
         }
+        public Brush setBorderColor
+        {
+            set { userBorder.BorderBrush = value; }
+        }
     }
 }

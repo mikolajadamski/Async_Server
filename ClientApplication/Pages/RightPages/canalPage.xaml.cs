@@ -84,10 +84,9 @@ namespace ClientApplication
         {
             messageBox.Text = string.Empty;
         }
-
-        private void sendButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void clearMessages()
         {
-
+            centerPanel.Children.Clear();
         }
     }
 }

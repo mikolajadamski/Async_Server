@@ -24,7 +24,7 @@ namespace ClientApplication
     {
         private ConnectionController connectionController;
         private List<canalPage> listOfPages = new List<canalPage>();
-        private List<Page> listOfSmallPages = new List<Page>();
+        private List<usersPage> listOfSmallPages = new List<usersPage>();
         private addPage AddPage = new addPage();
         private choseCanalPage ChoseCanalPage = new choseCanalPage();
         Thread receiver;
@@ -37,13 +37,14 @@ namespace ClientApplication
         {
             this.connectionController = connectionController;
             InitializeComponent();
-            displayAvailableCanals();
-            createNecessaryPages();
-            smallFrame.Content = ChoseCanalPage;
             receiver = new Thread(receive);
             receiver.Start();
             currentCanal = string.Empty;
             msgFinder = new Regex("MSG (.+) ENDMSG\r\n");
+
+            displayAvailableCanals();
+            createNecessaryPages();
+            smallFrame.Content = ChoseCanalPage;
         }
 
         private void receive()
@@ -54,7 +55,6 @@ namespace ClientApplication
             {
                 try
                 {
-
                     text = connectionController.readText();
                     processText(text);
                     text = string.Empty;
@@ -83,9 +83,25 @@ namespace ClientApplication
                 matchCollection = msgFinder.Matches(text);
                 foreach (Match match in matchCollection)
                 {
-
                     print(match.Groups[1].Value);
                 }
+            }
+            else if (text.Substring(0, 3) == "ADD")
+            {
+                MessageBox.Show(text);
+            }
+            else if (text.Substring(0, 6) == "CANALS")
+            {
+
+                char[] separators = new char[] { '\r', '\n' };
+
+                string[] canals = text.Substring(7).Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                canals.ElementAt(0);
+
+                canals.ElementAt(0).Remove(0, 6);
+
+                updateCanalsList(canals);
             }
             else
             {
@@ -129,6 +145,10 @@ namespace ClientApplication
             else if (response == "INVALID")
             {
                 MessageBox.Show("Kanał nie istnieje");
+            }
+            else if (response == "INVALID_MEMBER")
+            {
+                MessageBox.Show("Użytkownik nie istnieje");
             }
         }
 
@@ -200,7 +220,7 @@ namespace ClientApplication
                         string[] messageData = textMessage.Split(messageSeparators, StringSplitOptions.RemoveEmptyEntries);
                         message.setMessage(messageData);
 
-                        if (messageData[0] != connectionController.getUsername())
+                        if (messageData[0] != connectionController.Username)
                             message.setHorizontalAlignment = HorizontalAlignment.Left;
                         else
                         {
@@ -221,27 +241,31 @@ namespace ClientApplication
                 UsersPage.UsersPanel.Children.Clear();
                 foreach (string user in users)
                 {
-                    UserButton userButton = new UserButton();
-                    userButton.UserButtonLabel = user;
-                    UsersPage.UsersPanel.Children.Add(userButton);
+                    if (user != connectionController.Username)
+                    {
+                        UserButton userButton = new UserButton();
+                        userButton.UserButtonLabel = user;
+                        UsersPage.UsersPanel.Children.Add(userButton);
+                    }
                 }
             });
         }
 
-        /*
-        private void printInLogger(string text)
+        private void updateCanalsList(string[] canals)
         {
-            if (loggerBox.InvokeRequired)
+            this.Dispatcher.Invoke(() =>
             {
-                var d = new SafeCallDelegate(printInLogger);
-                loggerBox.Invoke(d, new object[] { text });
-            }
-            else
-            {
-                loggerBox.AppendText(text);
-            }
+                ChoseCanalPage.CanalsPanel.Children.Clear();
+                foreach (string canalName in canals)
+                {
+                    createCanalButton(canalName, ChoseCanalPage.getCanalsPanel);
+
+                    createCanalPage(canalName);
+
+                    createCanalUsersPage(canalName);
+                }
+            });
         }
-        */
 
         public ConnectionController GetConnectionController
         {
@@ -280,13 +304,21 @@ namespace ClientApplication
 
         private void createCanal_Click(object sender, RoutedEventArgs e)
         {
+            string type;
+            if (AddPage.isPrivate.IsChecked == true)
+            {
+                type = "private";
+            }
+            else
+            {
+                type = "public";
+            }
+
             string canalName = AddPage.getCenterPanelTextBox;
             if (canalName.Length != 0)
             {
-                connectionController.createCanal(canalName);
+                connectionController.createCanal(type + " " + canalName);
                 displayAvailableCanals();
-
-                //MessageBox.Show(newCanal);
             }
             else
             {
@@ -308,27 +340,14 @@ namespace ClientApplication
         {
             ChoseCanalPage.getCanalsPanel.Children.Clear();
 
-            string canalsName = connectionController.getCanals();
-
-            char[] separators = new char[] { '\r', '\n' };
-
-            string[] canals = canalsName.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string canalName in canals)
-            {
-                createCanalButton(canalName, ChoseCanalPage.getCanalsPanel);
-
-                createCanalPage(canalName);
-
-                createCanalUsersPage(canalName);
-            }
+            connectionController.getCanals();
         }
 
         private void createCanalUsersPage(string canalName)
         {
             usersPage UsersPage = new usersPage();
 
-            UsersPage.addNewUserButton.Click += AddNewUserButton_Click;
+            UsersPage.setAddUser_Click = AddNewUserButton_Click;
             UsersPage.Name = canalName + "UsersPage";
 
             listOfSmallPages.Add(UsersPage);
@@ -341,6 +360,12 @@ namespace ClientApplication
             AddPage.Name = "AddPage";
 
             ChoseCanalPage.setCreateNewCanalButton_Click = createNewCanal_Click;
+            ChoseCanalPage.setResetCanalListButton_Click = resetCanalListButton_Click;
+        }
+
+        private void resetCanalListButton_Click(object sender, RoutedEventArgs e)
+        {
+            displayAvailableCanals();
         }
 
         private void createCanalPage(string name)
@@ -397,13 +422,18 @@ namespace ClientApplication
         private void switchToCanal_Click(object sender, RoutedEventArgs e)
         {
             currentCanal = ((Button)sender).Name.Remove(((Button)sender).Name.Length - 6);
+
             connectionController.switchToCanal(currentCanal);
+
+            
         }
 
         //to do
         private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Dodaj nowego uzytkownika do kanalu!");
+            string userName = listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage").getUserName;
+
+            connectionController.addUserToCanal(currentCanal, userName);
         }
 
         private void displayCanal(string canalName)
@@ -424,7 +454,11 @@ namespace ClientApplication
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
+            var page = listOfPages.First(p => p.Name == currentCanal + "Page");
+            page.clearMessages();
+
             currentCanal = string.Empty;
+            
             connectionController.leaveCanal();
             pagesBorder.Visibility = Visibility.Hidden;
             smallFrame.Content = ChoseCanalPage;
@@ -443,7 +477,7 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
-            page.setMessagesBoxText(connectionController.getUsername()+": " +message);
+            page.setMessagesBoxText(connectionController.Username + ": " + message);
             connectionController.sendText(message);
 
         }

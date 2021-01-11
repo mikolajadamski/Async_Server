@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClientApplication" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
-      d:DesignHeight="400" d:DesignWidth="260"
+      MaxHeight="400" d:DesignWidth="260"
       Title="usersPage">
 
     <Grid>
@@ -32,9 +32,26 @@
                     BorderThickness="1" 
                     BorderBrush="#f083da"/>
 
-                <StackPanel 
-                    x:Name="usersPanel" 
-                    Height="310">
+                <StackPanel
+                    x:Name="usersPageCentralPanel">
+
+                    <ScrollViewer
+                        MinHeight="280"
+                        MaxHeight="310">
+                        <StackPanel 
+                            x:Name="usersPanel">
+
+                        </StackPanel>
+
+                    </ScrollViewer>
+
+
+                    <StackPanel
+                        x:Name="addUserPanel">
+
+                        
+                        
+                    </StackPanel>
 
                 </StackPanel>
 
@@ -42,6 +59,7 @@
 
                 <StackPanel VerticalAlignment="Bottom">
                     <Button
+                        Click="addNewUserButton_Click"
                         Width="100" Height="40" 
                         Margin="0,0,0,0" 
                         x:Name="addNewUserButton" 

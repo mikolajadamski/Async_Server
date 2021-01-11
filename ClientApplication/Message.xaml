@@ -9,6 +9,7 @@
              MinHeight="53" MaxWidth="360"
              HorizontalAlignment="Left">
     <Grid>
+
         <Border
             Margin="0,0,0,10">
 
@@ -43,10 +44,14 @@
                     <Border.BorderBrush>
 
                         <LinearGradientBrush x:Name="linearBrush">
+
                             <GradientStop Color="DarkGray" Offset="0.0"/>
                             <GradientStop Color="LightGray" Offset="1"/>
+
                         </LinearGradientBrush>
+
                     </Border.BorderBrush>
+
                     <TextBlock
                         x:Name="messageBlockText"
                         FontSize="20"
@@ -54,9 +59,13 @@
                         Margin="15,0"
                         VerticalAlignment="Center"
                         Text="Wiadomość"/>
+
                 </Border>
+
             </StackPanel>
+
         </Border>
+
     </Grid>
 
 </UserControl>
