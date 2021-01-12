@@ -101,7 +101,8 @@ namespace ServerLibrary
 
         private string prepareUpdateMsg()
         {
-            return "UPDATE " + string.Join(" ", canalUsers.Keys);
+            string[] users = DataAccess.AdminCheck(canalUsers.Keys.ToArray(), name);
+            return "UPDATE " + string.Join(" ", users);
         }
 
     }

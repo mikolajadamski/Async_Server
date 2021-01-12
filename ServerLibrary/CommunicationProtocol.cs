@@ -134,7 +134,7 @@ namespace ServerLibrary
 
         private static void list(NetworkStream stream, byte[] buffer, string username)
         {
-            StreamControl.sendText("CANALS\r\n" + string.Join("\r\n", DataAccess.selectOpenCanals2(username)) + "\r\n", buffer, stream);
+            StreamControl.sendText("CANALS\r\n" + string.Join("\r\n", DataAccess.selectUserCanals(username)) + "\r\n", buffer, stream);
         }
 
         private static void join(NetworkStream stream, byte[] buffer, UserController userController, string name)

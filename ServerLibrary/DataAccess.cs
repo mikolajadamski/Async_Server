@@ -371,6 +371,25 @@ namespace ServerLibrary
         
         }
 
+        public static string[] AdminCheck (string[] users, string canalName)
+        {
+            string[] result = { };
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                for (int i = 0; i < users.Length; i++)
+                {
+                    result = result.Append(users[i]).ToArray();
+                    var admincheck = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, users[i]));
+                    if(admincheck != null)
+                        result = result.Append("1").ToArray();
+                    else result = result.Append("0").ToArray();
+
+                }
+
+                return result;
+            }
+        }
+
         public static string[] listuserCanal(string canalName)
         {
             using(IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -397,7 +416,7 @@ namespace ServerLibrary
             }
         }
 
-        static public string[] selectOpenCanals2(string username)
+        static public string[] selectUserCanals(string username)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {

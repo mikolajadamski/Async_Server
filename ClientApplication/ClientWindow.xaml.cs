@@ -235,15 +235,19 @@ namespace ClientApplication
             {
                 usersPage UsersPage = (usersPage)listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage");
                 UsersPage.UsersPanel.Children.Clear();
-                foreach (string user in users)
+                for(int i=0; i< users.Length; i = i + 2)
                 {
-                    if (user != connectionController.Username)
+                    if (users[i] != connectionController.Username)
                     {
                         UserButton userButton = new UserButton();
-                        userButton.UserButtonLabel = user;
+                        if(users[i+1] == "0")
+                        userButton.UserButtonLabel = users[i];
+                        else userButton.UserButtonLabel = users[i] + " @admin";
                         UsersPage.UsersPanel.Children.Add(userButton);
                     }
                 }
+
+             
             });
         }
 
