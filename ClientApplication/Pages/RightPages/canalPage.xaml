@@ -129,6 +129,7 @@
                             Margin="0,5,0,0"
                             x:Name="messageBox"
                             Height="30"
+                            TextWrapping="Wrap"
                             Width="500"
                             Text="Wyślij"
                             VerticalAlignment="Center"

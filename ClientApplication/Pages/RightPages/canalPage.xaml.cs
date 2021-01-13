@@ -71,19 +71,23 @@ namespace ClientApplication
         {
             set { sendButton.Tag = value; }
         }
+
         public void setMessagesBoxText(string text)
         {
             //messagesBox.Text += "\r\n" + text;
         }
+
         public void setMessage(Message message)
         {
             centerPanel.Children.Add(message);
             centerPanelScroll.ScrollToEnd();
         }
+
         public void flushMessageText()
         {
             messageBox.Text = string.Empty;
         }
+
         public void clearMessages()
         {
             centerPanel.Children.Clear();

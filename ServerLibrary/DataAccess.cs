@@ -18,6 +18,7 @@ namespace ServerLibrary
         private static Mutex addUserMutex = new Mutex();
         private static Mutex createCanalMutex = new Mutex();
         private static Mutex loginUserMutex = new Mutex();
+
         static public int insertUser(User user)
         {
             try
@@ -41,6 +42,7 @@ namespace ServerLibrary
             }
 
         }
+
         static public int deleteUser(User user)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -155,6 +157,7 @@ namespace ServerLibrary
                 return result;
             };
         }
+
         static public void logOutUser(User user)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -243,7 +246,6 @@ namespace ServerLibrary
             }
         }
 
-
         public static string addtoCanal(string canalName, string username) {
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
@@ -273,11 +275,11 @@ namespace ServerLibrary
                 }
             }
         }
+
         static public string joinCanal(string canalName, User user)
         {
             return addtoCanal(canalName, user.Name);
         }
-
 
         static public string changeCanal(string canalName, User user){
             
@@ -298,8 +300,6 @@ namespace ServerLibrary
         
         }
 
-
-
         public static void removefromCanal(string canalName, string username, User user)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -318,6 +318,7 @@ namespace ServerLibrary
                 }
             }
         }
+
         public static void removeAllfromCanal(string canalName)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -329,6 +330,7 @@ namespace ServerLibrary
                 }
             }
         }
+
         public static void leaveCanal(string canalName,User user)
         {
           
@@ -402,8 +404,6 @@ namespace ServerLibrary
             }
         }
 
-        
-
         static public string[] selectOpenCanals() 
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -454,6 +454,7 @@ namespace ServerLibrary
                 databaseConnection.Execute(createCanalsTableOperation);
             }
         }
+
         static private string LoadConnectionString(string id = "Default")
         {
             return ConfigurationManager.ConnectionStrings[id].ConnectionString;
@@ -461,5 +462,4 @@ namespace ServerLibrary
 
     }
 
-    
 }
