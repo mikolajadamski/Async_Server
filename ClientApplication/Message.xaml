@@ -55,6 +55,7 @@
                     <TextBlock
                         x:Name="messageBlockText"
                         FontSize="20"
+                        TextWrapping="Wrap"
                         Foreground="Black"
                         Margin="15,0"
                         VerticalAlignment="Center"
