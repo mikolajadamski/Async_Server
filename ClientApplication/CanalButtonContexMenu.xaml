@@ -7,31 +7,18 @@
              mc:Ignorable="d" 
              Height="30" 
              Width="100">
-    
+
 
     <Grid
         x:Name="canalButtonContextMenu">
 
-        <MenuItem>
-
-            <iconPacks:PackIconMaterial 
-                        Kind="Delete"
-                        Height="10"
-                        VerticalAlignment="Center" 
-                        HorizontalAlignment="Center"
-                        Foreground="Black"/>
-
-            <Label
-                        FontSize="10"
-                        Content="Usuń kanał"/>
-
-        </MenuItem>
-        <!--<Border
+        <Border
             CornerRadius="10" 
             BorderThickness="3"
             Background="White">
 
             <Button
+                Style="{StaticResource PagesButtonTheme}"
                 x:Name="canalButtonContextMenuButton">
 
                 <StackPanel
@@ -46,14 +33,15 @@
 
                     <Label
                         FontSize="10"
+                        Foreground="Black"
                         Content="Usuń kanał"/>
 
                 </StackPanel>
 
             </Button>
 
-        </Border>-->
-        
+        </Border>
+
     </Grid>
 
     

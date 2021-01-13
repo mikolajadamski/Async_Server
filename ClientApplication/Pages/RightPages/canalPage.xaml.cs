@@ -62,7 +62,7 @@ namespace ClientApplication
             get { return messageBox.Text; }
         }
 
-        public RoutedEventHandler setSendButton_Click
+        public RoutedEventHandler SendButton_Click
         {
            set{ sendButton.Click += value; }
         }

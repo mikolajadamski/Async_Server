@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:ClientApplication" xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
-      MaxHeight="400" d:DesignWidth="260"
+      Height="400" d:DesignWidth="260"
       Title="usersPage">
 
     <Grid>
@@ -16,6 +16,7 @@
             </Border.Background>
 
             <StackPanel
+                VerticalAlignment="Stretch"
                 x:Name="mainPanel">
 
                 <TextBlock 
@@ -36,8 +37,8 @@
                     x:Name="usersPageCentralPanel">
 
                     <ScrollViewer
-                        MinHeight="280"
-                        MaxHeight="310">
+                        x:Name="canalsScrollViewer"
+                        Height="295">
                         <StackPanel 
                             x:Name="usersPanel">
 
@@ -55,22 +56,25 @@
 
                 </StackPanel>
 
-                <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
+                <Border Margin="10,5,10,5" BorderThickness="1" BorderBrush="#f083da"/>
 
-                <StackPanel VerticalAlignment="Bottom">
+                <StackPanel 
+                    VerticalAlignment="Bottom">
                     <Button
+                        Style="{StaticResource PagesButtonTheme}"
                         Click="addNewUserButton_Click"
                         Width="100" Height="40" 
-                        Margin="0,0,0,0" 
                         x:Name="addNewUserButton" 
+                        Margin="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial 
-                            Kind="Plus"
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Foreground="Black"/>
+                                Kind="Plus"
+                                x:Name="icon"
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Left"
+                                Foreground="Black"/>
                             <Label x:Name="createCanalLabael" Content="Dodaj osobę"/>
                         </StackPanel>
                     </Button>

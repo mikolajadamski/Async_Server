@@ -31,7 +31,8 @@
                         Width="30" Height="30" 
                         Margin="0,0,0,0" 
                         x:Name="resetCanalListButton"
-                        VerticalAlignment="Center">
+                        VerticalAlignment="Center"
+                        Style="{StaticResource PagesButtonTheme}">
                         
                         <StackPanel 
                             Orientation="Horizontal">
@@ -61,8 +62,9 @@
 
                 <StackPanel VerticalAlignment="Bottom">
                     <Button
+                        Style="{StaticResource PagesButtonTheme}"
                         Width="100" Height="40" 
-                        Margin="0,0,0,0" 
+                        Margin="10,0,0,0" 
                         x:Name="CreateNewCanalButton" 
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom">

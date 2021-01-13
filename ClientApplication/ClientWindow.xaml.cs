@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.IconPacks;
+﻿using ClientApplication.Buttons;
+using MahApps.Metro.IconPacks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -374,7 +375,7 @@ namespace ClientApplication
 
             CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
             CanalPage.setRightTopButton_Click = infoCanalButton_Click;
-            CanalPage.setSendButton_Click = sendMessageButton_Click;
+            CanalPage.SendButton_Click = sendMessageButton_Click;
             CanalPage.setCenterTopNamePanel = name;
             CanalPage.getSendButtonTag = name;
             CanalPage.Name = name + "Page";
@@ -470,22 +471,19 @@ namespace ClientApplication
 
         }
 
-        //to do
         private void sendMessageButton_Click(object sender, RoutedEventArgs e)
         {
-
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
             page.setMessagesBoxText(connectionController.Username + ": " + message);
             connectionController.sendText(message);
-
         }
 
         //to do
         private void infoCanalButton_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
