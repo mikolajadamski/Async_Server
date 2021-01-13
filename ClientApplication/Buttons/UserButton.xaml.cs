@@ -13,29 +13,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientApplication
+namespace ClientApplication.Buttons
 {
     /// <summary>
-    /// Interaction logic for AddUser.xaml
+    /// Interaction logic for UserButton.xaml
     /// </summary>
-    public partial class AddUser : UserControl
+    public partial class UserButton : UserControl
     {
-
-        public AddUser()
+        public UserButton()
         {
             InitializeComponent();
         }
 
-        public RoutedEventHandler setAddButton_Click
+        public object UserButtonLabel
         {
-            set{ addButton.Click += value; }
+            set { userButtonLabel.Content = value; }
+            get { return userButtonLabel.Content; }
         }
 
-        public string getUserName
+        public Brush setBorderColor
         {
-            get { return userNameText.Text; }
+            set { userBorder.BorderBrush = value; }
         }
-
 
     }
 }

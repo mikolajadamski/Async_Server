@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.IconPacks;
+﻿using ClientApplication.Buttons;
+using MahApps.Metro.IconPacks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace ClientApplication
     public partial class usersPage : Page
     {
         private AddUser addUser = new AddUser();
+        private Border border = new Border();
+        private bool isButtonShow = false;
 
         public usersPage()
         {
@@ -35,16 +38,35 @@ namespace ClientApplication
 
         private void addNewUserButton_Click(object sender, RoutedEventArgs e)
         {
-            BrushConverter converter = new BrushConverter();
+            if (!isButtonShow)
+            {
+                BrushConverter converter = new BrushConverter();
 
-            Border border = new Border();
+                border.Margin = new Thickness(10, 5, 10, 5);
+                border.BorderThickness = new Thickness(1);
+                border.BorderBrush = (Brush)converter.ConvertFromString("#f083da");
 
-            border.Margin = new Thickness(10, 0, 10, 0);
-            border.BorderThickness = new Thickness(1);
-            border.BorderBrush = (Brush)converter.ConvertFromString("#f083da");
+                canalsScrollViewer.Height = 248;
 
-            addUserPanel.Children.Add(border);
-            addUserPanel.Children.Add(addUser);
+                addUserPanel.Children.Add(border);
+                addUserPanel.Children.Add(addUser);
+
+                createCanalLabael.Content = "Zamknij";
+                icon.Kind = PackIconMaterialKind.Close;
+
+                isButtonShow = true;
+            }
+            else 
+            {
+                addUserPanel.Children.Remove(border);
+                addUserPanel.Children.Remove(addUser);
+                canalsScrollViewer.Height = 295;
+                createCanalLabael.Content = "Dodaj osobę";
+                icon.Kind = PackIconMaterialKind.Plus;
+                isButtonShow = false;
+            }
+
+            
 
         }
 

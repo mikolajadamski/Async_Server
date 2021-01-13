@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ClientApplication
+namespace ClientApplication.Buttons
 {
     /// <summary>
     /// Interaction logic for CanalButton.xaml
