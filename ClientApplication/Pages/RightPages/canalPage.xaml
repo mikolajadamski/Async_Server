@@ -129,7 +129,6 @@
 
                         <TextBox
                             materialDesign:HintAssist.Hint="Wpisz wiadomość "
-                            AcceptsReturn="True"
                             materialDesign:HintAssist.Foreground="Black"
                             BorderThickness="0"
                             Margin="0,5,0,5"

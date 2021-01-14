@@ -22,12 +22,14 @@ namespace ServerLibrary
             }
 
         }
+        
         public static void joinCanal(string canalName, string username, NetworkStream stream, byte[] buffer)
         {
             canals[canalName].addToCanal(username, stream, buffer);
             canals[canalName].stayInCanal(username, buffer);
             canals[canalName].removeFromCanal(username, buffer);
         }
+        
         public static UTF8Encoding encoder = new UTF8Encoding();
 
         public static string addCanal(string canalName)

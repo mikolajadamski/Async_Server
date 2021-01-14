@@ -24,12 +24,14 @@ namespace ClientApplication
         {
             InitializeComponent();
         }
+
         public void setMessage(string[] message)
         {
             userMessageName.Text = message[0];
             userMessageTime.Text = message[1];
             messageBlockText.Text = message[2];
         }
+
         public HorizontalAlignment setHorizontalAlignment
         {
             set { messageControl.HorizontalAlignment = value; }
