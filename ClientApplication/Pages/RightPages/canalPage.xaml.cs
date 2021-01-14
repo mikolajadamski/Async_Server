@@ -72,11 +72,6 @@ namespace ClientApplication
             set { sendButton.Tag = value; }
         }
 
-        public void setMessagesBoxText(string text)
-        {
-            //messagesBox.Text += "\r\n" + text;
-        }
-
         public void setMessage(Message message)
         {
             centerPanel.Children.Add(message);
@@ -91,6 +86,11 @@ namespace ClientApplication
         public void clearMessages()
         {
             centerPanel.Children.Clear();
+        }
+
+        public KeyEventHandler Key_Click
+        {
+            set { messageBox.KeyDown += value; }
         }
     }
 }

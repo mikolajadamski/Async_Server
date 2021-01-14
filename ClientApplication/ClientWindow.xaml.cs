@@ -41,7 +41,7 @@ namespace ClientApplication
             receiver = new Thread(receive);
             receiver.Start();
             currentCanal = string.Empty;
-            msgFinder = new Regex("MSG (.+) ENDMSG\r\n");
+            msgFinder = new Regex("MSG ([\\w\\W\t\r\n]+?) ENDMSG\r\n");
 
             displayAvailableCanals();
             createNecessaryPages();
@@ -93,10 +93,7 @@ namespace ClientApplication
             }
             else if (text.Substring(0, 6) == "CANALS")
             {
-
-                char[] separators = new char[] { '\r', '\n' };
-
-                string[] canals = text.Substring(7).Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                string[] canals = text.Substring(7).Split(new char[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 updateCanalsList(canals);
 
             }
@@ -203,18 +200,13 @@ namespace ClientApplication
             this.Dispatcher.Invoke(() =>
             {
                 var page = listOfPages.First(p => p.Name == currentCanal + "Page");
-                char[] separators = new char[] { '\r', '\n' };
-
-                string[] textMessages = text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (string textMessage in textMessages)
-                {
-                    if (textMessage != "Opuszczono kanal")
+            
+                
+                    if (text != "Opuszczono kanal")
                     {
                         Message message = new Message();
 
-                        char[] messageSeparators = new char[] { '\t' };
-                        string[] messageData = textMessage.Split(messageSeparators, StringSplitOptions.RemoveEmptyEntries);
+                        string[] messageData = text.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
                         message.setMessage(messageData);
 
                         if (messageData[0] != connectionController.Username)
@@ -226,7 +218,7 @@ namespace ClientApplication
 
                         page.setMessage(message);
                     }
-                }
+                
             });
         }
 
@@ -377,6 +369,7 @@ namespace ClientApplication
             CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
             CanalPage.setRightTopButton_Click = infoCanalButton_Click;
             CanalPage.SendButton_Click = sendMessageButton_Click;
+            CanalPage.Key_Click = returnClick;
             CanalPage.setCenterTopNamePanel = name;
             CanalPage.getSendButtonTag = name;
             CanalPage.Name = name + "Page";
@@ -477,8 +470,23 @@ namespace ClientApplication
             var page = listOfPages.First(p => p.Name == currentCanal + "Page");
             string message = page.getMessageText;
             page.flushMessageText();
-            page.setMessagesBoxText(connectionController.Username + ": " + message);
             connectionController.sendText(message);
+        }
+
+        private void returnClick(object sender, KeyEventArgs e)
+        {
+            var page = listOfPages.First(p => p.Name == currentCanal + "Page");
+            if (Keyboard.IsKeyDown(Key.RightShift) && Keyboard.IsKeyDown(Key.Enter))
+            {
+                page.messageBox.Text += Environment.NewLine;
+                page.messageBox.SelectionStart = page.messageBox.Text.Length;
+            }
+            else if (e.Key == Key.Enter)
+            {
+                string message = page.getMessageText;
+                page.flushMessageText();
+                connectionController.sendText(message);
+            }
         }
 
         //to do
