@@ -38,6 +38,7 @@ namespace ClientApplication
         public string getCenterPanelTextBox
         {
             get { return centerPanelTextBox.Text; }
+            set { centerPanelTextBox.Text = value; }
         }
 
     }

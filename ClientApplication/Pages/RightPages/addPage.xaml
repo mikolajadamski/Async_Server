@@ -87,7 +87,7 @@
                         Height="250">
 
                         <Label
-                            Foreground="LightGray"
+                            Foreground="DarkGray"
                             HorizontalAlignment="Center"
                             Margin="10,50,10,0"
                             FontSize="22"
@@ -105,10 +105,19 @@
 
                         <Border Margin="10,0,10,40" BorderThickness="1" BorderBrush="#f083da"/>
 
+                        <StackPanel
+                            Orientation="Horizontal"
+                            Height="30">
                         <CheckBox
+                            Style="{StaticResource CheckBoxStyle}"
                             x:Name="isPrivate"
-                            Margin="100,0,100,0"
-                            Content="private"/>
+                            VerticalAlignment="Center"
+                            Margin="134,0,0,5" 
+                            Height="20"
+                            Width="20"/>
+                            <Label
+                                Content="Private"/>
+                        </StackPanel>
 
                         <Button
                             x:Name="bottomButton"
@@ -128,9 +137,10 @@
                                     Foreground="Black"/>
 
                                 <Label
-                                x:Name="bottomButtonLabel"
-                                FontSize="22"
-                                Content="Stwórz Kanał"/>
+                                    x:Name="bottomButtonLabel"
+                                    FontSize="20"
+                                    Content="Stwórz Kanał"
+                                    Foreground="Black"/>
 
 
                             </StackPanel>

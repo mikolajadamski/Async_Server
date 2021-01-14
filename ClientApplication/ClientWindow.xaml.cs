@@ -319,6 +319,7 @@ namespace ClientApplication
             if (canalName.Length != 0)
             {
                 connectionController.createCanal(canalName + " " + type);
+                AddPage.getCenterPanelTextBox = null;
                 displayAvailableCanals();
             }
             else
