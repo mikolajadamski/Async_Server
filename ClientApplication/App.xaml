@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Themes/CheckBoxTheme.xaml"/>
                 <ResourceDictionary Source="Themes/PagesButtonTheme.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary Source="Themes/CloseButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -33,7 +33,7 @@
 
             <Button
                 Style="{StaticResource PagesButtonTheme}"
-                x:Name="canalButton">
+                x:Name="userButton">
 
                 <StackPanel 
                 HorizontalAlignment="Center"

@@ -1,4 +1,5 @@
 ﻿using ClientApplication.Buttons;
+using ClientApplication.Views;
 using MahApps.Metro.IconPacks;
 using System;
 using System.Collections.Generic;
@@ -85,11 +86,12 @@ namespace ClientApplication
                 foreach (Match match in matchCollection)
                 {
                     print(match.Groups[1].Value);
+
                 }
             }
             else if (text.Substring(0, 3) == "ADD")
             {
-                MessageBox.Show(text);
+                showNotification(text);
             }
             else if (text.Substring(0, 6) == "CANALS")
             {
@@ -121,28 +123,56 @@ namespace ClientApplication
                     break;
 
                 case "JOIN":
-                    processJoin(response[2]);
+                    processJoin(response[2], response[3]);
+                    break;
+
+                case "ADU":
+                    processAddUser(response[2], response[3]);
+                    break;
+
+                case "RMV":
+                    processRemove(response[2], response[3]);
                     break;
             }
         }
 
-        private void processJoin(string response)
+        private void processAddUser(string response, string name)
         {
             if (response == "OK")
             {
-                MessageBox.Show("Dołączono do kanału");
+                showNotification("Dołączono " + name + " do kanału");
+            }
+            else if (response == "U_OK")
+            {
+                showNotification("Dołączono do kanału " + name);
             }
             else if (response == "ALREADY_MEMBER")
             {
-                MessageBox.Show("Użytkownik już jest członkiem tego kanału");
+                showNotification("Użytkownik " + name + " już jest członkiem tego kanału");
             }
             else if (response == "INVALID")
             {
-                MessageBox.Show("Kanał nie istnieje");
+                showNotification("Kanał " + name + " nie istnieje");
             }
             else if (response == "INVALID_MEMBER")
             {
-                MessageBox.Show("Użytkownik nie istnieje");
+                showNotification("Użytkownik " + name + " nie istnieje");
+            }
+        }
+
+        private void processJoin(string response, string name)
+        {
+            if (response == "OK")
+            {
+                showNotification("Dołączono do kanału " + name);
+            }
+            else if (response == "ALREADY_MEMBER")
+            {
+                showNotification("Jesteś już członkiem kanału " + name);
+            }
+            else if (response == "INVALID")
+            {
+                showNotification("Kanał " + name + " nie istnieje");
             }
         }
 
@@ -157,11 +187,11 @@ namespace ClientApplication
             }
             else if(response == "AUTH_ERR")
             {
-                MessageBox.Show("Brak uprawnień!");
+                showNotification("Brak uprawnień!");
             }
             else if(response == "INVALID")
             {
-                MessageBox.Show("Taki kanał nie istnieje!");
+                showNotification("Taki kanał nie istnieje!");
             }
         }
 
@@ -173,7 +203,7 @@ namespace ClientApplication
             }
             else if (response == "AUTH_ERROR")
             {
-                MessageBox.Show("Nie jesteś członkiem tego kanału");
+                showNotification("Nie jesteś członkiem tego kanału");
                 currentCanal = string.Empty;
             }
             else if (response == "INVALID_ERROR")
@@ -191,7 +221,40 @@ namespace ClientApplication
             }
             else if(response == "ERR")
             {
-                MessageBox.Show("Nazwa kanału zajęta");
+                showNotification("Nazwa kanału zajęta");
+            }
+        }
+
+        private void processRemove(string response,string name)
+        {
+            if (response == "OK")
+            {
+                showNotification("Usunięto " + name + " z kanału");
+            }
+            else if (response == "U_OK")
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    leaveCanal();
+                });
+                showNotification("Usunięto cię z kanału " + name);
+                
+            }
+            else if (response == "NO_MEMBER")
+            {
+                showNotification("Użytkownik " + name + " nie jest członkiem tego kanału");
+            }
+            else if (response == "NO_PERM")
+            {
+                showNotification("Brak uprawnień");
+            }
+            else if (response == "INVALID_CANAL")
+            {
+                showNotification("Kanał " + name + " nie istnieje");
+            }
+            else if (response == "INVALID_MEMBER")
+            {
+                showNotification("Użytkownik " + name + " nie istnieje");
             }
         }
 
@@ -233,9 +296,20 @@ namespace ClientApplication
                     if (users[i] != connectionController.Username)
                     {
                         UserButton userButton = new UserButton();
+
                         if(users[i+1] == "0")
                         userButton.UserButtonLabel = users[i];
                         else userButton.UserButtonLabel = users[i] + " @admin";
+
+                        MenuItem removeBar = new MenuItem();
+                        removeBar.Click += deleteUserButton_Click;
+                        removeBar.Tag = users[i];
+                        removeBar.Header = "Usuń osobę";
+                        ContextMenu contextMenu = new ContextMenu();
+                        contextMenu.Items.Add(removeBar);
+
+                        userButton.setContextMenu = contextMenu;
+
                         UsersPage.UsersPanel.Children.Add(userButton);
                     }
                 }
@@ -316,7 +390,7 @@ namespace ClientApplication
             }
             else
             {
-                MessageBox.Show("Error");
+                showNotification("Error");
             }
 
             pagesBorder.Visibility = Visibility.Hidden;
@@ -329,7 +403,6 @@ namespace ClientApplication
             connectionController.deleteCanal(buttonName.Remove(buttonName.Length - 6, 6));
         }
 
-        //to do scroll
         private void displayAvailableCanals()
         {
             ChoseCanalPage.getCanalsPanel.Children.Clear();
@@ -379,7 +452,6 @@ namespace ClientApplication
             listOfPages.Add(CanalPage);
         }
 
-        //to do ContextMenu
         private void createCanalButton(string name, StackPanel canalsPanel)
         {
     
@@ -423,12 +495,20 @@ namespace ClientApplication
             
         }
 
-        //to do
         private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
         {
             string userName = listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage").getUserName;
 
+            listOfSmallPages.First(p => p.Name == currentCanal + "UsersPage").removeAddUserPanel();
+
             connectionController.addUserToCanal(currentCanal, userName);
+        }
+
+        private void deleteUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            string userName = ((MenuItem)sender).Tag.ToString();
+
+            connectionController.removeUserFromCanal(currentCanal, userName);
         }
 
         private void displayCanal(string canalName)
@@ -445,18 +525,12 @@ namespace ClientApplication
         private void backAddPage_Click(object sender, RoutedEventArgs e)
         {
             pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
         }
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
-            var page = listOfPages.First(p => p.Name == currentCanal + "Page");
-            page.clearMessages();
-
-            currentCanal = string.Empty;
-            
-            connectionController.leaveCanal();
-            pagesBorder.Visibility = Visibility.Hidden;
-            smallFrame.Content = ChoseCanalPage;
+            leaveCanal();  
         }
 
         //to do
@@ -493,6 +567,44 @@ namespace ClientApplication
         private void infoCanalButton_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void leaveCanal()
+        {
+            connectionController.leaveCanal();
+
+            var page = listOfPages.First(p => p.Name == currentCanal + "Page");
+            page.clearMessages();
+
+            pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
+            smallFrame.Content = ChoseCanalPage;
+
+            currentCanal = string.Empty;
+
+            pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
+            smallFrame.Content = ChoseCanalPage;
+            displayAvailableCanals();
+        }
+
+        private void showNotification(string text)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                Notification notification = new Notification();
+
+                notification.setText = text;
+
+                notification.closeButton_Click = closeNotificationButton_Click;
+
+                notificationBar.Children.Add(notification);
+            });
+        }
+
+        private void closeNotificationButton_Click(object sender, RoutedEventArgs e)
+        {
+            notificationBar.Children.RemoveAt(0);
         }
     }
 }

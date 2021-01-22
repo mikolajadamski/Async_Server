@@ -41,21 +41,25 @@
             <StackPanel 
                 HorizontalAlignment="Right">
                 <Button 
-                    Style="{StaticResource LoginButtonStyle}"
+                    Style="{StaticResource CloseButtonStyle}"
                     Command="ApplicationCommands.Close" 
-                    Width="20" Height="20"
+                    Width="25" Height="25"
                     Margin="0,10,10,0" 
                     Name="ExitButton">
                  
                     <StackPanel>
                         <iconPacks:PackIconMaterial 
-                            Kind="CloseBox" 
+                            Kind="CloseCircle" 
+                            Width="25"
+                            Height="25"
                             VerticalAlignment="Center" 
                             HorizontalAlignment="Center"
                             Foreground="White"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
+
+            
 
             <StackPanel VerticalAlignment="Center">
                 <Image Source="Images/Logo.png" Width="80" Margin="150,0"/>
@@ -67,6 +71,16 @@
                        HorizontalAlignment="Center"/>
             </StackPanel>
 
+            <StackPanel
+                x:Name="notificationBar"
+                MaxWidth="200"
+                MinHeight="40"
+                MaxHeight="80"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,20,0,0">
+
+            </StackPanel>
 
             <StackPanel Grid.Row="1">
                 <StackPanel  Orientation="Horizontal">

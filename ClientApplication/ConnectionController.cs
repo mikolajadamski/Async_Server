@@ -147,6 +147,12 @@ namespace ClientApplication
             
         }
 
+        public void removeUserFromCanal(string canalName, string userName)
+        {
+            string mess = "//remove " + canalName + " " + userName;
+            sendText(mess);
+        }
+
         public void sendText(string str)
         {
             byte[] encodedText = Encoding.UTF8.GetBytes(str);
@@ -154,6 +160,7 @@ namespace ClientApplication
             Array.Copy(encodedText, buffer, length);
             client.Stream.Write(buffer, 0, length);
         }
+        
         public string readText()
         {
             int message_size = client.Stream.Read(buffer, 0, buffer.Length);
