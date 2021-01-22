@@ -234,6 +234,12 @@ namespace ServerLibrary
                     {
                         if (result2.administrator) {
                             databaseConnection.Execute(string.Format("DROP TABLE {0}", canalName));
+                           
+                            var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                            string tableName = "";
+                            if (query != null)
+                                tableName = "k" + query.msgID;
+                            databaseConnection.Execute(string.Format("DROP TABLE {0}", tableName));
                             databaseConnection.Execute(string.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
                             return "RESP DEL OK";
                         }
