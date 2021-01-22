@@ -315,6 +315,7 @@ namespace ServerLibrary
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,username));
                     }
+                    
                 }
             }
         }
@@ -341,14 +342,24 @@ namespace ServerLibrary
                 if (result != null)
                 {
                     var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
-                   
-                   
-                    
-                    if (check != null)
+                    var admincheck = databaseConnection.Query(string.Format("SELECT * FROM {0} WHERE administrator = 1", canalName));
+
+
+                    if (check != null && admincheck == null)
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,user.Name));
                     }
-
+                    else if (check != null && admincheck != null)
+                    {
+                        databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
+                        var first_user = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} as User LIMIT 1", canalName));
+                        if (first_user != null)
+                            makeAdmin(canalName, first_user.User, user);
+                        else
+                        {
+                            deleteCanal(canalName, user);
+                        }
+                    }
 
                 }
             }
