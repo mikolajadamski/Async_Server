@@ -338,7 +338,7 @@ namespace ServerLibrary
             }
         }
 
-        public static void leaveCanal(string canalName,User user)
+        public static string leaveCanal(string canalName,User user)
         {
           
            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -354,19 +354,35 @@ namespace ServerLibrary
                     if (check != null && admincheck == null)
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,user.Name));
+                        return "RESP LEAVE OK";
                     }
                     else if (check != null && admincheck != null)
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
                         var first_user = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} as User LIMIT 1", canalName));
                         if (first_user != null)
+                        {
                             makeAdmin(canalName, first_user.User, user);
+                            return "RESP LEAVE OK";
+                        }
                         else
                         {
-                            deleteCanal(canalName, user);
+                            
+                            string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                            databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                            string res = deleteCanal(canalName, user);
+                            return "RESP LEAVE OK_DELETED";
                         }
                     }
+                    else
+                    {
+                        return "RESP LEAVE NOT_MEMBER";
+                    }
 
+                }
+                else
+                {
+                    return "RESP LEAVE ERR";
                 }
             }
         }

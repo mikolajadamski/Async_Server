@@ -20,13 +20,13 @@ namespace ClientApplication
     /// </summary>
     public partial class MainWindow : Window
     {
-        ConnectionController connectionController = new ConnectionController();
+        ConnectionController connectionController;
 
         
 
         public MainWindow()
         {
-
+            connectionController = new ConnectionController();
             connectionController.initializeConnection();
 
             InitializeComponent();
@@ -59,7 +59,6 @@ namespace ClientApplication
                 ClientWindow clientWindow = new ClientWindow(connectionController);
 
                 clientWindow.Show();
-
                 Close();
                
             }
