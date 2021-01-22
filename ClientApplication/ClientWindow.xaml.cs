@@ -133,6 +133,29 @@ namespace ClientApplication
                 case "RMV":
                     processRemove(response[2], response[3]);
                     break;
+                case "LEAVE":
+                    processLeave(response[2]);
+                    break;
+            }
+        }
+
+        private void processLeave(string response)
+        {
+            if(response == "OK")
+            {
+                MessageBox.Show("Opuszczono kanał");
+            }
+            else if(response == "OK_DELETED")
+            {
+                MessageBox.Show("Opuszczono kanał\n Brak członków - kanał usunięty.");
+            }
+            else if(response == "NOT_MEMBER")
+            {
+                MessageBox.Show("Nie jesteś członkiem tego kanału");
+            }
+            else
+            {
+                MessageBox.Show("Błąd");
             }
         }
 
@@ -466,6 +489,11 @@ namespace ClientApplication
             joinBar.Tag = canalButton.getCanalButtonName;
             joinBar.Header = "Join Canal";
 
+            MenuItem leaveBar = new MenuItem();
+            leaveBar.Click += leaveCommunityClick;
+            leaveBar.Tag = canalButton.getCanalButtonName;
+            leaveBar.Header = "Leave Canal";
+
             MenuItem deleteBar = new MenuItem();
             deleteBar.Click += deleteCanal_Click;
             deleteBar.Tag = canalButton.getCanalButtonName;
@@ -473,10 +501,18 @@ namespace ClientApplication
 
             ContextMenu contextMenu = new ContextMenu();
             contextMenu.Items.Add(joinBar);
+            contextMenu.Items.Add(leaveBar);
             contextMenu.Items.Add(deleteBar);
 
             canalButton.setContextMenu = contextMenu;
             canalsPanel.Children.Add(canalButton);
+        }
+
+        private void leaveCommunityClick(object sender, RoutedEventArgs e)
+        {
+            string name = ((MenuItem)sender).Tag.ToString();
+            string canalName = name.Remove(name.Length - 6);
+            connectionController.leaveCommunity(canalName);
         }
 
         private void joinCanalClick(object sender, RoutedEventArgs e)

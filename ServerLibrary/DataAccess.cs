@@ -234,6 +234,12 @@ namespace ServerLibrary
                     {
                         if (result2.administrator) {
                             databaseConnection.Execute(string.Format("DROP TABLE {0}", canalName));
+                           
+                            var query = databaseConnection.QuerySingleOrDefault(string.Format("SELECT msgID from canals where name = \"{0}\"", canalName));
+                            string tableName = "";
+                            if (query != null)
+                                tableName = "k" + query.msgID;
+                            databaseConnection.Execute(string.Format("DROP TABLE {0}", tableName));
                             databaseConnection.Execute(string.Format("DELETE FROM canals WHERE name = \"{0}\"", canalName));
                             return "RESP DEL OK";
                         }
@@ -352,6 +358,7 @@ namespace ServerLibrary
                             return "RESP RMV NO_MEMBER";
                         }
                     }
+
                     else
                     {
                         return "RESP RMV INVALID_CANAL";
@@ -360,6 +367,7 @@ namespace ServerLibrary
                 else
                 {
                     return "RESP RMV INVALID_MEMBER";
+
                 }
             }
         }
@@ -376,7 +384,7 @@ namespace ServerLibrary
             }
         }
 
-        public static void leaveCanal(string canalName,User user)
+        public static string leaveCanal(string canalName,User user)
         {
           
            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
@@ -386,15 +394,41 @@ namespace ServerLibrary
                 if (result != null)
                 {
                     var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
-                   
-                   
-                    
-                    if (check != null)
+                    var admincheck = databaseConnection.Query(string.Format("SELECT * FROM {0} WHERE administrator = 1", canalName));
+
+
+                    if (check != null && admincheck == null)
                     {
                         databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,user.Name));
+                        return "RESP LEAVE OK";
+                    }
+                    else if (check != null && admincheck != null)
+                    {
+                        databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
+                        var first_user = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} as User LIMIT 1", canalName));
+                        if (first_user != null)
+                        {
+                            makeAdmin(canalName, first_user.User, user);
+                            return "RESP LEAVE OK";
+                        }
+                        else
+                        {
+                            
+                            string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                            databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                            string res = deleteCanal(canalName, user);
+                            return "RESP LEAVE OK_DELETED";
+                        }
+                    }
+                    else
+                    {
+                        return "RESP LEAVE NOT_MEMBER";
                     }
 
-
+                }
+                else
+                {
+                    return "RESP LEAVE ERR";
                 }
             }
         }

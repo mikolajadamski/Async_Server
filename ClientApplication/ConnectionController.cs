@@ -178,6 +178,9 @@ namespace ClientApplication
             client.disconnect();
         }
 
-   
+        internal void leaveCommunity(string canalName)
+        {
+            sendText("leave " + canalName);
+        }
     }
 }
