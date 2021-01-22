@@ -75,7 +75,8 @@ namespace ServerLibrary
 
         static private void leaveCanal(NetworkStream stream, byte[] buffer, UserController userController, string canalName)
         {
-            DataAccess.leaveCanal(canalName, userController.User);
+            string result = DataAccess.leaveCanal(canalName, userController.User);
+            StreamControl.sendText(result, buffer, stream);
         }
 
         static private void help(NetworkStream stream, byte[] buffer)
