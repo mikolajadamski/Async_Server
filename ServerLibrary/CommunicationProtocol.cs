@@ -61,7 +61,7 @@ namespace ServerLibrary
                 case "join": join(stream, buffer, userController, cmd[1]); break;
                 case "remove": DataAccess.removefromCanal(cmd[1], cmd[2], userController.User); break;
                 case "removeall": DataAccess.removeAllfromCanal(cmd[1]); break;
-                case "leave": DataAccess.leaveCanal(cmd[1], userController.User); break;
+                case "leave": leaveCanal(stream, buffer, userController, cmd[1]); break;
                 case "listofusers": StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(cmd[1])) + "\r\n", buffer, stream); break;
                 case "exit": userController.IsLogged = false; break;
                 case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User); break;
@@ -71,6 +71,11 @@ namespace ServerLibrary
                     break;
             }
 
+        }
+
+        static private void leaveCanal(NetworkStream stream, byte[] buffer, UserController userController, string canalName)
+        {
+            DataAccess.leaveCanal(canalName, userController.User);
         }
 
         static private void help(NetworkStream stream, byte[] buffer)
