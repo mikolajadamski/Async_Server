@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientApplication.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -49,7 +50,7 @@ namespace ClientApplication
             string response = connectionController.login(UsernameBox.Text, PasswordBox.Password);
             if (response != "OK")
             {
-                MessageBox.Show(response);
+                showNotification(response);
             }
             else
             {
@@ -69,13 +70,30 @@ namespace ClientApplication
             if (response != "OK")
             {
                 serverResponse.Foreground = Brushes.Red;
-                serverResponse.Content = response;
+                showNotification(response);
             }
             else
             {
                 serverResponse.Foreground = Brushes.White;
-                serverResponse.Content = "Pomyślnie utworzono użykownika.";
+                showNotification("Pomyślnie utworzono użykownika.");
             }
+        }
+
+        private void showNotification(string text)
+        {
+            Notification notification = new Notification();
+
+            notification.setText = text;
+
+            notification.closeButton_Click = closeNotificationButton_Click;
+            notification.setLoginNotification();
+
+            notificationBar.Children.Add(notification);
+        }
+
+        private void closeNotificationButton_Click(object sender, RoutedEventArgs e)
+        {
+            notificationBar.Children.RemoveAt(0);
         }
     }
 }

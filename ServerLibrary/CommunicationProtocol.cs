@@ -59,7 +59,7 @@ namespace ServerLibrary
                 case "list": list(stream, buffer, cmd[1]); break;
                 case "add": DataAccess.addtoCanal(cmd[1], cmd[2]); break;
                 case "join": join(stream, buffer, userController, cmd[1]); break;
-                case "remove": DataAccess.removefromCanal(cmd[1], cmd[2], userController.User); break;
+                case "remove": DataAccess.removeFromCanal(cmd[1], cmd[2], userController.User.Name); break;
                 case "removeall": DataAccess.removeAllfromCanal(cmd[1]); break;
                 case "leave": leaveCanal(stream, buffer, userController, cmd[1]); break;
                 case "listofusers": StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(cmd[1])) + "\r\n", buffer, stream); break;
@@ -145,7 +145,7 @@ namespace ServerLibrary
 
         private static void join(NetworkStream stream, byte[] buffer, UserController userController, string name)
         {
-            StreamControl.sendText(DataAccess.joinCanal(name, userController.User), buffer, stream);
+            StreamControl.sendText(DataAccess.joinCanal(name, userController.User) + " " + name, buffer, stream);
         }
 
         private static void switchto(NetworkStream stream, byte[] buffer, UserController userController, string name)

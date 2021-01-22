@@ -103,7 +103,7 @@ namespace ServerLibrary
 
                 if (result != null)
                 {
-                    if(result.islogged)
+                    if (result.islogged)
                     {
                         loginUserMutex.ReleaseMutex();
                         return "Ktoś już jest zalogowany na tym koncie.\r\n";
@@ -125,7 +125,7 @@ namespace ServerLibrary
                     loginUserMutex.ReleaseMutex();
                     return "Nie ma takiego użytkownika.\r\n";
                 }
-                
+
             }
         }
 
@@ -184,31 +184,31 @@ namespace ServerLibrary
 
                     if (result == null)
                     {
-                    
 
-                            string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
-                            string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+
+                        string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
+                        string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
                         string idcheck = "SELECT max(msgID) as max FROM canals";
-                            var v = databaseConnection.QuerySingleOrDefault(@idcheck);
+                        var v = databaseConnection.QuerySingleOrDefault(@idcheck);
                         int id = -1;
-                        if(v.max != null)
-                             id =(int)v.max;
-                      
-                              string name =  "k"+(id+1).ToString();
-                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID, type) VALUES(\"{0}\",{1}, \"{2}\")", canalName, id+1, type);
-                              string initMsgTable = string.Format(@"CREATE TABLE IF NOT EXISTS {0} (
+                        if (v.max != null)
+                            id = (int)v.max;
+
+                        string name = "k" + (id + 1).ToString();
+                        string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID, type) VALUES(\"{0}\",{1}, \"{2}\")", canalName, id + 1, type);
+                        string initMsgTable = string.Format(@"CREATE TABLE IF NOT EXISTS {0} (
                                                     username VARCHAR (25) NOT NULL, 
                                                     time  TEXT,
                                                     message TEXT)", name);
-                        
-                            databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
-                            databaseConnection.Execute(@createCanalTableOperation);
-                            databaseConnection.Execute(insertAdminIntoCanalOperation, user);
-                            databaseConnection.Execute(initMsgTable);
-                            createCanalMutex.ReleaseMutex();
-                            return 1;
+
+                        databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
+                        databaseConnection.Execute(@createCanalTableOperation);
+                        databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                        databaseConnection.Execute(initMsgTable);
+                        createCanalMutex.ReleaseMutex();
+                        return 1;
                     }
-                   
+
                 }
                 catch (SQLiteException)
                 {
@@ -225,12 +225,12 @@ namespace ServerLibrary
 
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString())) {
                 var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-                if (result != null) 
+                if (result != null)
                 {
                     string command = String.Format("SELECT * FROM {0} WHERE username = @name", canalName);
                     var result2 = databaseConnection.QuerySingleOrDefault(@command, user);
 
-                    if (result2 != null) 
+                    if (result2 != null)
                     {
                         if (result2.administrator) {
                             databaseConnection.Execute(string.Format("DROP TABLE {0}", canalName));
@@ -263,28 +263,49 @@ namespace ServerLibrary
                         var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
                         if (check == null) {
                             databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, username));
-                            return "RESP JOIN OK";
+                            return "RESP ADU OK";
                         }
                         else
                         {
-                            return "RESP JOIN ALREADY_MEMBER";
+                            return "RESP ADU ALREADY_MEMBER";
                         }
                     }
                     else
                     {
-                        return "RESP JOIN INVALID";
+                        return "RESP ADU INVALID";
                     }
                 }
                 else
                 {
-                    return "RESP JOIN INVALID_MEMBER";
+                    return "RESP ADU INVALID_MEMBER";
                 }
             }
         }
 
         static public string joinCanal(string canalName, User user)
         {
-            return addtoCanal(canalName, user.Name);
+            using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
+            {
+                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
+
+                if (result != null)
+                {
+                    var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
+                    if (check == null)
+                    {
+                        databaseConnection.Execute(string.Format("INSERT INTO {0} (username,administrator) VALUES (\"{1}\", 0)", canalName, user.Name));
+                        return "RESP JOIN OK";
+                    }
+                    else
+                    {
+                        return "RESP JOIN ALREADY_MEMBER";
+                    }
+                }
+                else
+                {
+                    return "RESP JOIN INVALID";
+                }
+            }
         }
 
         static public string changeCanal(string canalName, User user){
@@ -306,22 +327,47 @@ namespace ServerLibrary
         
         }
 
-        public static void removefromCanal(string canalName, string username, User user)
+        public static string removeFromCanal(string canalName, string username, string userName)
         {
             using (IDbConnection databaseConnection = new SQLiteConnection(LoadConnectionString()))
             {
-                var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
-
-                if (result != null)
+                var isuser = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM users WHERE username = \"{0}\"", username));
+                if (isuser != null)
                 {
-                    var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
-                    var admincheck =  databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, user.Name));
+                    var result = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM canals WHERE name = \"{0}\"", canalName));
 
-                    if (check != null && admincheck != null)
+                    if (result != null)
                     {
-                        databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"",canalName,username));
+                        var check = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\"", canalName, username));
+                        var admincheck = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} WHERE username = \"{1}\" AND administrator = 1", canalName, userName));
+
+                        if (check != null)
+                        {
+                            if (admincheck != null)
+                            {
+                                databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"", canalName, username));
+                                return "RESP RMV OK";
+                            }
+                            else
+                            {
+                                return "RESP RMV NO_PERM";
+                            }
+                        }
+                        else
+                        {
+                            return "RESP RMV NO_MEMBER";
+                        }
                     }
-                    
+
+                    else
+                    {
+                        return "RESP RMV INVALID_CANAL";
+                    }
+                }
+                else
+                {
+                    return "RESP RMV INVALID_MEMBER";
+
                 }
             }
         }

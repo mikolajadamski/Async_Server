@@ -70,6 +70,16 @@ namespace ClientApplication
 
         }
 
+        public void removeAddUserPanel()
+        {
+            addUserPanel.Children.Remove(border);
+            addUserPanel.Children.Remove(addUser);
+            canalsScrollViewer.Height = 295;
+            createCanalLabael.Content = "Dodaj osobę";
+            icon.Kind = PackIconMaterialKind.Plus;
+            isButtonShow = false;
+        }
+
         public RoutedEventHandler setAddUser_Click
         {
             set { addUser.setAddButton_Click = value; }

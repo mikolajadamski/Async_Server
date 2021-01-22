@@ -45,7 +45,18 @@ namespace ServerLibrary
                     else if (text.Length>=5 && text.Substring(0, 5) == "//add")
                     {
                         string[] data = text.Substring(5).Split();
-                        DataAccess.addtoCanal(data[1], data[2]);
+                        string resp = DataAccess.addtoCanal(data[1], data[2]);
+                        StreamControl.sendText(resp + " " + data[2], buffer, canalUsers[username]);
+                        if (resp == "RESP JOIN OK" && canalUsers.ContainsKey(data[2]))
+                            StreamControl.sendText("RESP JOIN U_OK " + data[1], buffer, canalUsers[data[2]]);
+                    }
+                    else if (text.Length >= 8 && text.Substring(0, 8) == "//remove")
+                    {
+                        string[] data = text.Substring(8).Split();
+                        string resp = DataAccess.removeFromCanal(data[1], data[2], username);
+                        StreamControl.sendText(resp + " " + data[2], buffer, canalUsers[username]);
+                        if (resp == "RESP RMV OK" && canalUsers[data[2]] != null)
+                            StreamControl.sendText("RESP RMV U_OK " + data[1], buffer, canalUsers[data[2]]);
                     }
                     else if (text == "/r/n")
                         continue;
@@ -67,12 +78,12 @@ namespace ServerLibrary
 
         private void sendToOthers(string username, byte[] buffer, string text)
         {
-            foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
+            if (text.Length != 0)
             {
-                if (text.Length != 0)
+                string time = DateTime.Now.ToString("h:mm:ss tt");
+                DataAccess.addMsg(text, time, username, name);
+                foreach (KeyValuePair<string, NetworkStream> canalUser in canalUsers)
                 {
-                    string time = DateTime.Now.ToString("h:mm:ss tt");
-                    DataAccess.addMsg(text, time, username, name);
                     StreamControl.sendText("MSG " + username + "\t" + time + "\t" + text + " ENDMSG\r\n", buffer, canalUser.Value);
                     canalUser.Value.Flush();
                 }

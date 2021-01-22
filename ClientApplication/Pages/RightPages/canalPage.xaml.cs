@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientApplication.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

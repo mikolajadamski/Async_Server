@@ -36,5 +36,9 @@ namespace ClientApplication.Buttons
             set { userBorder.BorderBrush = value; }
         }
 
+        public ContextMenu setContextMenu
+        {
+            set { userButton.ContextMenu = value; }
+        }
     }
 }
