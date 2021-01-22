@@ -51,7 +51,6 @@ namespace ClientApplication
         private void receive()
         {
             string text;
-            System.Threading.Thread.Sleep(1000);
             connectionController.setTimeout(100);
             while (true)
             {

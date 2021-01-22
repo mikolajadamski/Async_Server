@@ -59,7 +59,6 @@ namespace ClientApplication
                 ClientWindow clientWindow = new ClientWindow(connectionController);
 
                 clientWindow.Show();
-                System.Threading.Thread.Sleep(1000);
                 Close();
                
             }
