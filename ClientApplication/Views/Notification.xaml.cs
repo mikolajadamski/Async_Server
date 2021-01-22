@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,7 @@ namespace ClientApplication.Views
     /// </summary>
     public partial class Notification : UserControl
     {
+        Thread thread;
         public Notification()
         {
             InitializeComponent();
@@ -44,6 +46,14 @@ namespace ClientApplication.Views
             ntfyTextBlock.MinHeight = 15;
             ntfyTextBlock.MaxWidth = 135;
             ntfyTextBlock.FontSize = 15;
+        }
+        public Thread Thread
+        {
+            set => Thread = value;
+        }
+        public void stopThread()
+        {
+            thread.Abort();
         }
     }
 

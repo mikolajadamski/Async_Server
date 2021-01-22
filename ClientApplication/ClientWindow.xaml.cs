@@ -626,15 +626,39 @@ namespace ClientApplication
 
         private void showNotification(string text)
         {
+            Thread thread = new Thread(() => notify(text));
+            thread.Start();
+        }
+        private void notify(string text)
+        {
+            int hashCode = 0;
             this.Dispatcher.Invoke(() =>
             {
                 Notification notification = new Notification();
-
                 notification.setText = text;
-
+                hashCode = notification.GetHashCode();
                 notification.closeButton_Click = closeNotificationButton_Click;
 
                 notificationBar.Children.Add(notification);
+                
+                
+            });
+            System.Threading.Thread.Sleep(5000);
+
+            this.Dispatcher.Invoke(() =>
+            {
+                var enumerator = notificationBar.Children.GetEnumerator();
+                Notification notif = null;
+                while (enumerator.MoveNext())
+                {
+                        if(enumerator.Current.GetHashCode() == hashCode)
+                        {
+                            notif = (Notification)enumerator.Current;
+                            break;
+                        }
+                } 
+                if(notif!=null)
+                    notificationBar.Children.Remove(notif);
             });
         }
 
