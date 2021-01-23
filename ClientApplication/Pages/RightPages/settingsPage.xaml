@@ -1,0 +1,265 @@
+﻿<Page x:Class="ClientApplication.Pages.RightPages.settingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ClientApplication" 
+      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d" 
+      d:DesignHeight="700" d:DesignWidth="680"
+      Title="addPage">
+
+    <Grid>
+
+        <Border CornerRadius="15">
+            <Border.Background>
+                <SolidColorBrush Color="White"/>
+            </Border.Background>
+            <StackPanel
+                x:Name="mainPanel">
+
+                <StackPanel 
+                    x:Name="topStackPanel"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Height="40"
+                    Margin="0,10,0,10">
+
+                    <StackPanel 
+                        x:Name="leftTopButtonPanel">
+
+                        <Button
+                            x:Name="leftTopButton"
+                            Width="100"
+                            Height="40"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource PagesButtonTheme}">
+
+                            <StackPanel 
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                                <iconPacks:PackIconMaterial 
+                                    Kind="LessThan" 
+                                    x:Name="leftTopButtonIcon"
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Foreground="Black"/>
+
+                                <Label 
+                                    x:Name="leftTopButtonLabel"
+                                    Content="Wróć"
+                                    FontSize="22"/>
+
+                            </StackPanel>
+
+                        </Button>
+
+                    </StackPanel>
+
+                    <StackPanel 
+                        x:Name="centerTopNamePanel"
+                        Width="400">
+
+                        <Label
+                            HorizontalAlignment="Center"
+                            FontSize="22"
+                            Name="centerTopNameLabel"
+                            Margin="10,0,10,0"
+                            Content="Ustawienia"/>
+
+                    </StackPanel>
+
+                    <StackPanel 
+                        x:Name="rightTopButtonPanel"
+                        Width="100">
+
+                        <!--<Button
+                            x:Name="logOutButton"
+                            Width="100"
+                            Height="40"
+                            HorizontalAlignment="Left"
+                            Style="{StaticResource PagesButtonTheme}">
+
+                            <StackPanel 
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center">
+
+                                <iconPacks:PackIconMaterial 
+                                    Kind="Logout" 
+                                    x:Name="rightTopButtonIcon"
+                                    VerticalAlignment="Center" 
+                                    HorizontalAlignment="Center"
+                                    Foreground="#f083da"/>
+
+                                <Label 
+                                    x:Name="rightTopButtonLabel"
+                                    Content="Wyloguj"
+                                    Foreground="Black"
+                                    FontSize="22"/>
+
+                            </StackPanel>
+
+                        </Button>-->
+
+                    </StackPanel>
+
+                </StackPanel>
+
+                <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
+
+                <!---center-->
+                <StackPanel
+                    x:Name="centerPanel"
+                    Width="600"
+                    Height="558"
+                    Margin="0,10,0,10">
+
+
+                    <StackPanel 
+                        x:Name="centerTopPanel"
+                        Orientation="Vertical"
+                        Margin="0,50,0,0">
+
+                        <Border
+                            Height="200"
+                            Width ="200" 
+                            BorderThickness="5" 
+                            CornerRadius="100"
+                            BorderBrush="Transparent">
+
+                            <Border.Background>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="#7be9f6" Offset="0.0"/>
+                                    <GradientStop Color="#f083da" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+
+                            <iconPacks:PackIconMaterial 
+                            Kind="Account"
+                            Width="100"
+                            Height="100"
+                            Margin="10"
+                            VerticalAlignment="Center" 
+                            HorizontalAlignment="Center"
+                            Foreground="White"/>
+
+                        </Border>
+
+                        <Label
+                            FontSize="40"
+                            Content="Użytkownik"
+                            x:Name="nameLabel"
+                            HorizontalAlignment="Center"/>
+
+                        <StackPanel
+                            
+                            Orientation="Horizontal"
+                            Width="600"
+                            Margin="0,10">
+
+                            <StackPanel
+                                x:Name="buttonsPanel">
+                                
+                                <Button
+                                    x:Name="changePasswordButton"
+                                    Width="150"
+                                    Height="40"
+                                    Margin="10,20,10,20"
+                                    HorizontalAlignment="Left"
+                                    Click="changePasswordButton_Click"
+                                    Style="{StaticResource PagesButtonTheme}">
+
+                                    <StackPanel 
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+
+                                        <iconPacks:PackIconMaterial 
+                                            x:Name="changePasswordIcon"
+                                            Kind="FormTextboxPassword" 
+                                            VerticalAlignment="Center" 
+                                            HorizontalAlignment="Center"
+                                            Foreground="Black"/>
+
+                                        <Label 
+                                            Name="changePasswordLabel"
+                                            Content="Zmień hasło"
+                                            Foreground="Black"
+                                            FontSize="22"/>
+
+                                    </StackPanel>
+
+                                </Button>
+
+                            </StackPanel>
+
+                            <StackPanel
+                                x:Name="executablePanel"
+                                Width="410"
+                                HorizontalAlignment="Right"
+                                Margin="10"
+                                Visibility="Hidden">
+                                
+
+                                <TextBox
+                                    x:Name="newPassword1"
+                                    FontSize="22"
+                                    Foreground="Black"
+                                    Margin="10"
+                                    Padding="5,0,0,0"
+                                    materialDesign:HintAssist.Hint="Stare Hasło"
+                                    materialDesign:HintAssist.Foreground="Black"/>
+
+                                <TextBox
+                                    x:Name="newPassword2"
+                                    FontSize="22"
+                                    Foreground="Black"
+                                    Margin="10"
+                                    Padding="5,0,0,0"
+                                    materialDesign:HintAssist.Hint="Nowe Hasło"
+                                    materialDesign:HintAssist.Foreground="Black"/>
+
+                                <Button
+                                    x:Name="changeButton"
+                                    Width="150"
+                                    Height="40"
+                                    Margin="10,20,10,20"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource PagesButtonTheme}">
+
+                                    <Label 
+                                        Name="changeLabel"
+                                        Content="Zmień"
+                                        Foreground="Black"
+                                        FontSize="22"/>
+                                </Button>
+
+                            </StackPanel>
+                            
+                        </StackPanel>
+
+                    </StackPanel>
+
+                </StackPanel>
+
+                <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>
+
+                <!---bottom-->
+                <StackPanel
+                    x:Name="bottomPanel"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,10"
+                    Height="40">
+
+
+
+                </StackPanel>
+
+
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Page>

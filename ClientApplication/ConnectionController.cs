@@ -165,6 +165,12 @@ namespace ClientApplication
             sendText(mess);
         }
 
+        public void changePassword(string oldPassword, string newPassword)
+        {
+            string mess = "changepassword " + oldPassword + " " + newPassword;
+            sendText(mess);
+        }
+
         public void sendText(string str)
         {
             byte[] encodedText = Encoding.UTF8.GetBytes(str);
