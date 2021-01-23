@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,7 +24,7 @@ namespace ClientApplication
     {
         ConnectionController connectionController;
 
-        
+        private bool connection = true;
 
         public MainWindow()
         {
@@ -31,7 +32,6 @@ namespace ClientApplication
             connectionController.initializeConnection();
 
             InitializeComponent();
-
         }
 
         private void MainWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -47,48 +47,85 @@ namespace ClientApplication
 
         private void Sign_In_Click(object sender, RoutedEventArgs e)
         {
-            string response = connectionController.login(UsernameBox.Text, PasswordBox.Password);
-            if (response != "OK")
+            if (connection)
             {
-                showNotification(response);
+                string response = connectionController.login(UsernameBox.Text, PasswordBox.Password);
+                if (response != "OK")
+                {
+                    showNotification(response);
+                }
+                else
+                {
+                    connectionController.setUsername(UsernameBox.Text);
+                    connectionController.IsLogged = true;
+
+                    ClientWindow clientWindow = new ClientWindow(connectionController);
+
+                    clientWindow.Show();
+                    Close();
+
+                }
             }
             else
-            {
-                connectionController.setUsername(UsernameBox.Text);
-                connectionController.IsLogged = true;
-
-                ClientWindow clientWindow = new ClientWindow(connectionController);
-
-                clientWindow.Show();
-                Close();
-               
-            }
+                showNotification("Brak połączenia z serwerem");
         }
         private void Sign_Up_Click(object sender, RoutedEventArgs e)
         {
-            string response = connectionController.register(UsernameBox.Text, PasswordBox.Password);
-            if (response != "OK")
+            if (connection)
             {
-                serverResponse.Foreground = Brushes.Red;
-                showNotification(response);
+                string response = connectionController.register(UsernameBox.Text, PasswordBox.Password);
+                if (response != "OK")
+                {
+                    serverResponse.Foreground = Brushes.Red;
+                    showNotification(response);
+                }
+                else
+                {
+                    serverResponse.Foreground = Brushes.White;
+                    showNotification("Pomyślnie utworzono użykownika.");
+                }
             }
             else
-            {
-                serverResponse.Foreground = Brushes.White;
-                showNotification("Pomyślnie utworzono użykownika.");
-            }
+                showNotification("Brak połączenia z serwerem");
         }
 
         private void showNotification(string text)
         {
-            Notification notification = new Notification();
+            Thread thread = new Thread(() => notify(text));
+            thread.Start();
+        }
+        private void notify(string text)
+        {
+            int hashCode = 0;
+            this.Dispatcher.Invoke(() =>
+            {
+                Notification notification = new Notification();
+                notification.setText = text;
+                hashCode = notification.GetHashCode();
+                notification.closeButton_Click = closeNotificationButton_Click;
+                notification.setLoginNotification();
 
-            notification.setText = text;
+                notificationBar.Children.Add(notification);
 
-            notification.closeButton_Click = closeNotificationButton_Click;
-            notification.setLoginNotification();
 
-            notificationBar.Children.Add(notification);
+            });
+            System.Threading.Thread.Sleep(5000);
+
+            this.Dispatcher.Invoke(() =>
+            {
+                var enumerator = notificationBar.Children.GetEnumerator();
+                Notification notif = null;
+                while (enumerator.MoveNext())
+                {
+                    if (enumerator.Current.GetHashCode() == hashCode)
+                    {
+                        notif = (Notification)enumerator.Current;
+                        break;
+                    }
+                }
+                if (notif != null)
+                    notificationBar.Children.Remove(notif);
+            });
         }
 
         private void closeNotificationButton_Click(object sender, RoutedEventArgs e)

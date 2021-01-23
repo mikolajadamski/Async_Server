@@ -64,7 +64,8 @@ namespace ServerLibrary
                 case "leave": leaveCanal(stream, buffer, userController, cmd[1]); break;
                 case "listofusers": StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(cmd[1])) + "\r\n", buffer, stream); break;
                 case "exit": userController.IsLogged = false; break;
-                case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User); break;
+                case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User.Name); break;
+                case "tkadmin": DataAccess.takeAdmin(cmd[1], cmd[2], userController.User.Name); break;
                 case "switchto": switchto(stream, buffer, userController, cmd[1]); break;
                 default:
                     StreamControl.sendText("Nieznana komenda.\r\n", buffer, stream);

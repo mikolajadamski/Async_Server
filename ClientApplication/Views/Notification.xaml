@@ -9,7 +9,7 @@
     <Grid
         x:Name="mainGrid"
         MaxWidth="300"
-        Height="80">
+        MinHeight="80">
 
         <Border
             CornerRadius="15"
@@ -64,7 +64,7 @@
                             TextWrapping="Wrap"
                             FontSize="18"
                             MinHeight="25"
-                            MaxWidth="235"
+                            MaxWidth="252"
                             Margin="5"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"/>
