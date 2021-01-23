@@ -153,6 +153,18 @@ namespace ClientApplication
             sendText(mess);
         }
 
+        public void makeAdminUser(string canalName, string userName)
+        {
+            string mess = "//mkadmin " + canalName + " " + userName;
+            sendText(mess);
+        }
+
+        public void takeAdminUser(string canalName, string userName)
+        {
+            string mess = "//tkadmin " + canalName + " " + userName;
+            sendText(mess);
+        }
+
         public void sendText(string str)
         {
             byte[] encodedText = Encoding.UTF8.GetBytes(str);

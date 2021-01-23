@@ -22,6 +22,10 @@ namespace ServerLibrary
         }
         public string Name { get; set; }
         public Dictionary<string, NetworkStream> CanalUsers { get; }
+        public NetworkStream networkStream(string username) 
+        {
+            return canalUsers[username];   
+        }
         public void addToCanal(string username, NetworkStream stream, byte[] buffer)
         {
             mutex.WaitOne();
@@ -57,6 +61,24 @@ namespace ServerLibrary
                         StreamControl.sendText(resp + " " + data[2], buffer, canalUsers[username]);
                         if (resp == "RESP RMV OK" && canalUsers[data[2]] != null)
                             StreamControl.sendText("RESP RMV U_OK " + data[1], buffer, canalUsers[data[2]]);
+                    }
+                    else if (text.Length >= 9 && text.Substring(0, 9) == "//mkadmin")
+                    {
+                        string[] data = text.Substring(9).Split();
+                        string resp = DataAccess.makeAdmin(data[1], data[2], username);
+                        StreamControl.sendText(resp + " " + data[2], buffer, canalUsers[username]);
+                        if (resp == "RESP MKA OK" && canalUsers[data[2]] != null)
+                            StreamControl.sendText("RESP MKA U_OK " + data[1], buffer, canalUsers[data[2]]);
+                        sendCommand(buffer, prepareUpdateMsg());
+                    }
+                    else if (text.Length >= 9 && text.Substring(0, 9) == "//tkadmin")
+                    {
+                        string[] data = text.Substring(9).Split();
+                        string resp = DataAccess.takeAdmin(data[1], data[2], username);
+                        StreamControl.sendText(resp + " " + data[2], buffer, canalUsers[username]);
+                        if (resp == "RESP TKA OK" && canalUsers[data[2]] != null)
+                            StreamControl.sendText("RESP TKA U_OK " + data[1], buffer, canalUsers[data[2]]);
+                        sendCommand(buffer, prepareUpdateMsg());
                     }
                     else if (text == "/r/n")
                         continue;
@@ -115,6 +137,5 @@ namespace ServerLibrary
             string[] users = DataAccess.AdminCheck(canalUsers.Keys.ToArray(), name);
             return "UPDATE " + string.Join(" ", users);
         }
-
     }
 }

@@ -75,7 +75,6 @@
                 x:Name="notificationBar"
                 MaxWidth="200"
                 MinHeight="40"
-                MaxHeight="80"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="10,20,0,0">
