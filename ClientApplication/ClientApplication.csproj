@@ -93,6 +93,9 @@
     <Compile Include="ClientWindow.xaml.cs">
       <DependentUpon>ClientWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\RightPages\settingsPage.xaml.cs">
+      <DependentUpon>settingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StreamControl.cs" />
     <Compile Include="Pages\LeftPages\usersPage.xaml.cs">
       <DependentUpon>usersPage.xaml</DependentUpon>
@@ -146,6 +149,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Pages\LeftPages\usersPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\RightPages\settingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

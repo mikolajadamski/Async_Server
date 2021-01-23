@@ -51,7 +51,7 @@ namespace ServerLibrary
         {
             switch (cmd[0].ToLower())
             {
-                case "changepassword": changepassword(stream, buffer, userController); break;
+                case "changepassword": changepassword(stream, buffer, userController, cmd[1], cmd[2]); break;
                 case "create": create(stream, buffer, userController, cmd[1], cmd[2]); break;
                 case "unregister": unregister(stream, buffer, userController); break;
                 case "delete": delete(stream, buffer, userController, cmd[1]); break;
@@ -100,15 +100,15 @@ namespace ServerLibrary
             StreamControl.sendText("\"mkadmin [nazwa kanalu] [nazwa uzytkownika]\" aby nadac prawa admina kanalu danemu uzytkownikowi\r\n", buffer, stream);
         }
 
-        static private void changepassword(NetworkStream stream, byte[] buffer, UserController userController)
+        static private void changepassword(NetworkStream stream, byte[] buffer, UserController userController, string oldPassword, string newPassword)
         {
-            StreamControl.sendText("Podaj stare haslo: ", buffer, stream);
-            string oldPassword = StreamControl.readText(stream, buffer);
             if (userController.IScorrectPassword(oldPassword))
             {
-                StreamControl.sendText("Podaj nowe haslo: ", buffer, stream);
-                string newPassword = StreamControl.readText(stream, buffer);
                 StreamControl.sendText(userController.changePassword(newPassword), buffer, stream);
+            }
+            else
+            {
+                StreamControl.sendText("RESP CPW OLD_ERROR", buffer, stream);
             }
         }
 

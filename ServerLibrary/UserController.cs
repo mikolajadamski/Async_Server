@@ -91,11 +91,11 @@ namespace ServerLibrary
             user.setPassword(newpassword);
             if (DataAccess.changeUserPassword(user) == 0)
             {
-                return "error";
+                return "RESP CPW ERROR";
             }
             else
             {
-                return "Pomyślnie zmieniono hasło\r\n";
+                return "RESP CPW OK";
             }
         }
     }

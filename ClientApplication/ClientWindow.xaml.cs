@@ -1,4 +1,5 @@
 ﻿using ClientApplication.Buttons;
+using ClientApplication.Pages.RightPages;
 using ClientApplication.Views;
 using MahApps.Metro.IconPacks;
 using System;
@@ -28,6 +29,7 @@ namespace ClientApplication
         private List<canalPage> listOfPages = new List<canalPage>();
         private List<usersPage> listOfSmallPages = new List<usersPage>();
         private addPage AddPage = new addPage();
+        private settingsPage SettingPage = new settingsPage();
         private choseCanalPage ChoseCanalPage = new choseCanalPage();
         Thread receiver;
         private string currentCanal;
@@ -144,6 +146,10 @@ namespace ClientApplication
 
                 case "TKA":
                     processTakeAdmin(response[2], response[3]);
+                    break;
+
+                case "CPW":
+                    processChangePassword(response[2]);
                     break;
             }
         }
@@ -354,6 +360,22 @@ namespace ClientApplication
             }
         }
 
+        private void processChangePassword(string response)
+        {
+            if(response =="OK")
+            {
+                showNotification("Pomyślnie zmieniono hasło");
+            }
+            else if(response=="OLD_ERROR")
+            {
+                showNotification("Stare hasło nie poprawne");
+            }
+            else if (response == "ERROR")
+            {
+                showNotification("Nie zmieniono hasła");
+            }
+        }
+
         private void print(string text)
         {
             this.Dispatcher.Invoke(() =>
@@ -467,10 +489,15 @@ namespace ClientApplication
                 DragMove();
         }
 
-        //to do
         private void SettingButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (currentCanal != string.Empty)
+            {
+                connectionController.leaveCanal();
+                smallFrame.Content = ChoseCanalPage;
+            }
+            pagesBorder.Visibility = Visibility.Visible;
+            framePages.Content = SettingPage;
         }
 
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
@@ -504,6 +531,7 @@ namespace ClientApplication
             }
 
             pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
 
         }
 
@@ -536,8 +564,19 @@ namespace ClientApplication
             AddPage.setLeftTopButton_Click = backAddPage_Click;
             AddPage.Name = "AddPage";
 
+            SettingPage.setLeftTopButton_Click = backAddPage_Click;
+            SettingPage.changeButton_Click = changePasswordButton_Click;
+            SettingPage.UserName = connectionController.Username;
+
             ChoseCanalPage.setCreateNewCanalButton_Click = createNewCanal_Click;
             ChoseCanalPage.setResetCanalListButton_Click = resetCanalListButton_Click;
+        }
+
+        private void changePasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            connectionController.changePassword(SettingPage.getPassword1, SettingPage.getPassword2);
+            pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
         }
 
         private void resetCanalListButton_Click(object sender, RoutedEventArgs e)
@@ -550,7 +589,7 @@ namespace ClientApplication
             canalPage CanalPage = new canalPage();
 
             CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
-            CanalPage.setRightTopButton_Click = infoCanalButton_Click;
+            CanalPage.setRightTopButton_Click = infoCanal_Click;
             CanalPage.SendButton_Click = sendMessageButton_Click;
             CanalPage.Key_Click = returnClick;
             CanalPage.setCenterTopNamePanel = name;
@@ -700,12 +739,6 @@ namespace ClientApplication
             }
         }
 
-        //to do
-        private void infoCanalButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void leaveCanal()
         {
             connectionController.leaveCanal();
@@ -730,6 +763,7 @@ namespace ClientApplication
             Thread thread = new Thread(() => notify(text));
             thread.Start();
         }
+
         private void notify(string text)
         {
             int hashCode = 0;
