@@ -418,14 +418,13 @@ namespace ServerLibrary
                     else if (check != null && admincheck != null)
                     {
 
-
+                        databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
                         var first_user = databaseConnection.QuerySingleOrDefault(string.Format("SELECT * FROM {0} as User LIMIT 1", canalName));
                         if (first_user != null)
                         {
                             string resp = makeAdmin(canalName, first_user.username, user.Name);
-                            if (resp == "RESP MKA OK")
+                            if (resp == "RESP MKA OK"  || resp == "RESP MKA IS_ADMIN")
                             {
-                                databaseConnection.Execute(string.Format("DELETE FROM {0} WHERE username = \"{1}\"", canalName, user.Name));
                                 return "RESP LEAVE OK";
                             }
                             else

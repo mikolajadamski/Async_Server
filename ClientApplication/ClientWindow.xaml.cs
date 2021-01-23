@@ -744,23 +744,23 @@ namespace ClientApplication
 
 
             });
-            System.Threading.Thread.Sleep(5000);
+            Thread.Sleep(5000);
 
-            this.Dispatcher.Invoke(() =>
-            {
-                var enumerator = notificationBar.Children.GetEnumerator();
-                Notification notif = null;
-                while (enumerator.MoveNext())
+                this.Dispatcher.Invoke(() =>
                 {
-                    if (enumerator.Current.GetHashCode() == hashCode)
+                    var enumerator = notificationBar.Children.GetEnumerator();
+                    Notification notif = null;
+                    while (enumerator.MoveNext())
                     {
-                        notif = (Notification)enumerator.Current;
-                        break;
+                        if (enumerator.Current.GetHashCode() == hashCode)
+                        {
+                            notif = (Notification)enumerator.Current;
+                            break;
+                        }
                     }
-                }
-                if (notif != null)
-                    notificationBar.Children.Remove(notif);
-            });
+                    if (notif != null)
+                        notificationBar.Children.Remove(notif);
+                });
         }
 
         private void closeNotificationButton_Click(object sender, RoutedEventArgs e)
