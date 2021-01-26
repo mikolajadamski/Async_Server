@@ -7,7 +7,7 @@ using ServerLibrary;
 namespace UnitTestProject
 {
     [TestClass]
-    public class UnitTest1
+    public class ServerTests
     {
         [TestMethod]
         public void TestWrongPortMethod()
@@ -38,8 +38,5 @@ namespace UnitTestProject
             }
 
         }
-
-
-
     }
 }
