@@ -104,7 +104,14 @@ namespace ServerLibrary
         {
             if (userController.IScorrectPassword(oldPassword))
             {
-                StreamControl.sendText(userController.changePassword(newPassword), buffer, stream);
+                if (newPassword.Length < 8 || newPassword.Length > 25)
+                {
+                    StreamControl.sendText("RESP CPW SIZE_ERROR", buffer, stream);
+                    return;
+                }
+                userController.User.setPassword(newPassword);
+                StreamControl.sendText("RESP CPW OK", buffer, stream);
+                return;
             }
             else
             {

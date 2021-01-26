@@ -370,9 +370,13 @@ namespace ClientApplication
             {
                 showNotification("Stare hasło nie poprawne");
             }
-            else if (response == "ERROR")
+            else if (response == "SIZE_ERROR")
             {
-                showNotification("Nie zmieniono hasła");
+                showNotification("Niepoprawna długość hasła");
+            }
+            else
+            {
+                showNotification("Błąd");
             }
         }
 

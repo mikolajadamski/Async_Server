@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace ServerLibrary
 {
@@ -635,7 +636,8 @@ namespace ServerLibrary
 
         static private string LoadConnectionString(string id = "Default")
         {
-            return ConfigurationManager.ConnectionStrings[id].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings[id].ConnectionString;
+            return connectionString;
         }
 
     }
