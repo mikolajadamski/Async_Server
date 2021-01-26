@@ -65,7 +65,7 @@
             <StackPanel
                 x:Name="notificationBar"
                 MaxWidth="300"
-                Height="80"
+                MinHeight="80"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Margin="0,20,20,0"

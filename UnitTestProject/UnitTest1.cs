@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Net;
-using ClientApp;
+using ClientApplication;
 using ServerLibrary;
 
 namespace UnitTestProject
@@ -14,23 +14,32 @@ namespace UnitTestProject
         {
             try
             {
-                ServerAsync server = new ServerAsync(IPAddress.Parse("127.0.0.1"), 3000);
+                ServerAsync server = new ServerAsync(IPAddress.Parse("127.0.0.1"), 1000);
                 Assert.Fail();
             }
-            catch(AssertFailedException)
+            catch(Exception e)
             {
-                Assert.Fail();
+               Assert.AreEqual(e.Message, "błędna wartość portu");
             }
-            catch (Exception e)
-            {
 
-            }
         }
 
         [TestMethod]
-        public void TestLoginMethod()
+        public void TestCorrectPortMethod()
         {
+            try
+            {
+                ServerAsync server = new ServerAsync(IPAddress.Parse("127.0.0.1"), 3000);
+                Assert.AreEqual(3000, server.Port);
+            }
+            catch (Exception)
+            {
+                Assert.Fail();
+            }
 
         }
+
+
+
     }
 }

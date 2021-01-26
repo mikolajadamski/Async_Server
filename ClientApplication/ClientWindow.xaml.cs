@@ -1,4 +1,5 @@
 ﻿using ClientApplication.Buttons;
+using ClientApplication.Pages.RightPages;
 using ClientApplication.Views;
 using MahApps.Metro.IconPacks;
 using System;
@@ -28,6 +29,7 @@ namespace ClientApplication
         private List<canalPage> listOfPages = new List<canalPage>();
         private List<usersPage> listOfSmallPages = new List<usersPage>();
         private addPage AddPage = new addPage();
+        private settingsPage SettingPage = new settingsPage();
         private choseCanalPage ChoseCanalPage = new choseCanalPage();
         Thread receiver;
         private string currentCanal;
@@ -79,9 +81,9 @@ namespace ClientApplication
             {
                 processResponse(text);
             }
-            else if(text.Substring(0,3) == "MSG")
+            else if (text.Substring(0, 3) == "MSG")
             {
-                
+
                 matchCollection = msgFinder.Matches(text);
                 foreach (Match match in matchCollection)
                 {
@@ -133,8 +135,21 @@ namespace ClientApplication
                 case "RMV":
                     processRemove(response[2], response[3]);
                     break;
+
                 case "LEAVE":
                     processLeave(response[2]);
+                    break;
+
+                case "MKA":
+                    processMakeAdmin(response[2],response[3]);
+                    break;
+
+                case "TKA":
+                    processTakeAdmin(response[2], response[3]);
+                    break;
+
+                case "CPW":
+                    processChangePassword(response[2]);
                     break;
             }
         }
@@ -143,19 +158,19 @@ namespace ClientApplication
         {
             if(response == "OK")
             {
-                MessageBox.Show("Opuszczono kanał");
+                showNotification("Opuszczono kanał");
             }
             else if(response == "OK_DELETED")
             {
-                MessageBox.Show("Opuszczono kanał\n Brak członków - kanał usunięty.");
+                showNotification("Opuszczono kanał\n Brak członków - kanał usunięty.");
             }
             else if(response == "NOT_MEMBER")
             {
-                MessageBox.Show("Nie jesteś członkiem tego kanału");
+                showNotification("Nie jesteś członkiem tego kanału");
             }
             else
             {
-                MessageBox.Show("Błąd");
+                showNotification("Błąd");
             }
         }
 
@@ -281,6 +296,86 @@ namespace ClientApplication
             }
         }
 
+        private void processMakeAdmin(string response, string name)
+        {
+            if (response == "OK")
+            {
+                showNotification("Nadano użytkownikowi " + name + " prawa administratora");
+            }
+            else if (response == "U_OK")
+            {
+                showNotification("Należysz do administracji kanału " + name);
+            }
+            else if (response == "NO_MEMBER")
+            {
+                showNotification("Użytkownik " + name + " nie jest członkiem tego kanału");
+            }
+            else if (response == "NO_PERM")
+            {
+                showNotification("Brak uprawnień");
+            }
+            else if (response == "IS_ADMIN")
+            {
+                showNotification("Użytkownik " + name + " jest już administratorem");
+            }
+            else if (response == "INVALID_CANAL")
+            {
+                showNotification("Kanał " + name + " nie istnieje");
+            }
+            else if (response == "INVALID_MEMBER")
+            {
+                showNotification("Użytkownik " + name + " nie istnieje");
+            }
+        }
+
+        private void processTakeAdmin(string response, string name)
+        {
+            if (response == "OK")
+            {
+                showNotification("Zabrano użytkownikowi " + name + " prawa administratora");
+            }
+            else if (response == "U_OK")
+            {
+                showNotification("Nie należysz już do administracji kanału " + name);
+            }
+            else if (response == "NO_MEMBER")
+            {
+                showNotification("Użytkownik " + name + " nie jest członkiem tego kanału");
+            }
+            else if (response == "NO_PERM")
+            {
+                showNotification("Brak uprawnień");
+            }
+            else if (response == "ISN_ADMIN")
+            {
+                showNotification("Użytkownik " + name + " nie jest już administratorem");
+            }
+            else if (response == "INVALID_CANAL")
+            {
+                showNotification("Kanał " + name + " nie istnieje");
+            }
+            else if (response == "INVALID_MEMBER")
+            {
+                showNotification("Użytkownik " + name + " nie istnieje");
+            }
+        }
+
+        private void processChangePassword(string response)
+        {
+            if(response =="OK")
+            {
+                showNotification("Pomyślnie zmieniono hasło");
+            }
+            else if(response=="OLD_ERROR")
+            {
+                showNotification("Stare hasło nie poprawne");
+            }
+            else if (response == "ERROR")
+            {
+                showNotification("Nie zmieniono hasła");
+            }
+        }
+
         private void print(string text)
         {
             this.Dispatcher.Invoke(() =>
@@ -320,15 +415,30 @@ namespace ClientApplication
                     {
                         UserButton userButton = new UserButton();
 
-                        if(users[i+1] == "0")
-                        userButton.UserButtonLabel = users[i];
-                        else userButton.UserButtonLabel = users[i] + " @admin";
+                        if (users[i + 1] == "0")
+                            userButton.UserButtonLabel = users[i];
+                        else
+                            userButton.UserButtonLabel = users[i] + " @admin";
 
                         MenuItem removeBar = new MenuItem();
                         removeBar.Click += deleteUserButton_Click;
                         removeBar.Tag = users[i];
                         removeBar.Header = "Usuń osobę";
+
+                        MenuItem mAdminBar = new MenuItem();
+                        mAdminBar.Click += makeAdminUserButton_Click;
+                        mAdminBar.Tag = users[i];
+                        mAdminBar.Header = "Mianuj administratorem";
+
+                        MenuItem tAdminBar = new MenuItem();
+                        tAdminBar.Click += takeAdminUserButton_Click;
+                        tAdminBar.Tag = users[i];
+                        tAdminBar.Header = "Zwolnij administratora";
+
                         ContextMenu contextMenu = new ContextMenu();
+
+                        contextMenu.Items.Add(mAdminBar);
+                        contextMenu.Items.Add(tAdminBar);
                         contextMenu.Items.Add(removeBar);
 
                         userButton.setContextMenu = contextMenu;
@@ -337,7 +447,6 @@ namespace ClientApplication
                     }
                 }
 
-             
             });
         }
 
@@ -380,10 +489,15 @@ namespace ClientApplication
                 DragMove();
         }
 
-        //to do
         private void SettingButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (currentCanal != string.Empty)
+            {
+                connectionController.leaveCanal();
+                smallFrame.Content = ChoseCanalPage;
+            }
+            pagesBorder.Visibility = Visibility.Visible;
+            framePages.Content = SettingPage;
         }
 
         private void createNewCanal_Click(object sender, RoutedEventArgs e)
@@ -417,6 +531,7 @@ namespace ClientApplication
             }
 
             pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
 
         }
 
@@ -449,8 +564,19 @@ namespace ClientApplication
             AddPage.setLeftTopButton_Click = backAddPage_Click;
             AddPage.Name = "AddPage";
 
+            SettingPage.setLeftTopButton_Click = backAddPage_Click;
+            SettingPage.changeButton_Click = changePasswordButton_Click;
+            SettingPage.UserName = connectionController.Username;
+
             ChoseCanalPage.setCreateNewCanalButton_Click = createNewCanal_Click;
             ChoseCanalPage.setResetCanalListButton_Click = resetCanalListButton_Click;
+        }
+
+        private void changePasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            connectionController.changePassword(SettingPage.getPassword1, SettingPage.getPassword2);
+            pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
         }
 
         private void resetCanalListButton_Click(object sender, RoutedEventArgs e)
@@ -463,7 +589,7 @@ namespace ClientApplication
             canalPage CanalPage = new canalPage();
 
             CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
-            CanalPage.setRightTopButton_Click = infoCanalButton_Click;
+            CanalPage.setRightTopButton_Click = infoCanal_Click;
             CanalPage.SendButton_Click = sendMessageButton_Click;
             CanalPage.Key_Click = returnClick;
             CanalPage.setCenterTopNamePanel = name;
@@ -547,6 +673,20 @@ namespace ClientApplication
             connectionController.removeUserFromCanal(currentCanal, userName);
         }
 
+        private void makeAdminUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            string userName = ((MenuItem)sender).Tag.ToString();
+
+            connectionController.makeAdminUser(currentCanal, userName);
+        }
+
+        private void takeAdminUserButton_Click(object sender, RoutedEventArgs e)
+        {
+            string userName = ((MenuItem)sender).Tag.ToString();
+
+            connectionController.takeAdminUser(currentCanal, userName);
+        }
+
         private void displayCanal(string canalName)
         {
             this.Dispatcher.Invoke(() =>
@@ -599,12 +739,6 @@ namespace ClientApplication
             }
         }
 
-        //to do
-        private void infoCanalButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
         private void leaveCanal()
         {
             connectionController.leaveCanal();
@@ -629,6 +763,7 @@ namespace ClientApplication
             Thread thread = new Thread(() => notify(text));
             thread.Start();
         }
+
         private void notify(string text)
         {
             int hashCode = 0;
@@ -640,31 +775,33 @@ namespace ClientApplication
                 notification.closeButton_Click = closeNotificationButton_Click;
 
                 notificationBar.Children.Add(notification);
-                
-                
-            });
-            System.Threading.Thread.Sleep(5000);
 
-            this.Dispatcher.Invoke(() =>
-            {
-                var enumerator = notificationBar.Children.GetEnumerator();
-                Notification notif = null;
-                while (enumerator.MoveNext())
+
+            });
+            Thread.Sleep(5000);
+
+                this.Dispatcher.Invoke(() =>
                 {
-                        if(enumerator.Current.GetHashCode() == hashCode)
+                    var enumerator = notificationBar.Children.GetEnumerator();
+                    Notification notif = null;
+                    while (enumerator.MoveNext())
+                    {
+                        if (enumerator.Current.GetHashCode() == hashCode)
                         {
                             notif = (Notification)enumerator.Current;
                             break;
                         }
-                } 
-                if(notif!=null)
-                    notificationBar.Children.Remove(notif);
-            });
+                    }
+                    if (notif != null)
+                        notificationBar.Children.Remove(notif);
+                });
         }
 
         private void closeNotificationButton_Click(object sender, RoutedEventArgs e)
         {
             notificationBar.Children.RemoveAt(0);
         }
+
     }
 }
+

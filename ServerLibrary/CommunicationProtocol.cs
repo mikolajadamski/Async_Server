@@ -51,7 +51,7 @@ namespace ServerLibrary
         {
             switch (cmd[0].ToLower())
             {
-                case "changepassword": changepassword(stream, buffer, userController); break;
+                case "changepassword": changepassword(stream, buffer, userController, cmd[1], cmd[2]); break;
                 case "create": create(stream, buffer, userController, cmd[1], cmd[2]); break;
                 case "unregister": unregister(stream, buffer, userController); break;
                 case "delete": delete(stream, buffer, userController, cmd[1]); break;
@@ -64,7 +64,8 @@ namespace ServerLibrary
                 case "leave": leaveCanal(stream, buffer, userController, cmd[1]); break;
                 case "listofusers": StreamControl.sendText(string.Join("\r\n", DataAccess.listuserCanal(cmd[1])) + "\r\n", buffer, stream); break;
                 case "exit": userController.IsLogged = false; break;
-                case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User); break;
+                case "mkadmin": DataAccess.makeAdmin(cmd[1], cmd[2], userController.User.Name); break;
+                case "tkadmin": DataAccess.takeAdmin(cmd[1], cmd[2], userController.User.Name); break;
                 case "switchto": switchto(stream, buffer, userController, cmd[1]); break;
                 default:
                     StreamControl.sendText("Nieznana komenda.\r\n", buffer, stream);
@@ -99,15 +100,15 @@ namespace ServerLibrary
             StreamControl.sendText("\"mkadmin [nazwa kanalu] [nazwa uzytkownika]\" aby nadac prawa admina kanalu danemu uzytkownikowi\r\n", buffer, stream);
         }
 
-        static private void changepassword(NetworkStream stream, byte[] buffer, UserController userController)
+        static private void changepassword(NetworkStream stream, byte[] buffer, UserController userController, string oldPassword, string newPassword)
         {
-            StreamControl.sendText("Podaj stare haslo: ", buffer, stream);
-            string oldPassword = StreamControl.readText(stream, buffer);
             if (userController.IScorrectPassword(oldPassword))
             {
-                StreamControl.sendText("Podaj nowe haslo: ", buffer, stream);
-                string newPassword = StreamControl.readText(stream, buffer);
                 StreamControl.sendText(userController.changePassword(newPassword), buffer, stream);
+            }
+            else
+            {
+                StreamControl.sendText("RESP CPW OLD_ERROR", buffer, stream);
             }
         }
 

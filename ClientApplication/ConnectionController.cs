@@ -65,7 +65,7 @@ namespace ClientApplication
             client.setTimeout(milis);
         }
 
-        internal string register(string username, string password)
+        public string register(string username, string password)
         {
             sendText("register");
             string response = readText();
@@ -150,6 +150,24 @@ namespace ClientApplication
         public void removeUserFromCanal(string canalName, string userName)
         {
             string mess = "//remove " + canalName + " " + userName;
+            sendText(mess);
+        }
+
+        public void makeAdminUser(string canalName, string userName)
+        {
+            string mess = "//mkadmin " + canalName + " " + userName;
+            sendText(mess);
+        }
+
+        public void takeAdminUser(string canalName, string userName)
+        {
+            string mess = "//tkadmin " + canalName + " " + userName;
+            sendText(mess);
+        }
+
+        public void changePassword(string oldPassword, string newPassword)
+        {
+            string mess = "changepassword " + oldPassword + " " + newPassword;
             sendText(mess);
         }
 
