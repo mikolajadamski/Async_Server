@@ -12,6 +12,7 @@ namespace ClientApp
         Client client;
         byte[] buffer;
         private UTF8Encoding encoder;
+
         public ConnectionController()
         { }
         
@@ -29,10 +30,12 @@ namespace ClientApp
                 return false;
             }
         }
+
         public void setUsername(string username)
         {
             client.Username = username;
         }
+
         public string login(string username, string password)
         {
             sendText("login");
@@ -104,18 +107,19 @@ namespace ClientApp
             Array.Copy(encodedText, buffer, length);
             client.Stream.Write(buffer, 0, length);
         }
+
         public string readText()
         {
             int message_size = client.Stream.Read(buffer, 0, buffer.Length);
             return encoder.GetString(buffer, 0, message_size);
         }
 
-
         public bool IsLogged
         {
             get => client.IsLogged;
             set => client.IsLogged = true;
         }
+       
         public void disconnectClient()
         {
             client.disconnect();

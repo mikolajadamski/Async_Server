@@ -25,6 +25,8 @@ namespace ClientApplication
     /// </summary>
     public partial class ClientWindow : Window
     {
+        #region Variables
+
         private ConnectionController connectionController;
         private List<canalPage> listOfPages = new List<canalPage>();
         private List<usersPage> listOfSmallPages = new List<usersPage>();
@@ -36,6 +38,7 @@ namespace ClientApplication
         Regex msgFinder;
         MatchCollection matchCollection;
 
+        #endregion
 
         public ClientWindow(ConnectionController connectionController)
         {
@@ -804,4 +807,3 @@ namespace ClientApplication
 
     }
 }
-

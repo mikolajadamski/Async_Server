@@ -17,6 +17,7 @@ namespace ServerLibrary
             isLogged = false;
            
         }
+
         public bool IsLogged
         {
             get => isLogged;
@@ -33,6 +34,7 @@ namespace ServerLibrary
                 }
             }
         }
+
         public string login()
         {
             string result = DataAccess.selectUser(user);
@@ -46,6 +48,7 @@ namespace ServerLibrary
                 return "ERR_AUTH";
             }
         }
+
         public string register()
         {
             if (DataAccess.insertUser(user) == 0)
@@ -57,6 +60,7 @@ namespace ServerLibrary
                 return "OK";
             }
         }
+
         public User User
         {
             get => user;
@@ -65,7 +69,6 @@ namespace ServerLibrary
                 if (value != null) user = value;
             }
         }
-
 
         public string deleteUser()
         {
@@ -79,6 +82,7 @@ namespace ServerLibrary
                 return "Operacja zakończona niepowodzeniem.\r\n";
             }
         }
+
         public bool IScorrectPassword(string oldPassword)
         {
             if (oldPassword == user.Password)
@@ -86,6 +90,7 @@ namespace ServerLibrary
             else
                 return false;
         }
+
         public string changePassword(string newpassword)
         {
             user.setPassword(newpassword);

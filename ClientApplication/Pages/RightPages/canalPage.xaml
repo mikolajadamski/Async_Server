@@ -59,7 +59,8 @@
 
                     <StackPanel 
                         x:Name="centerTopNamePanel"
-                        Width="400">
+                        Width="400"
+                        Margin="0,0,100,0">
 
                         <Label
                             HorizontalAlignment="Center"
@@ -68,31 +69,7 @@
                             Margin="10,0,10,0"/>
 
                     </StackPanel>
-                    
-                    <StackPanel x:Name="rightTopButtonPanel">
-                        <Button
-                            x:Name="rightTopButton"
-                            Width="100"
-                            Height="40"
-                            HorizontalAlignment="Left"
-                            Style="{StaticResource PagesButtonTheme}">
-                            
-                            <StackPanel 
-                                Orientation="Horizontal">
-                                
-                                <iconPacks:PackIconMaterial 
-                                    Kind="InformationOutline" 
-                                    x:Name="rightTopButtonIcon"
-                                    VerticalAlignment="Center" 
-                                    HorizontalAlignment="Center"
-                                    Foreground="Black"/>  
-                                
-                            </StackPanel>
 
-                        </Button>
-                        
-                    </StackPanel>
-                    
                 </StackPanel>
 
                 <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#f083da"/>

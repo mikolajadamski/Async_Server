@@ -29,10 +29,12 @@ namespace ClientApplication
                 return false;
             }
         }
+       
         public void setUsername(string username)
         {
             client.Username = username;
         }
+        
         public string login(string username, string password)
         {
             sendText("login");
@@ -130,14 +132,6 @@ namespace ClientApplication
         public void getCanals()
         {
             sendText("list " + Username);
-            /*
-             * string response = readText();
-             * if (response == "OK")
-             * {
-             * return "Błąd";
-             * }
-             * return response;
-            */
         }
 
         public void addUserToCanal(string canalName, string userName)
@@ -185,12 +179,12 @@ namespace ClientApplication
             return encoder.GetString(buffer, 0, message_size);
         }
 
-
         public bool IsLogged
         {
             get => client.IsLogged;
             set => client.IsLogged = true;
         }
+
         public void disconnectClient()
         {
             client.disconnect();

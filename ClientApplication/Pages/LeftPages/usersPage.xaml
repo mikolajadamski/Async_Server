@@ -20,7 +20,7 @@
                 x:Name="mainPanel">
 
                 <TextBlock 
-                    Text="Uzytkownicy"
+                    Text="Użytkownicy"
                     FontWeight="Light"
                     FontFamily="helvetica"
                     FontSize="20"
