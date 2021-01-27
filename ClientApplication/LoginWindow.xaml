@@ -85,7 +85,7 @@
                 <StackPanel  Orientation="Horizontal">
                     <TextBox FontFamily="helvetica" 
                              FontWeight="Light" 
-                             materialDesign:HintAssist.Hint="Username"
+                             materialDesign:HintAssist.Hint="Nazwa użytkownika"
                              FontSize="20"
                              HorizontalAlignment="Center"
                              Foreground="White"
@@ -114,7 +114,7 @@
                 <StackPanel  Orientation="Horizontal" Margin="0,10,0,0">
                     <PasswordBox FontFamily="helvetica" 
                              FontWeight="Light" 
-                                 materialDesign:HintAssist.Hint="Password"
+                                 materialDesign:HintAssist.Hint="Hasło"
                              FontSize="20"
                              HorizontalAlignment="Center"
                              Foreground="White"
@@ -144,10 +144,10 @@
                         Style="{StaticResource LoginButtonStyle}"
                         Width="100" Height="40"
                             Margin="60,0,60,0"
-                            Content="Sign In" 
+                            Content="Zaloguj się" 
                             Click="Sign_In_Click"/>
                     <Button Width="100" Height="40" 
-                            Content="Sign Up"
+                            Content="Zarejestruj się"
                         Style="{StaticResource LoginButtonStyle}"
                             Click="Sign_Up_Click"/>
                 </StackPanel>

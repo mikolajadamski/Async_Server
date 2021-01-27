@@ -141,7 +141,7 @@
                         <Label 
                             Foreground="White" 
                             Name="ExitButtonLabel"
-                            Content="Exit"/>
+                            Content="Wyjdź"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
