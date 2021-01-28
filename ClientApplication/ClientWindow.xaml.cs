@@ -249,20 +249,30 @@ namespace ClientApplication
             }
             else if (response == "INVALID_ERROR")
             {
-                //kanał nie istnieje
+                displayAvailableCanals();
                 currentCanal = string.Empty;
             }
         }
 
         private void processCreate(string response)
         {
-            if(response == "OK")
+            if (response == "OK")
             {
-                //do nothing, canal has been created and can be seen
+                pagesBorder.Visibility = Visibility.Hidden;
+                AddPage.isPrivate.IsChecked = false;
+                framePages.Content = null;
             }
-            else if(response == "ERR")
+            else if (response == "ALREADY_EXIST")
             {
                 showNotification("Nazwa kanału zajęta");
+            }
+            else if(response== "NAME_TOO_SHORT")
+            {
+                showNotification("Nazwa kanału za krótka");
+            }
+            else if (response == "ERR")
+            {
+                showNotification("Error");
             }
         }
 
@@ -526,20 +536,9 @@ namespace ClientApplication
             }
 
             string canalName = AddPage.getCenterPanelTextBox;
-            if (canalName.Length != 0)
-            {
-                connectionController.createCanal(canalName + " " + type);
-                AddPage.getCenterPanelTextBox = null;
-                displayAvailableCanals();
-            }
-            else
-            {
-                showNotification("Error");
-            }
-
-            pagesBorder.Visibility = Visibility.Hidden;
-            framePages.Content = null;
-
+            connectionController.createCanal(canalName + " " + type);
+            AddPage.getCenterPanelTextBox = null;
+            displayAvailableCanals();
         }
 
         private void deleteCanal_Click(object sender, RoutedEventArgs e)
@@ -571,7 +570,7 @@ namespace ClientApplication
             AddPage.setLeftTopButton_Click = backAddPage_Click;
             AddPage.Name = "AddPage";
 
-            SettingPage.setLeftTopButton_Click = backAddPage_Click;
+            SettingPage.setLeftTopButton_Click = backSettingPage_Click;
             SettingPage.changeButton_Click = changePasswordButton_Click;
             SettingPage.UserName = connectionController.Username;
 
@@ -581,7 +580,7 @@ namespace ClientApplication
 
         private void changePasswordButton_Click(object sender, RoutedEventArgs e)
         {
-            connectionController.changePassword(SettingPage.getPassword1, SettingPage.getPassword2);
+            connectionController.changePassword(SettingPage.OldPassword, SettingPage.NewPassword);
             pagesBorder.Visibility = Visibility.Hidden;
             framePages.Content = null;
         }
@@ -596,7 +595,6 @@ namespace ClientApplication
             canalPage CanalPage = new canalPage();
 
             CanalPage.setLeftTopButton_Click = leaveCanalButton_Click;
-            CanalPage.setRightTopButton_Click = infoCanal_Click;
             CanalPage.SendButton_Click = sendMessageButton_Click;
             CanalPage.Key_Click = returnClick;
             CanalPage.setCenterTopNamePanel = name;
@@ -660,8 +658,6 @@ namespace ClientApplication
             currentCanal = ((Button)sender).Name.Remove(((Button)sender).Name.Length - 6);
 
             connectionController.switchToCanal(currentCanal);
-
-            
         }
 
         private void AddNewUserButton_Click(object sender, RoutedEventArgs e)
@@ -705,21 +701,32 @@ namespace ClientApplication
 
         }
 
+        private void backSettingPage_Click(object sender, RoutedEventArgs e)
+        {
+            SettingPage.OldPassword = "";
+            SettingPage.NewPassword = "";
+
+            SettingPage.executablePanel.Visibility = Visibility.Hidden;
+            SettingPage.changePasswordLabel.Content = "Zmień hasło";
+            SettingPage.changePasswordIcon.Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.FormTextboxPassword;
+            SettingPage.IsPasswordVisible = false;
+
+            pagesBorder.Visibility = Visibility.Hidden;
+            framePages.Content = null;
+        }
+
         private void backAddPage_Click(object sender, RoutedEventArgs e)
         {
+            AddPage.getCenterPanelTextBox = "";
+
             pagesBorder.Visibility = Visibility.Hidden;
+            AddPage.isPrivate.IsChecked = false;
             framePages.Content = null;
         }
 
         private void leaveCanalButton_Click(object sender, RoutedEventArgs e)
         {
             leaveCanal();  
-        }
-
-        //to do
-        private void infoCanal_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void sendMessageButton_Click(object sender, RoutedEventArgs e)

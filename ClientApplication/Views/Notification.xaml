@@ -64,7 +64,7 @@
                             TextWrapping="Wrap"
                             FontSize="18"
                             MinHeight="25"
-                            MaxWidth="252"
+                            MaxWidth="242"
                             Margin="5"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"/>

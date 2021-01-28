@@ -60,7 +60,8 @@
 
                     <StackPanel 
                         x:Name="centerTopNamePanel"
-                        Width="400">
+                        Width="400"
+                        Margin="0,0,100,0">
 
                         <Label
                             HorizontalAlignment="Center"
@@ -68,40 +69,6 @@
                             Name="centerTopNameLabel"
                             Margin="10,0,10,0"
                             Content="Ustawienia"/>
-
-                    </StackPanel>
-
-                    <StackPanel 
-                        x:Name="rightTopButtonPanel"
-                        Width="100">
-
-                        <!--<Button
-                            x:Name="logOutButton"
-                            Width="100"
-                            Height="40"
-                            HorizontalAlignment="Left"
-                            Style="{StaticResource PagesButtonTheme}">
-
-                            <StackPanel 
-                                Orientation="Horizontal"
-                                VerticalAlignment="Center">
-
-                                <iconPacks:PackIconMaterial 
-                                    Kind="Logout" 
-                                    x:Name="rightTopButtonIcon"
-                                    VerticalAlignment="Center" 
-                                    HorizontalAlignment="Center"
-                                    Foreground="#f083da"/>
-
-                                <Label 
-                                    x:Name="rightTopButtonLabel"
-                                    Content="Wyloguj"
-                                    Foreground="Black"
-                                    FontSize="22"/>
-
-                            </StackPanel>
-
-                        </Button>-->
 
                     </StackPanel>
 
@@ -203,7 +170,7 @@
                                 
 
                                 <TextBox
-                                    x:Name="newPassword1"
+                                    x:Name="oldPassword"
                                     FontSize="22"
                                     Foreground="Black"
                                     Margin="10"
@@ -212,7 +179,7 @@
                                     materialDesign:HintAssist.Foreground="Black"/>
 
                                 <TextBox
-                                    x:Name="newPassword2"
+                                    x:Name="newPassword"
                                     FontSize="22"
                                     Foreground="Black"
                                     Margin="10"

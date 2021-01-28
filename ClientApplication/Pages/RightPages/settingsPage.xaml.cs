@@ -57,19 +57,26 @@ namespace ClientApplication.Pages.RightPages
             }
         }
 
+        public bool IsPasswordVisible
+        {
+            set { isPasswordVisible = value; }
+        }
+
         public string UserName
         {
             set { nameLabel.Content = value; }
         }
 
-        public string getPassword1
+        public string OldPassword
         {
-            get { return newPassword1.Text; }
+            get { return oldPassword.Text; }
+            set { oldPassword.Text = value; }
         }
 
-        public string getPassword2
+        public string NewPassword
         {
-            get { return newPassword2.Text; }
+            get { return newPassword.Text; }
+            set { newPassword.Text = value; }
         }
     }
 }
