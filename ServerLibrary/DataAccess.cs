@@ -172,7 +172,7 @@ namespace ServerLibrary
             }
         }
 
-        static public int createCanal(string canalName, User user, string type)
+        static public string createCanal(string canalName, User user, string type)
         {
 
             createCanalMutex.WaitOne();
@@ -181,45 +181,55 @@ namespace ServerLibrary
 
                 try
                 {
-                    string pom4 = string.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
-                    var result = databaseConnection.QuerySingleOrDefault(@pom4);
-
-
-                    if (result == null)
+                    if (canalName.Length != 0)
                     {
+                        string pom4 = string.Format("SELECT name FROM canals WHERE name = \"{0}\"", canalName);
+                        var result = databaseConnection.QuerySingleOrDefault(@pom4);
 
 
-                        string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
-                        string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
-                        string idcheck = "SELECT max(msgID) as max FROM canals";
-                        var v = databaseConnection.QuerySingleOrDefault(@idcheck);
-                        int id = -1;
-                        if (v.max != null)
-                            id = (int)v.max;
+                        if (result == null)
+                        {
+                            string createCanalTableOperation = string.Format("CREATE TABLE {0} ( username VARCHAR(25) UNIQUE NOT NULL, administrator BOOLEAN NOT NULL)", canalName);
+                            string insertAdminIntoCanalOperation = string.Format("INSERT INTO {0} (username,administrator) VALUES (@name, 1)", canalName);
+                            string idcheck = "SELECT max(msgID) as max FROM canals";
+                            var v = databaseConnection.QuerySingleOrDefault(@idcheck);
+                            int id = -1;
+                            if (v.max != null)
+                                id = (int)v.max;
 
-                        string name = "k" + (id + 1).ToString();
-                        string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID, type) VALUES(\"{0}\",{1}, \"{2}\")", canalName, id + 1, type);
-                        string initMsgTable = string.Format(@"CREATE TABLE IF NOT EXISTS {0} (
+                            string name = "k" + (id + 1).ToString();
+                            string insertCanalNameIntoCanalsOperation = string.Format("INSERT INTO canals(name, msgID, type) VALUES(\"{0}\",{1}, \"{2}\")", canalName, id + 1, type);
+                            string initMsgTable = string.Format(@"CREATE TABLE IF NOT EXISTS {0} (
                                                     username VARCHAR (25) NOT NULL, 
                                                     time  TEXT,
                                                     message TEXT)", name);
 
-                        databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
-                        databaseConnection.Execute(@createCanalTableOperation);
-                        databaseConnection.Execute(insertAdminIntoCanalOperation, user);
-                        databaseConnection.Execute(initMsgTable);
-                        createCanalMutex.ReleaseMutex();
-                        return 1;
+                            databaseConnection.Execute(@insertCanalNameIntoCanalsOperation);
+                            databaseConnection.Execute(@createCanalTableOperation);
+                            databaseConnection.Execute(insertAdminIntoCanalOperation, user);
+                            databaseConnection.Execute(initMsgTable);
+                            createCanalMutex.ReleaseMutex();
+                            return "RESP CREATE OK";
+                        }
+                        else
+                        {
+                            return "RESP CREATE ALREADY_EXIST";
+                        }
+                    }
+                    else
+                    {
+                        return "RESP CREATE NAME_TOO_SHORT";
                     }
 
                 }
+               
                 catch (SQLiteException)
                 {
                     createCanalMutex.ReleaseMutex();
-                    return 0;
+                    return "ERR";
                 }
                 createCanalMutex.ReleaseMutex();
-                return 0;
+                return "ERR";
             }
 
         }

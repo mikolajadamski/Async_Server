@@ -60,6 +60,7 @@ namespace ClientApplication
             {
                 addUserPanel.Children.Remove(border);
                 addUserPanel.Children.Remove(addUser);
+                addUser.UserName = "";
                 canalsScrollViewer.Height = 295;
                 createCanalLabael.Content = "Dodaj osobę";
                 icon.Kind = PackIconMaterialKind.Plus;
@@ -74,6 +75,7 @@ namespace ClientApplication
         {
             addUserPanel.Children.Remove(border);
             addUserPanel.Children.Remove(addUser);
+            addUser.UserName = "";
             canalsScrollViewer.Height = 295;
             createCanalLabael.Content = "Dodaj osobę";
             icon.Kind = PackIconMaterialKind.Plus;
@@ -87,7 +89,7 @@ namespace ClientApplication
 
         public string getUserName
         {
-            get { return addUser.getUserName; }
+            get { return addUser.UserName; }
         }
     }
 }

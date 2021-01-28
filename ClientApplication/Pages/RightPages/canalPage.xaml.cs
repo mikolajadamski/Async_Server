@@ -42,16 +42,6 @@ namespace ClientApplication
             set { centerTopNameLabel.Content = value; }
         }
 
-        public Visibility setRightTopButtonVisibility
-        {
-            set { rightTopButtonPanel.Visibility = value; }
-        }
-
-        public RoutedEventHandler setRightTopButton_Click
-        {
-            set { rightTopButton.Click += value; }
-        }
-
         public StackPanel setCenterStackPanel
         {
             set { centerPanel.Children.Add(value); }

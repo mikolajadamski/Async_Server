@@ -30,9 +30,10 @@ namespace ClientApplication.Buttons
             set { addButton.Click += value; }
         }
 
-        public string getUserName
+        public string UserName
         {
             get { return userNameText.Text; }
+            set { userNameText.Text = value; }
         }
 
     }

@@ -121,16 +121,12 @@ namespace ServerLibrary
 
         private static void create(NetworkStream stream, byte[] buffer, UserController userController, string name, string type)
         {
-            int result = DataAccess.createCanal(name, userController.User, type);
-            if (result == 1)
+            string result = DataAccess.createCanal(name, userController.User, type);
+            if (result == "RESP CREATE OK")
             {
                 CanalsController.addCanal(name);
-                StreamControl.sendText("RESP CREATE OK", buffer, stream);
             }
-            else
-            {
-                StreamControl.sendText("RESP CREATE ERR", buffer, stream);
-            }
+            StreamControl.sendText(result, buffer, stream);
         }
 
         private static void unregister(NetworkStream stream, byte[] buffer, UserController userController)
