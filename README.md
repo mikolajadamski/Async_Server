@@ -1,21 +1,20 @@
-# Serwer Asynchroniczny
+# Serwer Asynchroniczny oraz aplikacja kliencka
 
-Serwer przeznaczony do komunikacji między klientami
+Serwer przeznaczony do komunikacji między klientami.
+Klienci komunikują się za pomocą dedykowanej aplikacji.
+Aplikacja aplikacja kliencka zrealizowana została przy wykorzystaniu platformy WPF.
+Aplikacja serwerowa wykorzystuje bazę danych SQLite do przechowywania informacji potrzebnych do
+przeprowadzania komunikacji.
 
-## Instrukcja obsługi:
+## Wygląd aplikacji klienckiej
 
-Po udanym połączeniu serwer informuje o dostępnych komendach.
-Po zalogowaniu można sprawdzić dostępne komendy za pomocą komendy "help".
+# Rejestracja/Logowanie
+![image](https://user-images.githubusercontent.com/59196351/109991614-c0a33b00-7d0a-11eb-950f-257560fbb000.png)
 
-1. Połącz się z serwerem, np. za pomocą programu PuTTY.
-2. Zarejestruj się za pomocą komendy "register".
-3. Podaj dane wymagane do rejestracji - nazwa użytkownika i hasło.
-4. Zaloguj się na nowo utworzone konto za pomocą komendy "login".
-5. Stwórz nowy kanał za pomocą komendy "create [nazwa_kanału]".
-6. Wejdź na nowo utworzony kanał za pomocą komendy "switchto [nazwa_kanału]".
+# Lista kanałów/tworzenie kanału
+![image](https://user-images.githubusercontent.com/59196351/109992708-d36a3f80-7d0b-11eb-99d9-d9024017d7e4.png)
 
-7. Połącz się z serwerem za pomocą drugiego klienta.
-8. Podobnie jak w pierwszym przypadku, utwórz konto i się zaloguj.
-9. Dołącz do listy użytkowników za pomocą komendy "join [nazwa_kanału]". (Możesz wylistować dostępne kanały za pomocą komendy "list").
-10. Wejdź na kanał do którego dołączyłeś/aś a pomocą komendy "switchto [nazwa_kanału]".
-11. Teraz obaj klienci są na kanale i mogą się ze sobą komunikować.
+# Dialog na kanale
+![image](https://user-images.githubusercontent.com/59196351/109992822-f09f0e00-7d0b-11eb-957c-b9c97a05711e.png)
+
+
