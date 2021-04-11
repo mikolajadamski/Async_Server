@@ -2,7 +2,7 @@
 
 Serwer przeznaczony do komunikacji między klientami.
 Klienci komunikują się za pomocą dedykowanej aplikacji.
-Aplikacja aplikacja kliencka zrealizowana została przy wykorzystaniu platformy WPF.
+Aplikacja kliencka zrealizowana została przy wykorzystaniu platformy WPF.
 Aplikacja serwerowa wykorzystuje bazę danych SQLite do przechowywania informacji potrzebnych do
 przeprowadzania komunikacji.
 
